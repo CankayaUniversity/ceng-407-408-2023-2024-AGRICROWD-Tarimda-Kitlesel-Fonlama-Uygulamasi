@@ -1,0 +1,44 @@
+.password-strength {
+    display: flex;
+    margin-top: 8px;
+}
+
+.strength-indicator {
+    display: inline-block;
+    margin-right: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    color: #fff;
+    font-weight: bold;
+    opacity: 0.5;
+}
+
+.password-strength .strength-indicator {
+    background-color: #95a5a6;
+    /* Default gray color for indicators */
+}
+
+.password-strength .strength-indicator.valid {
+    background-color: #2ecc71;
+    /* Green color for valid indicators */
+}
+
+.password-requirements {
+    font-size: 12px;
+    margin-top: 6px;
+    color: #555;
+}
+
+.password-requirements span {
+    display: inline-block;
+    margin-right: 12px;
+}
+
+.password-requirements span.valid {
+    color: #2ecc71;
+    /* Yeşil renk for valid requirements */
+}

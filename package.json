@@ -1,0 +1,6 @@
+{
+  
+  "dependencies": {
+    "react-google-recaptcha": "^3.1.0"
+  }
+}
