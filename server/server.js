@@ -17,9 +17,8 @@ const userSchema = new mongoose.Schema({
 });
 const UserModel = mongoose.model('User', userSchema);
 
-const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY; // Google reCAPTCHA Secret Anahtarınızı ekleyin
+const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
 
-// reCAPTCHA doğrulama endpoint'i
 app.post('/verify-recaptcha', async (req, res) => {
     const { recaptchaValue } = req.body;
 
@@ -53,7 +52,6 @@ app.post('/register', [
     const { email, password, recaptchaValue } = req.body;
 
     try {
-        // reCAPTCHA doğrulama endpoint'ini çağır
         const recaptchaVerification = await axios.post('http://localhost:3001/verify-recaptcha', { recaptchaValue });
 
         if (recaptchaVerification.data.success) {
@@ -76,12 +74,10 @@ app.post('/register', [
     }
 });
 
-// Kullanıcı girişi endpoint'i
 app.post("/login", async (req, res) => {
     const { email, password, recaptchaValue } = req.body;
 
     try {
-        // reCAPTCHA doğrulama endpoint'ini çağır
         const recaptchaVerification = await axios.post('http://localhost:3001/verify-recaptcha', { recaptchaValue });
 
         if (recaptchaVerification.data.success) {

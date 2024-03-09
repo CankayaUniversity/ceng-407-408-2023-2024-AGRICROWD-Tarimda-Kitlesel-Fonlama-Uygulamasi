@@ -1,5 +1,6 @@
 .password-strength {
     display: flex;
+    align-items: center; /* Gerekli eklenti: Öğeleri dikey ortalamak için */
     margin-top: 8px;
 }
 
@@ -15,9 +16,6 @@
     color: #fff;
     font-weight: bold;
     opacity: 0.5;
-}
-
-.password-strength .strength-indicator {
     background-color: #95a5a6;
     /* Default gray color for indicators */
 }
@@ -31,6 +29,8 @@
     font-size: 12px;
     margin-top: 6px;
     color: #555;
+    display: flex;
+    align-items: center; /* Gerekli eklenti: Öğeleri dikey ortalamak için */
 }
 
 .password-requirements span {
@@ -41,4 +41,9 @@
 .password-requirements span.valid {
     color: #2ecc71;
     /* Yeşil renk for valid requirements */
+}
+
+.password-requirements span.invalid {
+    color: #e74c3c;
+    /* Kırmızı renk for invalid requirements */
 }

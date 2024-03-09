@@ -51,7 +51,7 @@ function Signup() {
             return;
         }
 
-        axios.post('http://localhost:3001/register', { name, email, password,recaptchaValue})
+        axios.post('http://localhost:3001/register', { name, email, password, recaptchaValue })
             .then(response => {
                 if (response.status === 200) {
                     console.log("Registration successful!");
@@ -105,18 +105,18 @@ function Signup() {
                             onChange={handlePasswordChange}
                         />
                         <div className="password-strength">
-                            {passwordStrength.hasLowerCase && <span className="strength-indicator lower-case valid">&#10004;</span>}
-                            {passwordStrength.hasUpperCase && <span className="strength-indicator upper-case valid">&#10004;</span>}
-                            {passwordStrength.hasSpecialChar && <span className="strength-indicator special-char valid">&#10004;</span>}
-                            {passwordStrength.hasNumber && <span className="strength-indicator number valid">&#10004;</span>}
-                            {passwordStrength.isLengthValid && <span className="strength-indicator length valid">&#10004;</span>}
+                            <span className={`strength-indicator lower-case ${passwordStrength.hasLowerCase ? 'valid' : 'invalid'}`}>&#10004;</span>
+                            <span className={`strength-indicator upper-case ${passwordStrength.hasUpperCase ? 'valid' : 'invalid'}`}>&#10004;</span>
+                            <span className={`strength-indicator special-char ${passwordStrength.hasSpecialChar ? 'valid' : 'invalid'}`}>&#10004;</span>
+                            <span className={`strength-indicator number ${passwordStrength.hasNumber ? 'valid' : 'invalid'}`}>&#10004;</span>
+                            <span className={`strength-indicator length ${passwordStrength.isLengthValid ? 'valid' : 'invalid'}`}>&#10004;</span>
                         </div>
                         <div className="password-requirements">
-                            <span className={`valid ${passwordStrength.hasLowerCase ? 'valid' : ''}`}>En az bir küçük harf</span>
-                            <span className={`valid ${passwordStrength.hasUpperCase ? 'valid' : ''}`}>En az bir büyük harf</span>
-                            <span className={`valid ${passwordStrength.hasSpecialChar ? 'valid' : ''}`}>En az bir özel karakter</span>
-                            <span className={`valid ${passwordStrength.hasNumber ? 'valid' : ''}`}>En az bir rakam</span>
-                            <span className={`valid ${passwordStrength.isLengthValid ? 'valid' : ''}`}>Minimum 6 karakter uzunluğu</span>
+                            <span className={`requirement ${passwordStrength.hasLowerCase ? 'valid' : 'invalid'}`}>En az bir küçük harf</span>
+                            <span className={`requirement ${passwordStrength.hasUpperCase ? 'valid' : 'invalid'}`}>En az bir büyük harf</span>
+                            <span className={`requirement ${passwordStrength.hasSpecialChar ? 'valid' : 'invalid'}`}>En az bir özel karakter</span>
+                            <span className={`requirement ${passwordStrength.hasNumber ? 'valid' : 'invalid'}`}>En az bir rakam</span>
+                            <span className={`requirement ${passwordStrength.isLengthValid ? 'valid' : 'invalid'}`}>Minimum 6 karakter uzunluğu</span>
                         </div>
                     </div>
                     <div className="mb-3">
