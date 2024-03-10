@@ -1,11 +1,38 @@
-import React, { useState } from 'react';
-import { Routes, Route, Link, Navigate, useParams } from 'react-router-dom';
-import BasicInfoForm from './basicInfo';
+// AddProject.jsx
 
-import "./addProject.css"
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Link, Navigate, useParams, useNavigate } from 'react-router-dom';
+import BasicInfoForm from './basicInfo';
+import axios from 'axios';
+
+import "./addProject.css";
+
 const AddProject = () => {
   const { userId, projectId } = useParams();
   const [currentStep, setCurrentStep] = useState(1);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/check-session');
+        if (response.data.success) {
+          // Kullanıcı giriş yapmış, devam et
+        } else {
+          // Kullanıcı giriş yapmamış, yönlendir
+          console.log('Session check failed:', response.data.errors);
+          // Uygun bir hata mesajı göster veya kullanıcıyı /login sayfasına yönlendir
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error('Session check error:', error);
+        // Axios hatası, kullanıcıyı /login sayfasına yönlendir
+        navigate('/login');
+      }
+    };
+
+    checkSession();
+  }, [navigate]);
 
   const handleBasicInfoSubmit = () => {
     setCurrentStep(2);

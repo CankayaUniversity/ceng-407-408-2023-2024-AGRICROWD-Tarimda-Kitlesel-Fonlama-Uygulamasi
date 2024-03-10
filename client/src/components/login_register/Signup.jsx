@@ -56,7 +56,7 @@ function Signup() {
                 if (response.status === 200) {
                     console.log("Registration successful!");
                     window.alert("Registration successful!");
-                    navigate('/login');
+                    navigate('/user-panel');
                 } else {
                     console.log("Registration failed:", response.data);
                     window.alert("Registration failed. Please try again.");

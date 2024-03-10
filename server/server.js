@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const cors = require("cors");
 const axios = require('axios');
+const jwt = require("jsonwebtoken");
+const { v4: uuidv4 } = require('uuid');  
 const { body, validationResult } = require('express-validator');
 require('dotenv').config({ path: './.env' });
 
@@ -44,7 +46,6 @@ app.post('/verify-recaptcha', async (req, res) => {
     }
 });
 
-// Kullanıcı kaydı endpoint'i
 app.post('/register', [
     body('email').isEmail(),
     body('password').isLength({ min: 5 })
@@ -79,25 +80,26 @@ app.post("/login", async (req, res) => {
 
     try {
         const recaptchaVerification = await axios.post('http://localhost:3001/verify-recaptcha', { recaptchaValue });
-
         if (recaptchaVerification.data.success) {
             const user = await UserModel.findOne({ email: email });
-
             if (user) {
                 bcrypt.compare(password, user.password)
                     .then(match => {
                         if (match) {
-                            res.json("Successful");
+                            console.log("UserID:", user._id)
+                            const authToken = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+                            const sessionID = uuidv4();
+                            res.json({ authToken, sessionID });
                         } else {
-                            res.json("The password is incorrect");
+                            res.status(401).json({ errors: ["The password is incorrect"] });
                         }
                     })
                     .catch(err => {
                         console.error(err);
-                        res.status(500).json("Internal Server Error");
+                        res.status(500).json({ errors: ["Internal Login Server Error"] });
                     });
             } else {
-                res.json("No record exist");
+                res.status(401).json({ errors: ["No record exists with this email"] });
             }
         } else {
             res.status(400).json({ errors: ["reCAPTCHA validation failed"] });
@@ -107,6 +109,7 @@ app.post("/login", async (req, res) => {
         res.status(500).json({ errors: ["Internal Server Error"] });
     }
 });
+
 
 const PORT = 3001;
 app.listen(PORT, () => {
