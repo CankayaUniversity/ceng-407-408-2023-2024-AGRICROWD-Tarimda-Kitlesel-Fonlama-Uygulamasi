@@ -1,5 +1,3 @@
-// AddProject.jsx
-
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, Navigate, useParams, useNavigate } from 'react-router-dom';
 import BasicInfoForm from './basicInfo';
@@ -7,21 +5,22 @@ import axios from 'axios';
 
 import "./addProject.css";
 
+// ...
+
 const AddProject = () => {
   const { userId, projectId } = useParams();
   const [currentStep, setCurrentStep] = useState(1);
+  const [user, setUser] = useState(null);  // Kullanıcı bilgisi
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/check-session');
+        const response = await axios.get(`http://localhost:3001/check-session/${userId}`);
         if (response.data.success) {
-          // Kullanıcı giriş yapmış, devam et
+          setUser(response.data.user);  // Giriş yapmış kullanıcının bilgisini al
         } else {
-          // Kullanıcı giriş yapmamış, yönlendir
           console.log('Session check failed:', response.data.errors);
-          // Uygun bir hata mesajı göster veya kullanıcıyı /login sayfasına yönlendir
           navigate('/login');
         }
       } catch (error) {
@@ -32,7 +31,7 @@ const AddProject = () => {
     };
 
     checkSession();
-  }, [navigate]);
+  }, [userId, navigate]);
 
   const handleBasicInfoSubmit = () => {
     setCurrentStep(2);
@@ -59,7 +58,7 @@ const AddProject = () => {
       <Routes>
         <Route
           path="basic"
-          element={currentStep === 1 ? <BasicInfoForm userId={userId} projectId={projectId} onSubmit={handleBasicInfoSubmit} /> : <Navigate to={`/add-project/${userId}`} />}
+          element={currentStep === 1 ? <BasicInfoForm user={user} projectId={projectId} onSubmit={handleBasicInfoSubmit} /> : <Navigate to={`/add-project/${userId}`} />}
         />
         {/* Diğer aşamaları da ekleyebilirsiniz */}
       </Routes>

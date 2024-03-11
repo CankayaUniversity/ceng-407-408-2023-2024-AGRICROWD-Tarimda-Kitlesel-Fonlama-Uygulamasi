@@ -1,25 +1,44 @@
+// MainNavbar.js
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import "./navBar.css"
+import './navBar.css';
 
-const Navbar = () => (
-  <nav className='auth-nav'>
-    <Link to="/" className="logo-link">
-      <h1>AgriCROWD</h1>
-    </Link>
-    <ul>
-      <li>
-        <Link to="/add-project/001">Add Project</Link>
-      </li>
-      <li>
-        <Link to="/login">Login</Link>
-      </li>
-      <li>
-        <Link to="/register">Register</Link>
-      </li>
-    </ul>
-  </nav>
-);
+const MainNavbar = () => {
+  const isAuthenticated = !!sessionStorage.getItem('authToken');
 
-export default Navbar;
+  return (
+    <nav className='auth-nav'>
+      <Link to="/" className="logo-link">
+        <h1>AgriCROWD</h1>
+      </Link>
+      <ul>
+        {isAuthenticated ? (
+          <>
+            <li>
+              <Link to="/add-project">Add Project</Link>
+            </li>
+            <li>
+              <Link to="/user-panel">User Panel</Link>
+            </li>
+            <li>
+              <Link to="/logout">Logout</Link>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/register">Register</Link>
+            </li>
+          </>
+        )}
+      </ul>
+    </nav>
+  );
+};
+
+export default MainNavbar;

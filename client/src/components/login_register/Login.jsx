@@ -4,6 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import Cookies from 'js-cookie';
 
+
+axios.defaults.withCredentials = true;
 function Login() {
 
     const [email, setEmail] = useState()
@@ -29,14 +31,13 @@ function Login() {
             return;
         } else {
             axios.post('http://localhost:3001/login', { email, password, recaptchaValue })
-                .then(result => {
-                    const { authToken, sessionID } = result.data;
-
-                    Cookies.set('authToken', authToken);
-                    Cookies.set('sessionID', sessionID);
-                    
-                    navigate('/user-panel');
-
+                .then(response => {
+                    if (response.data.status) {
+                        const { authToken, sessionID } = response.data;
+                        //Cookies.set('authToken', authToken);
+                        //Cookies.set('sessionID', sessionID);
+                        navigate('/user-panel');
+                    }
                 })
                 .catch(err => {
                     if (err.response && err.response.data && err.response.data.errors) {
@@ -77,7 +78,7 @@ function Login() {
                     </button>
                 </form>
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
-                
+
             </div>
         </div>
     );
