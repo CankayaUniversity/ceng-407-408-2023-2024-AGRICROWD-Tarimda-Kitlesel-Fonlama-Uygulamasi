@@ -30,7 +30,6 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 app.post('/verify-recaptcha', async (req, res) => {
     const { recaptchaValue } = req.body;
-
     try {
         const recaptchaResponse = await axios.post(
             'https://www.google.com/recaptcha/api/siteverify',
@@ -53,26 +52,22 @@ app.post('/verify-recaptcha', async (req, res) => {
     }
 });
 
-
-
 app.post('/verify-auth', (req, res) => {
-    const { authToken, sessionId } = req.body;
+    const authToken = req.body.authToken;
     console.log("Received authToken:", authToken);
-    console.log("Received sessionId:", sessionId);
 
     try {
-       
+        if (!authToken) {
+            return res.status(401).json({ success: false, errors: ['Auth token not provided'] });
+        }
+        const decoded = jwt.verify(authToken, JWT_SECRET);
+        console.log("Decoded userId:", decoded.userId);
+        res.json({ success: true, userId: decoded.userId });
     } catch (error) {
         console.error('Authentication error:', error);
         return res.status(500).json({ success: false, errors: ['Internal Server Error'] });
     }
 });
-
-function decodeAuthToken(authToken) {
-    const decoded = jwt.verify(authToken, JWT_SECRET);
-    console.log("Decoded userId:", decoded.userId);
-    return decoded.userId;
-}
 
 app.post(
     '/register',
@@ -82,10 +77,8 @@ app.post(
     ],
     async (req, res) => {
         const { email, password, recaptchaValue } = req.body;
-
         try {
             const recaptchaVerification = await axios.post('http://localhost:3001/verify-recaptcha', { recaptchaValue });
-
             if (recaptchaVerification.data.success) {
                 const existingUser = await UserModel.findOne({ email: email });
                 if (existingUser) {
@@ -97,7 +90,7 @@ app.post(
                     password: hashedPassword,
                 });
 
-                res.json(newUser); 
+                res.json(newUser);
             } else {
                 res.status(400).json({ errors: ['reCAPTCHA validation failed'] });
             }
@@ -108,41 +101,40 @@ app.post(
     }
 );
 
-app.post('/login', async (req, res) => {
-    const { email, password, recaptchaValue } = req.body;
-
-    try {
-        const recaptchaVerification = await axios.post('http://localhost:3001/verify-recaptcha', { recaptchaValue });
-        if (recaptchaVerification.data.success) {
-            const user = await UserModel.findOne({ email: email });
-            if (user) {
-                bcrypt.compare(password, user.password)
-                    .then(match => {
-                        if (match) {
-                            const authToken = jwt.sign({ userId: user._id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
-                            const sessionID = uuidv4();
-                            res.cookie("authToken",authToken,{httpOnly:true, maxAge: 360000});
-                            res.cookie("sessionID",sessionID,{httpOnly:true, maxAge: 360000});
-                            res.json({ status:true, authToken, sessionID });
-                        } else {
-                            res.status(401).json({ errors: ['The password is incorrect'] });
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        res.status(500).json({ errors: ['Internal Login Server Error'] });
-                    });
+app.post('/login',
+    [
+        body('email').isEmail().withMessage('Geçerli bir e-posta adresi giriniz.'),
+    ], async (req, res) => {
+        const { email, password, recaptchaValue } = req.body;
+        try {
+            const recaptchaVerification = await axios.post('http://localhost:3001/verify-recaptcha', { recaptchaValue });
+            if (recaptchaVerification.data.success) {
+                const user = await UserModel.findOne({ email: email });
+                if (user) {
+                    bcrypt.compare(password, user.password)
+                        .then(match => {
+                            if (match) {
+                                const authToken = jwt.sign({ userId: user._id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+                                res.json({ success: true, authToken });
+                            } else {
+                                res.status(401).json({ errors: ['The password is incorrect'] });
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            res.status(500).json({ errors: ['Internal Login Server Error'] });
+                        });
+                } else {
+                    res.status(401).json({ errors: ['No record exists with this email'] });
+                }
             } else {
-                res.status(401).json({ errors: ['No record exists with this email'] });
+                res.status(400).json({ errors: ['reCAPTCHA validation failed'] });
             }
-        } else {
-            res.status(400).json({ errors: ['reCAPTCHA validation failed'] });
+        } catch (error) {
+            console.error('Login error:', error);
+            res.status(500).json({ errors: ['Internal Server Error'] });
         }
-    } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ errors: ['Internal Server Error'] });
-    }
-});
+    });
 
 const PORT = 3001;
 app.listen(PORT, () => {

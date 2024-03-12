@@ -1,11 +1,14 @@
-import React from 'react'
+import React from 'react';
+import { useParams } from 'react-router-dom';
 
-function userPanel() {
+function UserPanel() {
+  const userId = "123";
+  console.log("userpanele erişiyon dayı sıkıntı yok ");
   return (
     <div>
-        <h1>Basariyla giris yaptiniz!</h1>
+      <h1>Merhaba, userId: {userId}</h1>
     </div>
-  )
+  );
 }
 
-export default userPanel
+export default UserPanel;

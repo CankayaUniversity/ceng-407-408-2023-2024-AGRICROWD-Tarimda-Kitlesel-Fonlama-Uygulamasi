@@ -1,6 +1,6 @@
 import { React, useState, useRef } from "react";
 import axios from 'axios'
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import Cookies from 'js-cookie';
 
@@ -30,19 +30,26 @@ function Login() {
             console.log("reCAPTCHA validation failed");
             return;
         } else {
-            axios.post('http://localhost:3001/login', { email, password, recaptchaValue })
+            console.log("reCAPTCHA validation success");
+            axios.post('http://localhost:3001/login', { email, password, recaptchaValue }, { withCredentials: true })
                 .then(response => {
-                    if (response.data.status) {
-                        const { authToken, sessionID } = response.data;
-                        //Cookies.set('authToken', authToken);
-                        //Cookies.set('sessionID', sessionID);
-                        navigate('/user-panel');
+                    console.log("Server response is: ", response);
+                    if (response.status) {
+                        window.alert("Basariyla giris yaptiniz!");
+                        Cookies.set('authToken', response.data.authToken, { expires: 1 / 24 });
+                        setTimeout(() => {
+                            navigate(`/user-panel`);
+                            window.location.reload();
+                          }, 250);
+                    } else {
+                        window.alert("Server hatasi!");
+                        resetRecaptcha();
                     }
                 })
                 .catch(err => {
+                    resetRecaptcha();
                     if (err.response && err.response.data && err.response.data.errors) {
                         setErrorMessage(err.response.data.errors[0]);
-                        resetRecaptcha();
                     } else {
                         setErrorMessage("Bilinmeyen bir hata oluştu.");
                     }

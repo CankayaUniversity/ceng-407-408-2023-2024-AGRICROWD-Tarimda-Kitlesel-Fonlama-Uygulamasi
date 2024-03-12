@@ -1,38 +1,40 @@
 // MainNavbar.js
-
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import './navBar.css';
 
-const MainNavbar = () => {
-  const isAuthenticated = !!sessionStorage.getItem('authToken');
+const MainNavbar = ({ isAuthenticated, onLogout }) => {
+  useEffect(() => {
+  }, [isAuthenticated]);
 
   return (
     <nav className='auth-nav'>
-      <Link to="/" className="logo-link">
+      <NavLink to="/" className="logo-link">
         <h1>AgriCROWD</h1>
-      </Link>
+      </NavLink>
       <ul>
         {isAuthenticated ? (
           <>
             <li>
-              <Link to="/add-project">Add Project</Link>
+              <NavLink to="/add-project">Add Project</NavLink>
             </li>
             <li>
-              <Link to="/user-panel">User Panel</Link>
+              <NavLink to="/user-panel">User Panel</NavLink>
             </li>
             <li>
-              <Link to="/logout">Logout</Link>
+              <NavLink to="/logout" onClick={onLogout}>
+                Logout
+              </NavLink>
             </li>
           </>
         ) : (
           <>
             <li>
-              <Link to="/login">Login</Link>
+              <NavLink to="/login">Login</NavLink>
             </li>
             <li>
-              <Link to="/register">Register</Link>
+              <NavLink to="/register">Register</NavLink>
             </li>
           </>
         )}
