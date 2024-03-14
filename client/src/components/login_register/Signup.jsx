@@ -51,7 +51,7 @@ function Signup() {
             return;
         }
 
-        axios.post('http://localhost:3001/register', { name, email, password, recaptchaValue })
+        axios.post('http://localhost:3001/api/register', { name, email, password, recaptchaValue })
             .then(response => {
                 if (response.status === 200) {
                     window.alert("Registration successful!");

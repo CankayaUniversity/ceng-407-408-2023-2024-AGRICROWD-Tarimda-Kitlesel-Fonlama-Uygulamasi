@@ -31,7 +31,7 @@ function Login() {
             return;
         } else {
             console.log("reCAPTCHA validation success");
-            axios.post('http://localhost:3001/login', { email, password, recaptchaValue }, { withCredentials: true })
+            axios.post('http://localhost:3001/api/login', { email, password, recaptchaValue }, { withCredentials: true })
                 .then(response => {
                     console.log("Server response is: ", response);
                     if (response.status) {

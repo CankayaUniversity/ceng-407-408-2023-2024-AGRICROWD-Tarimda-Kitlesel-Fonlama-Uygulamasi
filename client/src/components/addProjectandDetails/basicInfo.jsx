@@ -68,7 +68,7 @@ const BasicInfoForm = ({ onSubmit }) => {
     setSubCategory('');
   };
 
-  const navigate = useNavigate();  // useNavigate eklendi
+  const navigate = useNavigate();
   const { userId, projectId } = useParams();
 
   const handleSubmit = (e) => {

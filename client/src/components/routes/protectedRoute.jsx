@@ -7,13 +7,12 @@ const ProtectedRoute = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const authTokenFromCookie = Cookies.get('authToken');
-    console.log("children:", children);
 
     useEffect(() => {
         const verifyAuth = async () => {
             try {
                 const response = await axios.post(
-                    'http://localhost:3001/verify-auth',
+                    'http://localhost:3001/api/auth',
                     { authToken: authTokenFromCookie },
                     { withCredentials: true }
                 );
