@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       const authTokenFromCookie = Cookies.get('authToken');

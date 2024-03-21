@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const authTokenFromCookie = Cookies.get('authToken');
-
+    console.log("protectedRoute calisti");
     useEffect(() => {
         const verifyAuth = async () => {
             try {
