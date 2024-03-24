@@ -1,62 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import AddProject from './components/addProjectandDetails/AddProject';
-import Signup from './components/login_register/Signup';
-import Login from './components/login_register/Login';
-import UserPanel from './components/login_register/userPanel';
-import MainNavbar from './components/navBar/navBar';
-import Home from './components/Home/home';
-import ProtectedRoute from './components/routes/protectedRoute';
-import Cookies from 'js-cookie';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import Projects from './pages/Projects';
+import ProjectCreationPage from './pages/ProjectCreationPage';
+import Hero from './components/Hero';
+import Navbar from './components/Navbar';
 
-const App = () => {
-  const [authToken, setAuthToken] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const authTokenFromCookie = Cookies.get('authToken');
-      if (authTokenFromCookie) {
-        setAuthToken(authTokenFromCookie);
-      }
-      setLoading(false);
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  const logout = () => {
-    Cookies.remove('authToken');
-    setAuthToken(null);
-  };
-
-  return (
-    <Router>
-      <MainNavbar isAuthenticated={authToken} onLogout={logout} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/user-panel" element={
-          <ProtectedRoute>
-            <UserPanel />
-          </ProtectedRoute>
-        }
-        />
-        <Route path="/add-project" element={
-          <ProtectedRoute>
-            <AddProject />
-          </ProtectedRoute>
-        }
-        />
-        <Route path='/logout' element={<Navigate to="/" replace />} />
-      </Routes>
-    </Router>
-  );
+const navbarButtonsStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  fontSize: '1.5rem',
+  gap: '4rem',
 };
+
+function Main({ children }) {
+  return <div className='main'>{children}</div>;
+}
+
+function App() {
+  return (
+    <div>
+      <Navbar>
+        <nav style={navbarButtonsStyle}>
+          <p>Projects</p>
+          <p>Whitepaper</p>
+          <p>Login</p>
+          <p
+            style={{
+              border: '2px solid hsla(186, 33%, 94%, 1)',
+              borderRadius: '100px',
+              padding: '6px 10px',
+            }}
+          >
+            Sign in
+          </p>
+        </nav>
+      </Navbar>
+      <Main>
+        {/* <Login></Login> */}
+        {/* <SignUp></SignUp> */}
+        {/* <Hero></Hero> */}
+        <ProjectCreationPage></ProjectCreationPage>
+      </Main>
+    </div>
+  );
+}
 
 export default App;
