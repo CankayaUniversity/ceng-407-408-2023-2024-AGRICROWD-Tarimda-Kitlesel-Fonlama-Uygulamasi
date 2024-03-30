@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "authkit": "^0.0.1",
     "axios": "^1.6.7",
+    "bootstrap": "^5.3.3",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
     "ether": "^0.0.9",

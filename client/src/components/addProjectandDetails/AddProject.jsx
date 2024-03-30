@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import BasicInfoForm from './details/basicInfo';
 import axios from 'axios';
@@ -40,6 +40,7 @@ const AddProject = () => {
 
   const handleBasicInfoSubmit = () => {
     setCurrentStep(2);
+    navigate(`/add-project/${projectId}/edit/basic`);
   };
 
   const handleInitializeCategories = async () => {
@@ -60,7 +61,7 @@ const AddProject = () => {
           <nav className='subNav'>
             <ul>
               <li className={currentStep === 1 ? 'active' : ''}>
-                <button className={currentStep === 1 ? 'active-link' : ''} onClick={() => setCurrentStep(1)}>
+                <button className={currentStep === 1 ? 'active-link' : ''} onClick={handleBasicInfoSubmit}>
                   Add Basics
                 </button>
               </li>

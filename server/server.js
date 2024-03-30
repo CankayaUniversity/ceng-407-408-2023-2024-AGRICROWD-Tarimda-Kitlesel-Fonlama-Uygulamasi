@@ -13,9 +13,13 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 mongoose.connect(process.env.MONGODB_URI, {
-
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 })
-  .then(() => console.log('MongoDB connection established'))
+  .then(() => {
+    console.log('MongoDB connection established');
+    require('./scripts/createInitialAdmin');
+  })
   .catch(err => console.error('MongoDB connection error:', err));
 
 const recaptchaRoutes = require('./routes/verifyRecaptcha');
@@ -32,6 +36,9 @@ app.use('/api/login', loginRoutes);
 
 const categoriesRoutes = require('./routes/categories');
 app.use('/api/categories', categoriesRoutes);
+
+const adminRoutes = require('./routes/admin');
+app.use('/api/admin', adminRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
