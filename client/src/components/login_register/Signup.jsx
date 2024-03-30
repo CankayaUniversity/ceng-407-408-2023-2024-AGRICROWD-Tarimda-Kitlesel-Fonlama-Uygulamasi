@@ -84,13 +84,13 @@ function Signup() {
                         <label htmlFor="name">
                             <strong>Name</strong>
                         </label>
-                        <input type="text" name="name" placeholder="Enter Name" autoComplete="off" className="form-control rounded-0" onChange={(e) => setName(e.target.value)} />
+                        <input type="text" name="name" placeholder="Enter Name" autoComplete="off" className="form-control rounded-0" onChange={(e) => setName(e.target.value)} required/>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="email">
                             <strong>Email</strong>
                         </label>
-                        <input type="text" placeholder="Enter Email" autoComplete="off" name="email" className="form-control rounded-0" onChange={(e) => setEmail(e.target.value)} />
+                        <input type="email" placeholder="Enter Email" autoComplete="off" name="email" className="form-control rounded-0" onChange={(e) => setEmail(e.target.value)} required/>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="password">
@@ -102,6 +102,7 @@ function Signup() {
                             name="password"
                             className="form-control rounded-0"
                             onChange={handlePasswordChange}
+                            required
                         />
                         <div className="password-strength">
                             <span className={`strength-indicator lower-case ${passwordStrength.hasLowerCase ? 'valid' : 'invalid'}`}>&#10004;</span>

@@ -3,16 +3,21 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import AddProject from './components/addProjectandDetails/AddProject';
 import Signup from './components/login_register/Signup';
 import Login from './components/login_register/Login';
+import AdminLogin from './components/Admin/Login/adminLogin';
 import UserPanel from './components/login_register/userPanel';
 import MainNavbar from './components/navBar/navBar';
 import Home from './components/Home/home';
 import ProtectedRoute from './components/routes/protectedRoute';
+import ProtectedAdminRoute from './components/routes/protectedAdminRoute'; 
+import AdminPanel from './components/Admin/Panel/adminPanel'; 
 import Cookies from 'js-cookie';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       const authTokenFromCookie = Cookies.get('authToken');
@@ -41,6 +46,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/user-panel" element={
           <ProtectedRoute>
             <UserPanel />
@@ -51,6 +57,12 @@ const App = () => {
           <ProtectedRoute>
             <AddProject />
           </ProtectedRoute>
+        }
+        />
+        <Route path="/admin-panel" element={ 
+          <ProtectedAdminRoute>
+            <AdminPanel />
+          </ProtectedAdminRoute>
         }
         />
         <Route path='/logout' element={<Navigate to="/" replace />} />

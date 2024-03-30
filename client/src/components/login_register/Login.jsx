@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import Cookies from 'js-cookie';
 
-
 axios.defaults.withCredentials = true;
 function Login() {
 
@@ -15,13 +14,16 @@ function Login() {
     const recaptchaRef = useRef();
     const navigate = useNavigate()
 
-
     const handleRecaptchaChange = (value) => {
         setRecaptchaValue(value);
     };
     const resetRecaptcha = () => {
         recaptchaRef.current.reset();
         setRecaptchaValue(null);
+    };
+
+    const handleAdminLogin = () => {
+        navigate("/admin-login");
     };
 
     const handleSubmit = (e) => {
@@ -40,7 +42,7 @@ function Login() {
                         setTimeout(() => {
                             navigate(`/user-panel`);
                             window.location.reload();
-                          }, 250);
+                        }, 250);
                     } else {
                         window.alert("Server hatasi!");
                         resetRecaptcha();
@@ -84,8 +86,13 @@ function Login() {
                         Login
                     </button>
                 </form>
+                <div>
+                    <p>Eğer yönetici iseniz:</p>
+                    <button className="btn btn-primary w-100 rounded-0" onClick={handleAdminLogin}>
+                        Admin Login
+                    </button>
+                </div>
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
-
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, Navigate, useParams, useNavigate } from 'react-router-dom';
-import BasicInfoForm from './basicInfo';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import BasicInfoForm from './details/basicInfo';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -40,6 +40,16 @@ const AddProject = () => {
 
   const handleBasicInfoSubmit = () => {
     setCurrentStep(2);
+    navigate(`/add-project/${projectId}/edit/basic`);
+  };
+
+  const handleInitializeCategories = async () => {
+    try {
+      await axios.post('http://localhost:3001/api/categories/init');
+      console.log('Kategoriler başarıyla başlatıldı.');
+    } catch (error) {
+      console.error('Kategorileri başlatırken bir hata oluştu:', error);
+    }
   };
 
   return (
@@ -51,24 +61,23 @@ const AddProject = () => {
           <nav className='subNav'>
             <ul>
               <li className={currentStep === 1 ? 'active' : ''}>
-                <Link to={`/add-project/${userId}/${generateProjectId()}/basic`} className={currentStep === 1 ? 'active-link' : ''}>
+                <button className={currentStep === 1 ? 'active-link' : ''} onClick={handleBasicInfoSubmit}>
                   Add Basics
-                </Link>
+                </button>
               </li>
               <li className={currentStep === 2 ? 'active' : ''}>
-                <Link to={`/add-project/${userId}/${projectId}/reward`} className={currentStep === 2 ? 'active-link' : ''}>
+                <button className={currentStep === 2 ? 'active-link' : ''} onClick={() => setCurrentStep(2)}>
                   Add Rewards
-                </Link>
+                </button>
               </li>
             </ul>
           </nav>
 
-          <Routes>
-            <Route
-              path="basic"
-              element={currentStep === 1 ? <BasicInfoForm userId={userId} projectId={projectId} onSubmit={handleBasicInfoSubmit} /> : <Navigate to={`/add-project/${userId}`} />}
-            />
-          </Routes>
+          <button onClick={handleInitializeCategories}>Initialize Categories --TEST ONLY---</button>
+
+          {currentStep === 1 && (
+            <BasicInfoForm userId={userId} projectId={projectId} onSubmit={handleBasicInfoSubmit} />
+          )}
         </>
       )}
     </div>
