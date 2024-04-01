@@ -9,9 +9,13 @@ const adminSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    firstLogin: {
+        type: Boolean,
+        default: true 
     }
 });
 
-const Admin = mongoose.model('Admins', adminSchema);
+const Admin = mongoose.model('Admin', adminSchema);
 
 module.exports = Admin;

@@ -23,7 +23,7 @@ function Login() {
     };
 
     const handleAdminLogin = () => {
-        navigate("/admin-login");
+        navigate("/admin/login");
     };
 
     const handleSubmit = (e) => {

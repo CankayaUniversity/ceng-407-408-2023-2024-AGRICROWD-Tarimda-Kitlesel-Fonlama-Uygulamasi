@@ -1,4 +1,4 @@
-import { React, useState, useRef } from "react";
+import { React, useState, useRef, useEffect } from "react";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -22,6 +22,23 @@ function AdminLogin() {
         setRecaptchaValue(null);
     };
 
+    useEffect(() => {
+        const admToken = Cookies.get('admToken');
+        if (admToken) {
+            axios.post('http://localhost:3001/api/admin/verify-token', { token: admToken })
+                .then(response => {
+                    if (response.data.success) {
+                        navigate(`/admin/panel`);
+                    } else {
+                        console.log("Token doğrulanamadı.");
+                    }
+                })
+                .catch(err => {
+                    console.error("Token doğrulama hatası:", err);
+                });
+        }
+    }, []); 
+
     const handleSubmit = (e) => {
         e.preventDefault()
         if (!recaptchaValue) {
@@ -36,9 +53,9 @@ function AdminLogin() {
                         window.alert("Basariyla giris yaptiniz!");
                         Cookies.set('admToken', response.data.authToken, { expires: 1 / 24 });
                         setTimeout(() => {
-                            navigate(`/admin-panel`);
+                            navigate(`/admin/panel`);
                             window.location.reload();
-                          }, 250);
+                        }, 250);
                     } else {
                         window.alert("Server hatasi!");
                         resetRecaptcha();

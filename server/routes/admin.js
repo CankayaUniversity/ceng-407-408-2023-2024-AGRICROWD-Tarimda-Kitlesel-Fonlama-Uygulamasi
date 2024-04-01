@@ -32,10 +32,15 @@ router.post('/login', async (req, res) => {
 });
 
 router.put('/change-password', async (req, res) => {
-    const { username, oldPassword, newPassword } = req.body;
+    const { oldPassword, newPassword, token } = req.body;
     try {
+        const tokenResponse = await axios.post('http://localhost:3001/api/admin/verify-token', { token });
+        if (!tokenResponse.data.success) {
+            return res.status(401).json({ errors: ['Oturum bilgileri geçersiz.'] });
+        }
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const username = decodedToken.username;
         const admin = await Admin.findOne({ username });
-
         if (!admin || !(await bcrypt.compare(oldPassword, admin.password))) {
             return res.status(401).json({ errors: ['Geçersiz kullanıcı adı veya şifre.'] });
         }
@@ -64,5 +69,6 @@ router.post('/verify-token', async (req, res) => {
         res.json({ success: false });
     }
 });
+
 
 module.exports = router;
