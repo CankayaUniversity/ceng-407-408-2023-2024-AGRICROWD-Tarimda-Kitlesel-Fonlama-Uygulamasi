@@ -11,7 +11,7 @@ router.post('/',
         body('password').isLength({ min: 5 }),
     ],
     async (req, res) => {
-        const { email, password, recaptchaValue } = req.body;
+        const { name, email, password, recaptchaValue } = req.body;
         try {
             const recaptchaVerification = await axios.post('http://localhost:3001/api/recaptcha', { recaptchaValue });
             if (recaptchaVerification.data.success) {
@@ -21,6 +21,7 @@ router.post('/',
                 }
                 const hashedPassword = await bcrypt.hash(password, 10);
                 const newUser = await UserModel.create({
+                    name: name,
                     email: email,
                     password: hashedPassword,
                 });

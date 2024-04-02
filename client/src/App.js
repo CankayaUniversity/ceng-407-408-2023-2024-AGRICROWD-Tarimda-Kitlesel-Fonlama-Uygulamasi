@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import AddProject from './components/addProjectandDetails/AddProject';
+import Home from './components/Home/home';
 import Signup from './components/login_register/Signup';
 import Login from './components/login_register/Login';
-import AdminLogin from './components/Admin/Login/adminLogin';
 import UserPanel from './components/login_register/userPanel';
+import AddProject from './components/addProjectandDetails/AddProject';
 import MainNavbar from './components/navBar/navBar';
-import Home from './components/Home/home';
 import ProtectedRoute from './components/routes/protectedRoute';
-import ProtectedAdminRoute from './components/routes/protectedAdminRoute'; 
-import AdminPanel from './components/Admin/Panel/adminPanel'; 
+import ProtectedAdminRoute from './components/routes/protectedAdminRoute';
+import AdminLogin from './components/Admin/Login/adminLogin';
+import AdminPanel from './components/Admin/Panel/adminPanel';
+import AdminChangePsw from './components/Admin/changePassword/changePsw';
 import Cookies from 'js-cookie';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,7 +18,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       const authTokenFromCookie = Cookies.get('authToken');
@@ -46,7 +47,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/user-panel" element={
           <ProtectedRoute>
             <UserPanel />
@@ -59,9 +60,15 @@ const App = () => {
           </ProtectedRoute>
         }
         />
-        <Route path="/admin-panel" element={ 
+        <Route path="/admin/panel" element={
           <ProtectedAdminRoute>
             <AdminPanel />
+          </ProtectedAdminRoute>
+        }
+        />
+        <Route path="/admin/change-password" element={
+          <ProtectedAdminRoute>
+            <AdminChangePsw />
           </ProtectedAdminRoute>
         }
         />

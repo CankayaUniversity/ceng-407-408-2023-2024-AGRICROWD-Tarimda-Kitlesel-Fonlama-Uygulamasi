@@ -43,15 +43,6 @@ const AddProject = () => {
     navigate(`/add-project/${projectId}/edit/basic`);
   };
 
-  const handleInitializeCategories = async () => {
-    try {
-      await axios.post('http://localhost:3001/api/categories/init');
-      console.log('Kategoriler başarıyla başlatıldı.');
-    } catch (error) {
-      console.error('Kategorileri başlatırken bir hata oluştu:', error);
-    }
-  };
-
   return (
     <div>
       {loading ? (
@@ -72,8 +63,6 @@ const AddProject = () => {
               </li>
             </ul>
           </nav>
-
-          <button onClick={handleInitializeCategories}>Initialize Categories --TEST ONLY---</button>
 
           {currentStep === 1 && (
             <BasicInfoForm userId={userId} projectId={projectId} onSubmit={handleBasicInfoSubmit} />
