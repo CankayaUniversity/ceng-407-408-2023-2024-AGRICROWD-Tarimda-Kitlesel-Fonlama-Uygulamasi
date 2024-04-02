@@ -47,7 +47,7 @@ router.put('/change-password', async (req, res) => {
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
         admin.password = hashedNewPassword;
         await admin.save();
-        res.json({ message: 'Şifre başarıyla güncellendi.' });
+        res.json({ success:true,message: 'Şifre başarıyla güncellendi.' });
     } catch (error) {
         console.error('Şifre güncelleme hatası:', error);
         res.status(500).json({ errors: ['Bir hata oluştu.'] });

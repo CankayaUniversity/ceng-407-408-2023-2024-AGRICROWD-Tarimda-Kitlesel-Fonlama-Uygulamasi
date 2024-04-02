@@ -9,11 +9,16 @@ function ChangePassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState(""); 
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
       setErrorMessage("Yeni şifreniz doğrulama şifrenizle eşleşmiyor.");
+      return;
+    }
+
+    if (oldPassword === newPassword) {
+      setErrorMessage("Eski şifreniz yeni şifrenizle aynı olamaz.");
       return;
     }
 
@@ -24,8 +29,11 @@ function ChangePassword() {
         newPassword,
         token
       });
+      if (response.data.success) {
+        setSuccessMessage("Şifrenizi başarıyla değiştirdiniz!"); // Başarı mesajını ayarla
+        setErrorMessage(""); // Hata mesajını temizle
+      }
       console.log("Server response: ", response.data);
-      navigate("/admin/panel");
     } catch (error) {
       console.error("Change password error: ", error);
       setErrorMessage("Şifre değiştirme işlemi başarısız oldu. Lütfen tekrar deneyin.");
@@ -37,6 +45,7 @@ function ChangePassword() {
       <div className="bg-white p-3 rounded w-25">
         <h2>Şifre Değiştirme</h2>
         {errorMessage && <div className="alert alert-danger" role="alert">{errorMessage}</div>}
+        {successMessage && <div className="alert alert-success" role="alert">{successMessage}</div>} {/* Yeni başarı mesajını görüntüle */}
         <div className="mb-3">
           <label htmlFor="oldPassword" className="form-label">Eski Şifre</label>
           <input

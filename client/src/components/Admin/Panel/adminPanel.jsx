@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import { Button, Col, Container, Nav, Row } from "react-bootstrap";
 import ChangePassword from "../changePassword/changePsw";
+import CategoriesCrud from "../categories/categoriesCrud";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 function AdminPanel() {
-    const [currentPage, setCurrentPage] = useState("home"); // Başlangıçta "home" sayfasını göstermek için
+    const [currentPage, setCurrentPage] = useState("home");
     const navigate = useNavigate();
 
     const handleChangePassword = () => {
         setCurrentPage("change-password");
     };
 
+    const handleCategories = () => { 
+        setCurrentPage("categories");
+    };
+
     const handleLogout = () => {
-        // Çıkış işlemi: admToken'ı sil ve kullanıcıyı giriş sayfasına yönlendir
         Cookies.remove('admToken');
         navigate('/admin/login');
     };
@@ -23,7 +27,9 @@ function AdminPanel() {
             case "change-password":
                 return <ChangePassword />;
             case "home":
-                return <div>Hoşgeldiniz</div>; // Ana sayfa içeriği
+                return <div>Hoşgeldiniz</div>;
+            case "categories": // Yeni eklendi
+                return <CategoriesCrud />;
             default:
                 return null;
         }
@@ -34,11 +40,14 @@ function AdminPanel() {
             <Row>
                 <Col md={3}>
                     <Nav className="flex-column">
-                        <Button variant="light" className="nav-link" onClick={() => setCurrentPage("home")}>
+                        <Button variant="light" className={`nav-link ${currentPage === 'home' ? 'active' : ''}`} onClick={() => setCurrentPage("home")}>
                             Ana Sayfa
                         </Button>
-                        <Button variant="light" className="nav-link" onClick={handleChangePassword}>
+                        <Button variant="light" className={`nav-link ${currentPage === 'change-password' ? 'active' : ''}`} onClick={handleChangePassword}>
                             Şifrenizi Değiştirin
+                        </Button>
+                        <Button variant="light" className={`nav-link ${currentPage === 'categories' ? 'active' : ''}`} onClick={handleCategories}> {/* Yeni eklendi */}
+                            Kategoriler
                         </Button>
                         <Button variant="light" className="nav-link" onClick={handleLogout}>
                             Çıkış Yap
