@@ -8,6 +8,13 @@ const pendingProjectSchema = new mongoose.Schema({
   basicInfo: {
     type: Object,
     required: true
+  },
+  rejectionReason: {
+    type: String
+  },
+  status: {
+    type: String,
+    default: 'pending' 
   }
 });
 

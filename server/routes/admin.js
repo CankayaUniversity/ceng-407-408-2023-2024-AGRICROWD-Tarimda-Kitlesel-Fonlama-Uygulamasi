@@ -102,4 +102,17 @@ router.get('/projects/pending', async (req, res) => {
         res.status(500).json({ message: 'An error occurred while fetching pending projects.' });
     }
 });
+
+router.put('/projects/:projectId/reject', async (req, res) => {
+    try {
+      const { projectId } = req.params;
+      const { rejectionReason } = req.body;
+      const project = await PendingProject.findByIdAndUpdate(projectId, { rejectionReason, status: 'rejected' }, { new: true });
+      res.json(project);
+    } catch (error) {
+      console.error('Error rejecting project:', error);
+      res.status(500).json({ message: 'An error occurred while rejecting the project.' });
+    }
+  });
+  
 module.exports = router;

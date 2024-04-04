@@ -40,6 +40,9 @@ app.use('/api/categories', categoriesRoutes);
 const adminRoutes = require('./routes/admin');
 app.use('/api/admin', adminRoutes);
 
+const getUserInfoRoutes = require('./routes/getUserInfo');
+app.use('/api/info', getUserInfoRoutes);
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
