@@ -38,6 +38,9 @@ app.use('/api/categories', categoriesRoutes);
 const adminRoutes = require('./routes/admin');
 app.use('/api/admin', adminRoutes);
 
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/user', userRoutes);
+
 const getUserInfoRoutes = require('./routes/getUserInfo');
 app.use('/api/info', getUserInfoRoutes);
 
