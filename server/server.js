@@ -13,8 +13,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
 })
   .then(() => {
     console.log('MongoDB connection established');
@@ -39,6 +37,9 @@ app.use('/api/categories', categoriesRoutes);
 
 const adminRoutes = require('./routes/admin');
 app.use('/api/admin', adminRoutes);
+
+const getUserInfoRoutes = require('./routes/getUserInfo');
+app.use('/api/info', getUserInfoRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

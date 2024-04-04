@@ -10,7 +10,7 @@ import ProtectedRoute from './components/routes/protectedRoute';
 import ProtectedAdminRoute from './components/routes/protectedAdminRoute';
 import AdminLogin from './components/Admin/Login/adminLogin';
 import AdminPanel from './components/Admin/Panel/adminPanel';
-import AdminChangePsw from './components/Admin/changePassword/changePsw';
+import AdminChangePsw from './components/Admin/Panel/changePassword/changePsw';
 import Cookies from 'js-cookie';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
