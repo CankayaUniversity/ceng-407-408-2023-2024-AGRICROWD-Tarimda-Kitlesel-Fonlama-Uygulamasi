@@ -1,10 +1,8 @@
-// AdminPanel.js
-
 import React, { useState } from "react";
 import { Button, Col, Container, Nav, Row } from "react-bootstrap";
-import ChangePassword from "../changePassword/changePsw";
-import CategoriesCrud from "../categories/categoriesCrud";
-import PendingProjects from "../pendingProjects/pendingProjects"; // Yeni eklendi
+import ChangePassword from "./changePassword/changePsw";
+import CategoriesCrud from "./categories/categoriesCrud";
+import PendingProjects from "./pendingProjects/pendingProjects";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
