@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './basicInfo.css';
 
-const BasicInfoForm = ({ onSubmit }) => {
+const BasicInfoForm = ({ onSubmit, userId }) => {
   const [projectName, setProjectName] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
   const [category, setCategory] = useState('');
@@ -39,7 +39,7 @@ const BasicInfoForm = ({ onSubmit }) => {
   }, [category, categories]);
 
   useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem('basicInfo'));
+    const savedData = JSON.parse(localStorage.getItem(userId));
     if (savedData) {
       setProjectName(savedData.projectName);
       setProjectDescription(savedData.projectDescription);
@@ -50,7 +50,7 @@ const BasicInfoForm = ({ onSubmit }) => {
       setTargetAmount(savedData.targetAmount);
       setCampaignDuration(savedData.campaignDuration);
     }
-  }, []);
+  }, [userId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,7 +85,7 @@ const BasicInfoForm = ({ onSubmit }) => {
     };
 
     try {
-      localStorage.setItem('basicInfo', JSON.stringify(basicInfo));
+      localStorage.setItem(userId, JSON.stringify(basicInfo));
       await onSubmit(basicInfo);
       console.log('Basic info submitted successfully!');
     } catch (error) {

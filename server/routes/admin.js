@@ -76,7 +76,7 @@ router.post('/verify-token', async (req, res) => {
 
 
 
-//projects bölümü
+//projects side
 
 router.post('/projects/add-pending', async (req, res) => {
     try {
@@ -103,16 +103,24 @@ router.get('/projects/pending', async (req, res) => {
     }
 });
 
-router.put('/projects/:projectId/reject', async (req, res) => {
+router.put('/projects/reject', async (req, res) => {
+    const { projectId, rejectionReason } = req.body;
     try {
-      const { projectId } = req.params;
-      const { rejectionReason } = req.body;
-      const project = await PendingProject.findByIdAndUpdate(projectId, { rejectionReason, status: 'rejected' }, { new: true });
-      res.json(project);
+        const updatedProject = await PendingProject.findByIdAndUpdate(
+            projectId,
+            { rejectionReason, status: 'rejected' },
+            { new: true }
+        );
+
+        if (!updatedProject) {
+            return res.status(404).json({ error: 'Project not found' });
+        }
+        res.json(updatedProject);
     } catch (error) {
-      console.error('Error rejecting project:', error);
-      res.status(500).json({ message: 'An error occurred while rejecting the project.' });
+        console.error('Error rejecting project:', error);
+        res.status(500).json({ error: 'Server error' });
     }
-  });
-  
+});
+
+
 module.exports = router;

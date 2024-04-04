@@ -13,8 +13,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
 })
   .then(() => {
     console.log('MongoDB connection established');

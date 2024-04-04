@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
-import BasicInfoForm from './details/basicInfo';
-import RewardsForm from './details/Reward';
+import BasicInfoForm from './details/basicInfo/basicInfo';
+import RewardsForm from './details/reward/Reward';
 
 import "./addProject.css";
 
@@ -48,7 +48,6 @@ const AddProject = () => {
   const handleBasicInfoSubmit = (basicInfo) => {
     setCurrentStep(2);
     setBasicInfoCompleted(true);
-    localStorage.setItem('basicInfo', JSON.stringify(basicInfo));
   };
 
   const handleRewardsSubmit = () => {
@@ -57,7 +56,7 @@ const AddProject = () => {
 
   const handleApprovalSubmit = async () => {
     try {
-      const basicInfo = JSON.parse(localStorage.getItem('basicInfo'));
+      const basicInfo = JSON.parse(localStorage.getItem(userId));
       const response = await axios.post('http://localhost:3001/api/admin/projects/add-pending', {
         userId,
         basicInfo
@@ -66,6 +65,7 @@ const AddProject = () => {
       setTimeout(() => {
         setSubmitMessage('');
       }, 15000);
+      localStorage.removeItem(userId);
     } catch (error) {
       console.error('Error submitting project for approval:', error);
       setSubmitMessage('Bir hata oluştu, lütfen tekrar deneyin.'); 
@@ -99,7 +99,7 @@ const AddProject = () => {
           )}
 
           {currentStep === 1 && (
-            <BasicInfoForm onSubmit={handleBasicInfoSubmit} />
+            <BasicInfoForm userId={userId} onSubmit={handleBasicInfoSubmit} />
           )}
 
           {currentStep === 2 && (
