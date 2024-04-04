@@ -3,7 +3,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const router = express.Router();
-const Admin = require('../models/Admin'); 
+
+const Admin = require('../models/Admin');
+const PendingProject = require('../models/pendingProjectsSchema');
+
 
 router.post('/login', async (req, res) => {
     const { username, password, recaptchaValue } = req.body;
@@ -23,7 +26,7 @@ router.post('/login', async (req, res) => {
         if (!passwordMatch) {
             return res.status(401).json({ errors: ['Geçersiz kullanıcı adı veya şifre.'] });
         }
-        const token = jwt.sign({ username: admin.username }, process.env.JWT_SECRET , { expiresIn: '1h' });
+        const token = jwt.sign({ username: admin.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ authToken: token });
     } catch (error) {
         console.error('Giriş hatası:', error);
@@ -47,7 +50,7 @@ router.put('/change-password', async (req, res) => {
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
         admin.password = hashedNewPassword;
         await admin.save();
-        res.json({ success:true,message: 'Şifre başarıyla güncellendi.' });
+        res.json({ success: true, message: 'Şifre başarıyla güncellendi.' });
     } catch (error) {
         console.error('Şifre güncelleme hatası:', error);
         res.status(500).json({ errors: ['Bir hata oluştu.'] });
@@ -71,4 +74,32 @@ router.post('/verify-token', async (req, res) => {
 });
 
 
+
+
+//projects bölümü
+
+router.post('/projects/add-pending', async (req, res) => {
+    try {
+        const { userId, basicInfo } = req.body;
+        const newPendingProject = new PendingProject({
+            userId,
+            basicInfo
+        });
+        await newPendingProject.save();
+        res.status(201).json({ success: true, message: 'Project submitted for approval successfully!' });
+    } catch (error) {
+        console.error('Error submitting project for approval:', error);
+        res.status(500).json({ message: 'An error occurred while submitting the project for approval. Please try again.' });
+    }
+});
+
+router.get('/projects/pending', async (req, res) => {
+    try {
+        const pendingProjects = await PendingProject.find();
+        res.status(200).json(pendingProjects);
+    } catch (error) {
+        console.error('Error fetching pending projects:', error);
+        res.status(500).json({ message: 'An error occurred while fetching pending projects.' });
+    }
+});
 module.exports = router;

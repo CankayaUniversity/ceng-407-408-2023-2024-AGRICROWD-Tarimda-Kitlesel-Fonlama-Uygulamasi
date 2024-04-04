@@ -37,7 +37,7 @@ const ProtectedAdminRoute = ({ children }) => {
         return <div>Loading...</div>;
     }
 
-    return isAdminAuthenticated ? children : <Navigate to="/admin-login" />;
+    return isAdminAuthenticated ? children : <Navigate to="/admin/login" />;
 };
 
 export default ProtectedAdminRoute;
