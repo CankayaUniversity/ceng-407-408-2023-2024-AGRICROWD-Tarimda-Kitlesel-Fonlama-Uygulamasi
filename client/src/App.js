@@ -9,8 +9,11 @@ import MainNavbar from './components/navBar/navBar';
 import ProtectedRoute from './components/routes/protectedRoute';
 import ProtectedAdminRoute from './components/routes/protectedAdminRoute';
 import AdminLogin from './components/Admin/Login/adminLogin';
-import AdminPanel from './components/Admin/Panel/adminPanel';
+import AdminHome from './components/Admin/Panel/home/home';
+import AdminNavBar from './components/Admin/Panel/adminNavBar';
+import AdminCategories from './components/Admin/Panel/categories/categoriesCrud';
 import AdminChangePsw from './components/Admin/Panel/changePassword/changePsw';
+import AdmingPendingProjects from './components/Admin/Panel/pendingProjects/pendingProjects';
 import Cookies from 'js-cookie';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -48,7 +51,7 @@ const App = () => {
         <Route path="/register" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/user-panel" element={
+        <Route path="/user/panel" element={
           <ProtectedRoute>
             <UserPanel />
           </ProtectedRoute>
@@ -60,15 +63,38 @@ const App = () => {
           </ProtectedRoute>
         }
         />
-        <Route path="/admin/panel" element={
+        <Route path="/admin/home" element={
           <ProtectedAdminRoute>
-            <AdminPanel />
+            <AdminNavBar />
+            <AdminHome />
           </ProtectedAdminRoute>
         }
         />
         <Route path="/admin/change-password" element={
           <ProtectedAdminRoute>
+            <AdminNavBar />
             <AdminChangePsw />
+          </ProtectedAdminRoute>
+        }
+        />
+        <Route path="/admin/categories" element={
+          <ProtectedAdminRoute>
+            <AdminNavBar />
+            <AdminCategories />
+          </ProtectedAdminRoute>
+        }
+        />
+        <Route path="/admin/pending-projects" element={
+          <ProtectedAdminRoute>
+            <AdminNavBar />
+            <AdmingPendingProjects />
+          </ProtectedAdminRoute>
+        }
+        />
+        <Route path="/admin/pending-projects" element={
+          <ProtectedAdminRoute>
+            <AdminNavBar />
+            <AdmingPendingProjects />
           </ProtectedAdminRoute>
         }
         />

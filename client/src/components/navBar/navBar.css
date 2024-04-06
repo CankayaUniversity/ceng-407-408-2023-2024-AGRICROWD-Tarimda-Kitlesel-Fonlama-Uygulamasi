@@ -1,38 +1,25 @@
-.auth-nav {
-    background-color: #08f30c;
-    color: #fff;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .logo-link {
-    text-decoration: none;
-    color: #fff;
-  }
-  
-  ul {
-    list-style: none;
-    display: flex;
-  }
-  
-  li {
-    margin-left: 20px;
-  }
-  
-  li:first-child {
-    margin-left: 0;
-  }
-  
-  a {
-    text-decoration: none;
-    color: #fff;
-    font-weight: bold;
-    transition: color 0.3s ease;
-  }
-  
-  a:hover {
-    color: #ecf0f1;
-  }
-  
+.navbar-nav .nav-link {
+  color: #333; 
+}
+
+.navbar-nav .nav-link:hover {
+  color: #555; 
+}
+
+.navbar-nav .nav-item.active .nav-link {
+  color: #fff; 
+  background-color: #007bff; 
+}
+
+.navbar-nav .nav-link.active {
+  color: #fff; 
+  background-color: #007bff; 
+}
+
+.navbar-brand {
+  color: #007bff; 
+}
+
+.navbar-brand:hover {
+  color: #0056b3; 
+}

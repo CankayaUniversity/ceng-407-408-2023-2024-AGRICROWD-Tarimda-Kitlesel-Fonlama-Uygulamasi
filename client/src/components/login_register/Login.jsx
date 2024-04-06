@@ -40,7 +40,7 @@ function Login() {
                         window.alert("Basariyla giris yaptiniz!");
                         Cookies.set('authToken', response.data.authToken, { expires: 1 / 24 });
                         setTimeout(() => {
-                            navigate(`/user-panel`);
+                            navigate(`/user/panel`);
                             window.location.reload();
                         }, 250);
                     } else {
