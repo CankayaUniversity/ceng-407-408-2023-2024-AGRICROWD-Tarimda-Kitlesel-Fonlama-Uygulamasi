@@ -8,36 +8,42 @@ const MainNavbar = ({ isAuthenticated, onLogout }) => {
   }, [isAuthenticated]);
 
   return (
-    <nav className='auth-nav'>
-      <NavLink to="/" className="logo-link">
-        <h1>AgriCROWD</h1>
+    <nav className='auth-nav navbar navbar-expand-lg navbar-light bg-light'>
+      <NavLink to="/" className="navbar-brand">
+        AgriCROWD
       </NavLink>
-      <ul>
-        {isAuthenticated ? (
-          <>
-            <li>
-              <NavLink to="/add-project">Add Project</NavLink>
-            </li>
-            <li>
-              <NavLink to="/user-panel">User Panel</NavLink>
-            </li>
-            <li>
-              <NavLink to="/logout" onClick={onLogout}>
+      <div className="collapse navbar-collapse" id="navbarNav">
+        <ul className="navbar-nav mr-auto">
+          {isAuthenticated ? (
+            <>
+              <li className="nav-item">
+                <NavLink to="/add-project" className="nav-link" activeClassName="active">Add Project</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/user/panel" className="nav-link" activeClassName="active">User Panel</NavLink>
+              </li>
+            </>
+          ) : (
+            <>
+              <li className="nav-item">
+                <NavLink to="/login" className="nav-link" activeClassName="active">Login</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/register" className="nav-link" activeClassName="active">Register</NavLink>
+              </li>
+            </>
+          )}
+        </ul>
+        {isAuthenticated && (
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <NavLink to="/logout" className="nav-link" activeClassName="active" onClick={onLogout}>
                 Logout
               </NavLink>
             </li>
-          </>
-        ) : (
-          <>
-            <li>
-              <NavLink to="/login">Login</NavLink>
-            </li>
-            <li>
-              <NavLink to="/register">Register</NavLink>
-            </li>
-          </>
+          </ul>
         )}
-      </ul>
+      </div>
     </nav>
   );
 };

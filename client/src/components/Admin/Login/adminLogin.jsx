@@ -28,7 +28,7 @@ function AdminLogin() {
             axios.post('http://localhost:3001/api/admin/verify-token', { token: admToken })
                 .then(response => {
                     if (response.data.success) {
-                        navigate(`/admin/panel`);
+                        navigate(`/admin/home`);
                     } else {
                         console.log("Token doğrulanamadı.");
                     }
@@ -53,7 +53,7 @@ function AdminLogin() {
                         window.alert("Basariyla giris yaptiniz!");
                         Cookies.set('admToken', response.data.authToken, { expires: 1 / 24 });
                         setTimeout(() => {
-                            navigate(`/admin/panel`);
+                            navigate(`/admin/home`);
                             window.location.reload();
                         }, 250);
                     } else {
