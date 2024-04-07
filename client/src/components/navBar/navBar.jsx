@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'; 
 
 import './navBar.css';
 
@@ -17,19 +17,19 @@ const MainNavbar = ({ isAuthenticated, onLogout }) => {
           {isAuthenticated ? (
             <>
               <li className="nav-item">
-                <NavLink to="/add-project" className="nav-link" activeClassName="active">Add Project</NavLink>
+                <NavLink to="/add-project" className="nav-link" activeClassName="active">Add Project</NavLink> 
               </li>
               <li className="nav-item">
-                <NavLink to="/user/panel" className="nav-link" activeClassName="active">User Panel</NavLink>
+                <NavLink to="/user/panel" className="nav-link" activeClassName="active">User Panel</NavLink> 
               </li>
             </>
           ) : (
             <>
               <li className="nav-item">
-                <NavLink to="/login" className="nav-link" activeClassName="active">Login</NavLink>
+                <NavLink to="/login" className="nav-link" activeClassName="active">Login</NavLink> 
               </li>
               <li className="nav-item">
-                <NavLink to="/register" className="nav-link" activeClassName="active">Register</NavLink>
+                <NavLink to="/register" className="nav-link" activeClassName="active">Register</NavLink> 
               </li>
             </>
           )}
@@ -37,7 +37,7 @@ const MainNavbar = ({ isAuthenticated, onLogout }) => {
         {isAuthenticated && (
           <ul className="navbar-nav">
             <li className="nav-item">
-              <NavLink to="/logout" className="nav-link" activeClassName="active" onClick={onLogout}>
+              <NavLink to="/logout" className="nav-link" activeClassName="active" onClick={onLogout}> 
                 Logout
               </NavLink>
             </li>
