@@ -17,7 +17,7 @@ const MainNavbar = ({ isAuthenticated, onLogout }) => {
           {isAuthenticated ? (
             <>
               <li className="nav-item">
-                <NavLink to="/add-project" className="nav-link" activeClassName="active">Add Project</NavLink> 
+                <NavLink to="/add-project/inform" className="nav-link" activeClassName="active">Add Project</NavLink> 
               </li>
               <li className="nav-item">
                 <NavLink to="/user/panel" className="nav-link" activeClassName="active">User Panel</NavLink> 

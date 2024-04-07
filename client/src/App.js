@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+
+import ProtectedRoute from './components/routes/protectedRoute';
+import ProtectedAdminRoute from './components/routes/protectedAdminRoute';
+
 import Home from './components/Home/home';
 import MainNavbar from './components/navBar/navBar';
 import Signup from './components/login_register/Signup';
 import Login from './components/login_register/Login';
 import UserPanel from './components/login_register/userPanel';
 
-import AddProject from './components/addProject/AddProject';
 import AddProjectNav from './components/addProject/navBar/navBar';
 import ProjectInform from './components/addProject/details/inform/inform';
 import ProjectBasics from './components/addProject/details/basicInfo/basicInfo';
 import ProjectReward from './components/addProject/details/reward/Reward';
 
-import ProtectedRoute from './components/routes/protectedRoute';
-import ProtectedAdminRoute from './components/routes/protectedAdminRoute';
 import AdminLogin from './components/Admin/Login/adminLogin';
 import AdminHome from './components/Admin/Panel/home/home';
 import AdminNavBar from './components/Admin/Panel/adminNavBar';
 import AdminCategories from './components/Admin/Panel/categories/categoriesCrud';
 import AdminChangePsw from './components/Admin/Panel/changePassword/changePsw';
 import AdminPendingProjects from './components/Admin/Panel/pendingProjects/pendingProjects';
-import Cookies from 'js-cookie';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 

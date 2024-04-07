@@ -58,8 +58,12 @@ router.put('/change-password', async (req, res) => {
 });
 
 router.post('/verify-token', async (req, res) => {
-    const { token } = req.body;
+    const authToken = req.headers.authorization;
+    if (!authToken) {
+        return res.status(401).json({ success: false, errors: ['Auth token not provided'] });
+    }
     try {
+        const token = authToken.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         const admin = await Admin.findOne({ username: decodedToken.username });
         if (admin) {
@@ -72,8 +76,6 @@ router.post('/verify-token', async (req, res) => {
         res.json({ success: false });
     }
 });
-
-
 
 
 //projects side

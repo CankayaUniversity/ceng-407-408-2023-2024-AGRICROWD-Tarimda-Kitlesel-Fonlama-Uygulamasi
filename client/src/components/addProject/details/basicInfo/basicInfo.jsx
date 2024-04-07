@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './basicInfo.css';
 
-const BasicInfoForm = ({ onSubmit, userId }) => {
+const BasicInfoForm = ({ userId }) => {
   const [projectName, setProjectName] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
   const [category, setCategory] = useState('');
@@ -86,7 +86,7 @@ const BasicInfoForm = ({ onSubmit, userId }) => {
 
     try {
       localStorage.setItem(userId, JSON.stringify(basicInfo));
-      await onSubmit(basicInfo);
+      localStorage.setItem("isBasicsComplated", "true");
       console.log('Basic info submitted successfully!');
     } catch (error) {
       console.error('Error submitting basic info:', error);

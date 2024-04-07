@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Form, Button, Card } from "react-bootstrap";
 import "./inform.css";
 
-const Inform = ({ onInformComplete }) => { // Inform bileşenine onInformComplete props'unu ekle
+const Inform = () => { 
     const [isAgreed, setIsAgreed] = useState(false);
     const [canToggleCheckbox, setCanToggleCheckbox] = useState(false);
     const [canProceed, setCanProceed] = useState(false);
@@ -12,19 +12,23 @@ const Inform = ({ onInformComplete }) => { // Inform bileşenine onInformComplet
     const navigate = useNavigate();
 
     useEffect(() => {
-        const checkboxTimer = setTimeout(() => {
-            setCanToggleCheckbox(true);
-        }, 20000); 
+        const isInformCompleted = localStorage.getItem("isInformCompleted");
+        if (isInformCompleted === "true") {
+            navigate("/add-project/basics");
+        } else {
+            const checkboxTimer = setTimeout(() => {
+                setCanToggleCheckbox(true);
+            }, 20000); 
 
-        const checkboxInterval = setInterval(() => {
-            setCheckboxRemainingTime(prevTime => (prevTime > 0 ? prevTime - 1 : 0));
-        }, 1000);
+            const checkboxInterval = setInterval(() => {
+                setCheckboxRemainingTime(prevTime => (prevTime > 0 ? prevTime - 1 : 0));
+            }, 1000);
 
-        // Temizleme
-        return () => {
-            clearTimeout(checkboxTimer);
-            clearInterval(checkboxInterval);
-        };
+            return () => {
+                clearTimeout(checkboxTimer);
+                clearInterval(checkboxInterval);
+            };
+        }
     }, []);
 
     useEffect(() => {
@@ -49,8 +53,8 @@ const Inform = ({ onInformComplete }) => { // Inform bileşenine onInformComplet
     };
 
     const handleSubmit = () => {
+        localStorage.setItem("isInformCompleted", "true");
         navigate("/add-project/basics");
-        onInformComplete();
     };
 
     return (
