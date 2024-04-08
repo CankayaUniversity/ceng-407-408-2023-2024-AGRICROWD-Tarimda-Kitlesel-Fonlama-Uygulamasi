@@ -17,8 +17,14 @@ const ProtectedAdminRoute = ({ children }) => {
             try {
                 const response = await axios.post(
                     'http://localhost:3001/api/admin/verify-token',
-                    { token: admToken },
-                    { withCredentials: true }
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${admToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        withCredentials: true
+                    }
                 );
                 if (response.data.success) {
                     setIsAdminAuthenticated(true);

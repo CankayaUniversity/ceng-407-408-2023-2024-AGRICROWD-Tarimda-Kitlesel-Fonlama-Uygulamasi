@@ -28,21 +28,33 @@ function UserPanel() {
 
   useEffect(() => {
     const authToken = Cookies.get('authToken');
-    
+
     const fetchUserId = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/api/auth', { authToken });
-        if (response.data.success) {
-          
-          fetchUserDetails(response.data.user._id, authToken);
-        } else {
-          console.error('Kullanıcı kimliği alınamadı.');
+        if (authToken) {
+          const response = await axios.post(
+            'http://localhost:3001/api/auth',
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+              },
+              withCredentials: true
+            }
+          );
+          if (response.data.success) {
+            fetchUserDetails(response.data.user._id, authToken);
+          } else {
+            console.error('Kullanıcı kimliği alınamadı.');
+          }
         }
+
       } catch (error) {
         console.error('Sunucuyla iletişim hatası:', error);
       }
     };
-  
+
     const fetchUserDetails = async (userId, authToken) => {
       try {
         const userDetailsResponse = await axios.get(`http://localhost:3001/api/user/${userId}`, {
@@ -57,14 +69,14 @@ function UserPanel() {
         console.error('Kullanıcı bilgileri alınırken bir hata oluştu:', error);
       }
     };
-  
+
     fetchUserId();
   }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    
-    
+
+
     if (name === "name" || name === "surname") {
       const onlyLetters = value.replace(/[^a-zA-ZğüşöçİĞÜŞÖÇ\s]/g, '');
       setUser(prevState => ({
@@ -72,7 +84,7 @@ function UserPanel() {
         [name]: onlyLetters
       }));
     } else if (name === "phone") {
-      
+
       const onlyNums = value.replace(/[^0-9]/g, '');
       if (onlyNums.length <= 10) {
         setUser(prevState => ({
@@ -81,7 +93,7 @@ function UserPanel() {
         }));
       }
     } else {
-      
+
       setUser(prevState => ({
         ...prevState,
         [name]: value
@@ -93,12 +105,12 @@ function UserPanel() {
     event.preventDefault();
     const authToken = Cookies.get('authToken');
     const updatedUser = { ...user };
-  
-    
+
+
     if (!updatedUser.password || updatedUser.password.trim() === '') {
       delete updatedUser.password;
     }
-  
+
     try {
       await axios.put(`http://localhost:3001/api/user/${user._id}`, updatedUser, {
         headers: { Authorization: `Bearer ${authToken}` },
@@ -127,24 +139,24 @@ function UserPanel() {
         <div className="mb-3">
           <label htmlFor="name" className="form-label">Ad</label>
           <input type="text" className="form-control" id="name" name="name" value={user.name || ''} onChange={handleChange}
-          pattern="[a-zA-ZğüşöçİĞÜŞÖÇ\s]*" 
-          title="Rakam ve özel karakter içeremez."
-          placeholder="Adınız"
-          maxLength="25"
+            pattern="[a-zA-ZğüşöçİĞÜŞÖÇ\s]*"
+            title="Rakam ve özel karakter içeremez."
+            placeholder="Adınız"
+            maxLength="25"
           />
         </div>
-        
+
         {/* Soyad */}
         <div className="mb-3">
           <label htmlFor="surname" className="form-label">Soyad</label>
           <input type="text" className="form-control" id="surname" name="surname" value={user.surname || ''} onChange={handleChange}
-          pattern="[a-zA-ZğüşöçİĞÜŞÖÇ\s]*" 
-          title="Rakam ve özel karakter içeremez."
-          placeholder="Soyadınız"
-          maxLength="25"
+            pattern="[a-zA-ZğüşöçİĞÜŞÖÇ\s]*"
+            title="Rakam ve özel karakter içeremez."
+            placeholder="Soyadınız"
+            maxLength="25"
           />
         </div>
-        
+
         {/* Doğum Tarihi */}
         <div className="mb-3">
           <label htmlFor="birthDate" className="form-label">Doğum Tarihi</label>
@@ -178,13 +190,13 @@ function UserPanel() {
           <label htmlFor="phone" className="form-label">Cep Telefon Numarası</label>
           <div className="input-group">
             <span className="input-group-text" id="basic-addon1">+90</span>
-            <input type="tel" className="form-control" id="phone" name="phone" 
-              placeholder="5XX XXX XXXX" 
-              value={user.phone || ''} 
-              onChange={handleChange} 
-              pattern="\d*" 
+            <input type="tel" className="form-control" id="phone" name="phone"
+              placeholder="5XX XXX XXXX"
+              value={user.phone || ''}
+              onChange={handleChange}
+              pattern="\d*"
               maxLength="10"
-              aria-label="Phone" 
+              aria-label="Phone"
               aria-describedby="basic-addon1" />
           </div>
         </div>

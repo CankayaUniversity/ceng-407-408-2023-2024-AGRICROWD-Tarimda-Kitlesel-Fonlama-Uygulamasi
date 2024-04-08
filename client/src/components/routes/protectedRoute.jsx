@@ -7,17 +7,26 @@ const ProtectedRoute = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const authTokenFromCookie = Cookies.get('authToken');
+
     useEffect(() => {
         const verifyAuth = async () => {
             try {
-                const response = await axios.post(
-                    'http://localhost:3001/api/auth',
-                    { authToken: authTokenFromCookie },
-                    { withCredentials: true }
-                );
-                if (response.data.success) {
-                    console.log('User is authenticated');
-                    setIsAuthenticated(true);
+                if (authTokenFromCookie) {
+                    const response = await axios.post(
+                        'http://localhost:3001/api/auth',
+                        {},
+                        {
+                            headers: {
+                                Authorization: `Bearer ${authTokenFromCookie}`,
+                                'Content-Type': 'application/json'
+                            },
+                            withCredentials: true
+                        }
+                    );
+                    if (response.data.success) {
+                        console.log('User is authenticated');
+                        setIsAuthenticated(true);
+                    }
                 }
             } catch (error) {
                 console.error('Authentication error:', error);
@@ -26,11 +35,7 @@ const ProtectedRoute = ({ children }) => {
             }
         };
 
-        if (authTokenFromCookie) {
-            verifyAuth();
-        } else {
-            setLoading(false);
-        }
+        verifyAuth();
     }, [authTokenFromCookie]);
 
     if (loading) {

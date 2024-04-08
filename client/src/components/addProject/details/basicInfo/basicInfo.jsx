@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import './basicInfo.css';
 
-const BasicInfoForm = ({ onSubmit, userId }) => {
+const BasicInfoForm = () => {
+  const [userId, setUserID] = useState('');
   const [projectName, setProjectName] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
   const [category, setCategory] = useState('');
@@ -14,6 +17,8 @@ const BasicInfoForm = ({ onSubmit, userId }) => {
   const [requiresLocation, setRequiresLocation] = useState(false); // Konum bilgisi istenmesi flag'i
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -26,6 +31,34 @@ const BasicInfoForm = ({ onSubmit, userId }) => {
     };
 
     fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const authTokenFromCookie = Cookies.get('authToken');
+    const fetchUserID = async () => {
+      try {
+        const response = await axios.post(
+          'http://localhost:3001/api/auth',
+          {},
+          {
+              headers: {
+                  Authorization: `Bearer ${authTokenFromCookie}`,
+                  'Content-Type': 'application/json'
+              },
+              withCredentials: true
+          }
+      );
+        if(response.data.user){
+          setUserID(response.data.user._id);
+        } else{
+          console.error("User not found");
+        }
+      } catch (error) {
+        console.error('Error fetching user ID:', error);
+      }
+    };
+
+    fetchUserID();
   }, []);
 
   useEffect(() => {
@@ -86,7 +119,8 @@ const BasicInfoForm = ({ onSubmit, userId }) => {
 
     try {
       localStorage.setItem(userId, JSON.stringify(basicInfo));
-      await onSubmit(basicInfo);
+      localStorage.setItem("isBasicsCompleted", "true");
+      navigate('/add-project/reward');
       console.log('Basic info submitted successfully!');
     } catch (error) {
       console.error('Error submitting basic info:', error);
@@ -111,7 +145,7 @@ const BasicInfoForm = ({ onSubmit, userId }) => {
           <select className="form-select" value={category} onChange={(e) => setCategory(e.target.value)} required>
             <option value="">Select Category</option>
             {categories.map((cat) => (
-              <option key={cat.categoryId} value={cat.categoryName}>
+              <option key={cat._id} value={cat.categoryName}>
                 {cat.categoryName}
               </option>
             ))}
@@ -123,7 +157,7 @@ const BasicInfoForm = ({ onSubmit, userId }) => {
             <select className="form-select" value={subCategory} onChange={(e) => setSubCategory(e.target.value)} required>
               <option value="">Select Sub-Category</option>
               {subCategories.map((subCat) => (
-                <option key={subCat} value={subCat}>
+                <option key={subCat._id} value={subCat}>
                   {subCat}
                 </option>
               ))}

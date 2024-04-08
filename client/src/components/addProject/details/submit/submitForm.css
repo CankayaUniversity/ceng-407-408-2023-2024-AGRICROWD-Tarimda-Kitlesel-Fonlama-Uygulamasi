@@ -1,0 +1,38 @@
+.submit-form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.submit-form-container h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.submit-form-container p {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.form-check-label {
+    font-size: 16px;
+}
+
+.submit-message {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #dff0d8;
+    border: 1px solid #d0e9c6;
+    border-radius: 4px;
+    color: #3c763d;
+}
+
+.btn-primary {
+    font-size: 16px;
+    padding: 10px 20px;
+}
