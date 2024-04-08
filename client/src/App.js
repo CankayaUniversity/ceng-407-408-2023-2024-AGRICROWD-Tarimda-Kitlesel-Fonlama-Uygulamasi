@@ -15,6 +15,7 @@ import AddProjectNav from './components/addProject/navBar/navBar';
 import ProjectInform from './components/addProject/details/inform/inform';
 import ProjectBasics from './components/addProject/details/basicInfo/basicInfo';
 import ProjectReward from './components/addProject/details/reward/Reward';
+import ProjectSubmitForApproval from './components/addProject/details/submit/submitForApproval';
 
 import AdminLogin from './components/Admin/Login/adminLogin';
 import AdminHome from './components/Admin/Panel/home/home';
@@ -71,7 +72,7 @@ const App = () => {
                 <Route path="inform" element={<ProjectInform />} />
                 <Route path="basics" element={<ProjectBasics />} />
                 <Route path="reward" element={<ProjectReward />} />
-                <Route path="submit" element={<AdminPendingProjects />} />
+                <Route path="submit" element={<ProjectSubmitForApproval />} />
               </Routes>
           </ProtectedRoute>
         }
