@@ -32,6 +32,16 @@
     color: #3c763d;
 }
 
+.error-message {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    color: #721c24;
+}
+
 .btn-primary {
     font-size: 16px;
     padding: 10px 20px;

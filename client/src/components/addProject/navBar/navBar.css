@@ -12,14 +12,12 @@
     background-color: #f8f9fa;
 }
 
-
-.nav-link[disabled] {
+.nav-link.disabled {
     cursor: not-allowed;
     pointer-events: none;
     color: #6c757d; 
 }
 
-
-.nav-link[disabled]:hover {
+.nav-link.disabled:hover {
     text-decoration: none; 
 }

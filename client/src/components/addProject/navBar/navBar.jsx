@@ -12,35 +12,41 @@ const NavBar = () => {
     useEffect(() => {
         const informCompleted = localStorage.getItem("isInformCompleted") === "true";
         const basicsCompleted = localStorage.getItem("isBasicsCompleted") === "true";
-        const rewardCompleted = localStorage.getItem("isRewardCompleted") === "true";
+        // const rewardCompleted = localStorage.getItem("isRewardCompleted") === "true";
 
         if (informCompleted !== null) setIsInformCompleted(informCompleted);
         if (basicsCompleted !== null) setIsBasicsCompleted(basicsCompleted);
-        if (rewardCompleted !== null) setIsRewardCompleted(rewardCompleted); 
+        // if (rewardCompleted !== null) setIsRewardCompleted(rewardCompleted); 
 
-        setIsRewardCompleted(true); // otomatik true
+        console.log("Inform: ", isInformCompleted);
+        console.log("BasicInfo: ", isBasicsCompleted);
+        console.log("Reward: ", isRewardCompleted);
+
         setIsSubmitClickable(isInformCompleted && isBasicsCompleted && isRewardCompleted);
-    }, [location.pathname],isSubmitClickable);
+    }, [location.pathname, isInformCompleted, isBasicsCompleted, isRewardCompleted]);
 
     return (
         <nav className='navbar navbar-expand-lg navbar-light bg-light'>
             <ul className='navbar-nav mr-auto'>
+                <NavLink
+                    to="/add-project/inform"
+                    className={`nav-link ${location.pathname === '/add-project/inform' ? 'active' : ''} ${!isInformCompleted ? '' : 'disabled'}`}
+                >
+                    {isInformCompleted ? 'Inform (Completed)' : 'Inform (Not Completed)'}
+                </NavLink>
                 <li className='nav-item'>
-                    <NavLink to="/add-project/inform" className={`nav-link ${location.pathname === '/add-project/inform' ? 'active' : ''}`} activeClassName="active">Inform</NavLink>
+                    <NavLink to="/add-project/basics" className={`nav-link ${location.pathname === '/add-project/basics' ? 'active' : ''} ${isInformCompleted ? '' : 'disabled'}`} >Add Basic</NavLink>
                 </li>
                 <li className='nav-item'>
-                    <NavLink to="/add-project/basics" className={`nav-link ${location.pathname === '/add-project/basics' ? 'active' : ''} ${isInformCompleted ? '' : 'disabled'}`} activeClassName="active">Add Basic</NavLink>
+                    <NavLink to="/add-project/reward" className={`nav-link ${location.pathname === '/add-project/reward' ? 'active' : ''} ${isBasicsCompleted ? '' : 'disabled'}`} >Add Reward</NavLink>
                 </li>
                 <li className='nav-item'>
-                    <NavLink to="/add-project/reward" className={`nav-link ${location.pathname === '/add-project/reward' ? 'active' : ''} ${isBasicsCompleted ? '' : 'disabled'}`} activeClassName="active">Add Reward</NavLink>
-                </li>
-                <li className='nav-item'>
-                    <NavLink to="/add-project/submit" className={`nav-link ${location.pathname === '/add-project/submit' ? 'active' : ''} ${isSubmitClickable ? '' : 'disabled'}`} activeClassName="active">Submit for Approval</NavLink>
+                    <NavLink to="/add-project/submit" className={`nav-link ${location.pathname === '/add-project/submit' ? 'active' : ''} ${isSubmitClickable ? '' : 'disabled'}`} >Submit for Approval</NavLink>
                 </li>
             </ul>
         </nav>
     );
-    
+
 };
 
 export default NavBar;

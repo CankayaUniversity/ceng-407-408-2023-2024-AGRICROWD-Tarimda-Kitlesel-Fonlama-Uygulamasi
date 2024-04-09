@@ -1,0 +1,40 @@
+.not-found-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.error-text {
+    text-align: center;
+}
+
+.error-text h1 {
+    font-size: 100px;
+    margin-bottom: 10px;
+}
+
+.error-text h3 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.error-text p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.error-text .btn-primary {
+    font-size: 16px;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.error-text .btn-primary:hover {
+    background-color: #0056b3;
+}
