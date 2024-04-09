@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 
 import ProtectedRoute from './components/routes/protectedRoute';
 import ProtectedAdminRoute from './components/routes/protectedAdminRoute';
+import NotFound from './components/NotFound/NotFound';
 
 import Home from './components/Home/home';
 import MainNavbar from './components/navBar/navBar';
@@ -55,6 +56,7 @@ const App = () => {
     <Router>
       <MainNavbar isAuthenticated={authToken} onLogout={logout} />
       <Routes>
+        <Route path="*" element={<NotFound />} />
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Signup />} />
         <Route path="/login" element={<Login />} />
@@ -69,6 +71,7 @@ const App = () => {
           <ProtectedRoute>
             <AddProjectNav />
             <Routes>
+                <Route path="*" element={<NotFound />} />
                 <Route path="inform" element={<ProjectInform />} />
                 <Route path="basics" element={<ProjectBasics />} />
                 <Route path="reward" element={<ProjectReward />} />
@@ -83,6 +86,7 @@ const App = () => {
             <ProtectedAdminRoute>
               <AdminNavBar />
               <Routes>
+                <Route path="*" element={<NotFound />} />
                 <Route path="home" element={<AdminHome />} />
                 <Route path="change-password" element={<AdminChangePsw />} />
                 <Route path="categories" element={<AdminCategories />} />

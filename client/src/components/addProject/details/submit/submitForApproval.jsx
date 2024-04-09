@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import './submitForm.css';
@@ -6,8 +7,10 @@ import './submitForm.css';
 const SubmitForm = () => {
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [submitMessage, setSubmitMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const [remainingTime, setRemainingTime] = useState(15);
     const [userId, setUserID] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const authTokenFromCookie = Cookies.get('authToken');
@@ -70,13 +73,15 @@ const SubmitForm = () => {
             setSubmitMessage(response.data.message);
             setTimeout(() => {
                 setSubmitMessage('');
+                navigate('/user/my-projects');
             }, 15000);
             localStorage.removeItem(userId);
             localStorage.removeItem("isInformCompleted");
             localStorage.removeItem("isBasicsCompleted");
         } catch (error) {
             console.error('Error submitting project for approval:', error);
-            setSubmitMessage('Bir hata oluştu, lütfen tekrar deneyin.');
+            const errorMessage = error.response ? error.response.data.message : 'Bir hata oluştu, lütfen tekrar deneyin.';
+            setErrorMessage(errorMessage);
         }
     };
 
@@ -108,6 +113,7 @@ const SubmitForm = () => {
                 </label>
             </div>
             {submitMessage && <div className="submit-message">{submitMessage}</div>}
+            {errorMessage && <div className="error-message">{errorMessage}</div>}
             <button
                 type="button"
                 className="btn btn-primary"
