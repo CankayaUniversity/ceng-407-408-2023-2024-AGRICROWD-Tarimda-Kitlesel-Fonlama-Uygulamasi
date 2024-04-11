@@ -1,19 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import './home.css';
+import styles from './Home.module.css';
 
 const Home = () => (
-  <div className='home-container'>
-    <header>
-      <h1>Welcome to AgriCROWD Platform!</h1>
-      <p>Your hub for agricultural projects and collaboration.</p>
-    </header>
-    <section className='cta-section'>
-      <p>Ready to get started?</p>
-      <Link to="/add-project" className="cta-button">Add Your Project</Link>
-    </section>
-  </div>
+  <section className={styles.container}>
+    <p className={styles.heroText}>
+      <div>Your hub for agricultural</div>
+      <div>projects and collaboration</div>
+    </p>
+    <p className={styles.subText}>Ready to get started?</p>
+    <Link to='/add-project'>
+      <button className={styles.button}>Add Your Project</button>
+    </Link>
+  </section>
 );
 
 export default Home;
