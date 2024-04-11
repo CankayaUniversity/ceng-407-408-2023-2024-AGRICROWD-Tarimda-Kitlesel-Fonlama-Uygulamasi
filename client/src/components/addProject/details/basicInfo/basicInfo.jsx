@@ -3,6 +3,10 @@ import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import './basicInfo.css';
+import MapContainer from '../../MapContainer';
+import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
+
+
 
 const BasicInfoForm = () => {
   const [userId, setUserID] = useState('');
@@ -181,6 +185,9 @@ const BasicInfoForm = () => {
         <div className="mb-3">
           <label className="form-label">Campaign Duration (Days):</label>
           <input type="text" className="form-control" value={campaignDuration} onChange={(e) => setCampaignDuration(e.target.value)} required min="1" />
+        </div>
+        <div className="mb-3">
+          <MapContainer></MapContainer>
         </div>
         {requiresLocation && (
           <p>Emir gerekli konum alma islemlerini gerceklestirecek!</p>
