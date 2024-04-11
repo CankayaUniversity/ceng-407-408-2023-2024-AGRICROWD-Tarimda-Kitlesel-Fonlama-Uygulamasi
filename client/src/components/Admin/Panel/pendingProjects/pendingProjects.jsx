@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import './pendingProjects.css'
+
 const PendingProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,8 +82,8 @@ const PendingProjects = () => {
       <div>
         <h5>User Details:</h5>
         <ul className="list-group">
-          <li className="list-group-item"><strong>User Name:</strong> {userDetails.name}</li>
-          <li className="list-group-item"><strong>User Email:</strong> {userDetails.email}</li>
+          <li className="list-group-item"><strong>Name:</strong> {userDetails.name}</li>
+          <li className="list-group-item"><strong>Email:</strong> {userDetails.email}</li>
         </ul>
       </div>
     );
