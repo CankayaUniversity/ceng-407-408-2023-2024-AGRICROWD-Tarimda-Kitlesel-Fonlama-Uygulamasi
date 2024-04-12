@@ -13,11 +13,11 @@ import NotFound from './components/NotFound/NotFound';
 
 // import MainNavbar from './components/navBar/navBar';
 
-import Home from './components/Home/Home.jsx';
-import Navbar from './components/Navbar/Navbar.jsx';
-import SignUp from './components/SignUp/SignUp.jsx';
+import Home from './components/Home/Home';
+import Navbar from './components/Navbar/Navbar';
+import SignUp from './components/SignUp/SignUp';
 import Login from './components/Login/Login';
-import UserPanel from './components/AccountSettings/AccountSettings.jsx';
+import UserPanel from './components/AccountSettings/AccountSettings';
 
 import AddProject from './components/addProject/AddProject';
 import AddProjectNav from './components/addProject/navBar/APNavbar';
@@ -63,55 +63,67 @@ const App = () => {
 
   return (
     <Router>
-      <Navbar isAuthenticated={authToken} onLogout={logout} />
       <Routes>
-        <Route path='*' element={<NotFound />} />
-        <Route path='/' element={<Home />} />
-        <Route path='/register' element={<SignUp />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<SignUp />} />
         <Route path='/admin/login' element={<AdminLogin />} />
         <Route
-          path='/user/panel'
+          path='*'
           element={
-            <ProtectedRoute>
-              <UserPanel />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/add-project/*'
-          element={
-            <ProtectedRoute>
-              <AddProjectNav />
+            <>
+              <Navbar isAuthenticated={authToken} onLogout={logout} />
               <Routes>
                 <Route path='*' element={<NotFound />} />
-                <Route path='inform' element={<ProjectInform />} />
-                <Route path='basics' element={<ProjectBasics />} />
-                <Route path='reward' element={<ProjectReward />} />
-                <Route path='submit' element={<ProjectSubmitForApproval />} />
-              </Routes>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/admin/*'
-          element={
-            <ProtectedAdminRoute>
-              <AdminNavBar />
-              <Routes>
-                <Route path='*' element={<NotFound />} />
-                <Route path='home' element={<AdminHome />} />
-                <Route path='change-password' element={<AdminChangePsw />} />
-                <Route path='categories' element={<AdminCategories />} />
+                <Route path='/' element={<Home />} />
                 <Route
-                  path='pending-projects'
-                  element={<AdminPendingProjects />}
+                  path='/user/*'
+                  element={
+                    <ProtectedRoute>
+                      <Routes>
+                        <Route path='*' element={<NotFound />} />
+                        <Route path='panel' element={<UserPanel />} />
+                      </Routes>
+                    </ProtectedRoute>
+                  }
                 />
+                <Route
+                  path='/add-project/*'
+                  element={
+                    <ProtectedRoute>
+                      <AddProjectNav />
+                      <Routes>
+                        <Route path='*' element={<NotFound />} />
+                        <Route path='inform' element={<ProjectInform />} />
+                        <Route path='basics' element={<ProjectBasics />} />
+                        <Route path='reward' element={<ProjectReward />} />
+                        <Route path='submit' element={<ProjectSubmitForApproval />} />
+                      </Routes>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path='/admin/*'
+                  element={
+                    <ProtectedAdminRoute>
+                      <AdminNavBar />
+                      <Routes>
+                        <Route path='*' element={<NotFound />} />
+                        <Route path='home' element={<AdminHome />} />
+                        <Route path='change-password' element={<AdminChangePsw />} />
+                        <Route path='categories' element={<AdminCategories />} />
+                        <Route
+                          path='pending-projects'
+                          element={<AdminPendingProjects />}
+                        />
+                      </Routes>
+                    </ProtectedAdminRoute>
+                  }
+                />
+                <Route path='/logout' element={<Navigate to='/' replace />} />
               </Routes>
-            </ProtectedAdminRoute>
+            </>
           }
         />
-        <Route path='/logout' element={<Navigate to='/' replace />} />
       </Routes>
     </Router>
   );
