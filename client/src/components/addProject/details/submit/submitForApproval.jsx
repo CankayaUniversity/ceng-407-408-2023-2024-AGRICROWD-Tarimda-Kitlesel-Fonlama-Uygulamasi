@@ -71,6 +71,7 @@ const SubmitForm = () => {
                 basicInfo
             });
             setSubmitMessage(response.data.message);
+            setIsCheckboxChecked(false);
             setTimeout(() => {
                 setSubmitMessage('');
                 navigate('/user/my-projects');
