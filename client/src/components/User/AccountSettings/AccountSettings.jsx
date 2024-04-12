@@ -102,13 +102,23 @@ function UserPanel() {
 
     const fetchUserId = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/api/auth', {
-          authToken,
-        });
-        if (response.data.success) {
-          fetchUserDetails(response.data.user._id, authToken);
-        } else {
-          console.error('Kullanıcı kimliği alınamadı.');
+        if (authToken) {
+          const response = await axios.post(
+            'http://localhost:3001/api/auth',
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+              },
+              withCredentials: true
+            }
+          );
+          if (response.data.success) {
+            fetchUserDetails(response.data.user._id, authToken);
+          } else {
+            console.error('Kullanıcı kimliği alınamadı.');
+          }
         }
       } catch (error) {
         console.error('Sunucuyla iletişim hatası:', error);

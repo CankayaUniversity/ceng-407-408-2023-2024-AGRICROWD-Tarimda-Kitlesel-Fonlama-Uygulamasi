@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import './basicInfo.css';
-import MapContainer from '../../MapContainer';
+import MapContainer from './Mapping/MapContainer';
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
-
-
 
 const BasicInfoForm = () => {
   const [userId, setUserID] = useState('');
@@ -21,7 +19,7 @@ const BasicInfoForm = () => {
   const [requiresLocation, setRequiresLocation] = useState(false); // Konum bilgisi istenmesi flag'i
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,16 +43,16 @@ const BasicInfoForm = () => {
           'http://localhost:3001/api/auth',
           {},
           {
-              headers: {
-                  Authorization: `Bearer ${authTokenFromCookie}`,
-                  'Content-Type': 'application/json'
-              },
-              withCredentials: true
+            headers: {
+              Authorization: `Bearer ${authTokenFromCookie}`,
+              'Content-Type': 'application/json'
+            },
+            withCredentials: true
           }
-      );
-        if(response.data.user){
+        );
+        if (response.data.user) {
           setUserID(response.data.user._id);
-        } else{
+        } else {
           console.error("User not found");
         }
       } catch (error) {
@@ -186,13 +184,15 @@ const BasicInfoForm = () => {
           <label className="form-label">Campaign Duration (Days):</label>
           <input type="text" className="form-control" value={campaignDuration} onChange={(e) => setCampaignDuration(e.target.value)} required min="1" />
         </div>
-        <div className="mb-3">
-          <MapContainer></MapContainer>
-        </div>
-        {requiresLocation && (
-          <p>Emir gerekli konum alma islemlerini gerceklestirecek!</p>
-        )}
         <button type="submit" className="btn btn-primary">Submit</button>
+        <div className="map-section">
+          {requiresLocation && (
+            <div className="mb-3">
+              <p>Emir gerekli konum alma islemlerini gerceklestirecek!</p>
+              <MapContainer></MapContainer>
+            </div>
+          )}
+        </div>
       </form>
     </div>
   );

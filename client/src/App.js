@@ -11,15 +11,13 @@ import ProtectedRoute from './components/routes/protectedRoute';
 import ProtectedAdminRoute from './components/routes/protectedAdminRoute';
 import NotFound from './components/NotFound/NotFound';
 
-// import MainNavbar from './components/navBar/navBar';
-
 import Home from './components/Home/Home';
 import Navbar from './components/Navbar/Navbar';
 import SignUp from './components/SignUp/SignUp';
 import Login from './components/Login/Login';
-import UserPanel from './components/AccountSettings/AccountSettings';
+import UserPanel from './components/User/AccountSettings/AccountSettings';
 
-import AddProject from './components/addProject/AddProject';
+// import AddProject from './components/addProject/AddProject';
 import AddProjectNav from './components/addProject/navBar/APNavbar';
 import ProjectInform from './components/addProject/details/inform/inform';
 import ProjectBasics from './components/addProject/details/basicInfo/basicInfo';
@@ -32,7 +30,6 @@ import AdminNavBar from './components/Admin/Panel/adminNavBar';
 import AdminCategories from './components/Admin/Panel/categories/categoriesCrud';
 import AdminChangePsw from './components/Admin/Panel/changePassword/changePsw';
 import AdminPendingProjects from './components/Admin/Panel/pendingProjects/pendingProjects';
-// import MainNavbar from './components/navBar/navBar';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
