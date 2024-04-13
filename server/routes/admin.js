@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const router = express.Router();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const Admin = require('../models/Admin');
 const PendingProject = require('../models/pendingProjectsSchema');
@@ -123,6 +125,23 @@ router.put('/projects/reject', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+
+
+router.get('/projects/:projectId/photos', async (req, res) => {
+    try {
+        const projectId = req.params.projectId;
+        const project = await PendingProject.findById(projectId);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        res.status(200).json(project.photos);
+    } catch (error) {
+        console.error('Error fetching project photos:', error);
+        res.status(500).json({ message: 'An error occurred while fetching project photos.' });
+    }
+});
+
 
 
 module.exports = router;

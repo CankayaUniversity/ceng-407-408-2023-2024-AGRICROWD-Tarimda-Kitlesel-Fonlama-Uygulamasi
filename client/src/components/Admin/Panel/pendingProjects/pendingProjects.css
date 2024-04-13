@@ -25,3 +25,20 @@
 .alert {
     margin-bottom: 20px;
 }
+
+.photos-container {
+    overflow-x: auto;
+}
+
+.photo-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+}
+
+.project-photo {
+    width: 300px;
+    height: auto;
+    margin-right: 10px;
+    scroll-snap-align: start;
+}
