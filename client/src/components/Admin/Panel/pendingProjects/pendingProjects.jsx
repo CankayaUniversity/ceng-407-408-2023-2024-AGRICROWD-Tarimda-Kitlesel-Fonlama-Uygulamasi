@@ -32,7 +32,7 @@ const PendingProjects = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setFeedbackMessage("");
-    }, 15000); 
+    }, 15000);
     return () => clearTimeout(timer);
   }, [feedbackMessage]);
 
@@ -40,7 +40,7 @@ const PendingProjects = () => {
     try {
       await axios.put('http://localhost:3001/api/admin/projects/approve', { projectId });
       setFeedbackMessage("Project approved successfully!");
-      fetchProjects(); 
+      fetchProjects();
     } catch (error) {
       console.error('Error approving project:', error);
       setFeedbackMessage("Error approving project. Please try again later.");
@@ -53,7 +53,7 @@ const PendingProjects = () => {
       setRejectionReason("");
       setSelectedProjectId(null);
       setFeedbackMessage("Project rejected successfully!");
-      fetchProjects(); 
+      fetchProjects();
     } catch (error) {
       console.error('Error rejecting project:', error);
       setFeedbackMessage("Error rejecting project. Please try again later.");
@@ -72,6 +72,25 @@ const PendingProjects = () => {
           <li className="list-group-item"><strong>Country:</strong> {projectData.country}</li>
           <li className="list-group-item"><strong>Target Amount:</strong> {projectData.targetAmount}</li>
           <li className="list-group-item"><strong>Campaign Duration:</strong> {projectData.campaignDuration} days</li>
+          {projectData.projectImages && projectData.projectImages.length > 0 ? (
+            <li className="list-group-item">
+              <strong>Project Photos:</strong>
+              <div className="photos-container">
+                <div className="photo-slider">
+                  {projectData.projectImages.map((photo, index) => (
+                    <img
+                      key={index}
+                      src={`http://localhost:3001/api/photos/${photo._id}`}
+                      alt={`Photo ${index}`}
+                      className="project-photo"
+                    />
+                  ))}
+                </div>
+              </div>
+            </li>
+          ) : (
+            <li className="list-group-item">No photos available for this project!</li>
+          )}
         </ul>
       </div>
     );

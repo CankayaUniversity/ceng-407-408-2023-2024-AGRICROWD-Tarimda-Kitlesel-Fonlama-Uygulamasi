@@ -107,21 +107,34 @@ const BasicInfoForm = () => {
       alert('Dosya formatı desteklenmiyor. Lütfen yalnızca resim ve görüntü dosyaları yükleyin.');
       return;
     }
-
-    const basicInfo = {
-      projectName,
-      projectDescription,
-      category,
-      subCategory,
-      country,
-      projectImages: Array.from(projectImages),
-      targetAmount,
-      campaignDuration,
-    };
-
     try {
+      const formData = new FormData();
+      Array.from(projectImages).forEach(image => {
+        formData.append('photos', image);
+      });
+  
+      const uploadResponse = await axios.post('http://localhost:3001/api/photos/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      console.log('Uploaded photos:', uploadResponse.data);
+  
+      const basicInfo = {
+        projectName,
+        projectDescription,
+        category,
+        subCategory,
+        country,
+        projectImages: uploadResponse.data, 
+        targetAmount,
+        campaignDuration,
+      };
+  
       localStorage.setItem(userId, JSON.stringify(basicInfo));
       localStorage.setItem("isBasicsCompleted", "true");
+  
       navigate('/add-project/reward');
       console.log('Basic info submitted successfully!');
     } catch (error) {
@@ -169,7 +182,7 @@ const BasicInfoForm = () => {
         <div className="mb-3">
           <label className="form-label">Country (Currently only Turkiye is available!):</label>
           <select className="form-select" value={country} onChange={(e) => setCountry(e.target.value)} required>
-            <option value="turkey">Türkiye</option>
+            <option value="turkey">Turkiye</option>
           </select>
         </div>
         <div className="mb-3">
@@ -184,7 +197,7 @@ const BasicInfoForm = () => {
           <label className="form-label">Campaign Duration (Days):</label>
           <input type="text" className="form-control" value={campaignDuration} onChange={(e) => setCampaignDuration(e.target.value)} required min="1" />
         </div>
-        <button type="submit" className="btn btn-primary">Submit</button>
+        <button type="submit" className="btn btn-primary" encType="multipart/form-data">Submit</button>
         <div className="map-section">
           {requiresLocation && (
             <div className="mb-3">
