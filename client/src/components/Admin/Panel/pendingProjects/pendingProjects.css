@@ -27,18 +27,16 @@
 }
 
 .photos-container {
-    overflow-x: auto;
+  overflow-x: auto;
 }
 
 .photo-slider {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 .project-photo {
-    width: 300px;
-    height: auto;
-    margin-right: 10px;
-    scroll-snap-align: start;
+  width: 300px; 
+  height: auto; 
+  margin-right: 10px; 
 }
