@@ -21,11 +21,12 @@ function ChangePassword() {
     }
 
     try {
-      const token = Cookies.get("admToken");
+      const admToken = Cookies.get("admToken");
       const response = await axios.put('http://localhost:3001/api/admin/change-password', {
         oldPassword,
-        newPassword,
-        token
+        newPassword
+      }, {
+        headers: { Authorization: `Bearer ${admToken}` }
       });
       if (response.data.success) {
         setSuccessMessage("You have successfully changed your password!");
