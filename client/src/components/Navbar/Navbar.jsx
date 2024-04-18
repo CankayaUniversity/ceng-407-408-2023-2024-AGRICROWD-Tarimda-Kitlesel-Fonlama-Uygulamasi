@@ -8,12 +8,12 @@ const MainNavbar = ({ isAuthenticated, onLogout }) => {
   useEffect(() => {}, [isAuthenticated]);
 
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} ${styles.sticky}`}>
       <nav className={styles.container}>
         <NavLink to='/'>
           <Logo></Logo>
         </NavLink>
-        {/* <NavLink to='/'>AgriCROWD</NavLink> */}
+
         <div id='navbarNav'>
           <ul className={styles.list}>
             {isAuthenticated ? (
@@ -21,9 +21,11 @@ const MainNavbar = ({ isAuthenticated, onLogout }) => {
                 <li>
                   <NavLink to='/add-project/inform'>Add Project</NavLink>
                 </li>
+
                 <li>
                   <NavLink to='/user/panel'>Account</NavLink>
                 </li>
+
                 <li>
                   <NavLink to='/logout' onClick={onLogout}>
                     Sign Out
@@ -35,21 +37,13 @@ const MainNavbar = ({ isAuthenticated, onLogout }) => {
                 <li>
                   <NavLink to='/login'>Login</NavLink>
                 </li>
+
                 <li>
                   <NavLink to='/register'>Register</NavLink>
                 </li>
               </>
             )}
           </ul>
-          {/* {isAuthenticated && (
-            <ul>
-              <li>
-                <NavLink to='/logout' onClick={onLogout}>
-                  Logout
-                </NavLink>
-              </li>
-            </ul>
-          )} */}
         </div>
       </nav>
     </header>

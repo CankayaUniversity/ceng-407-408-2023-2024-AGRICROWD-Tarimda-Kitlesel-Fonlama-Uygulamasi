@@ -1,0 +1,11 @@
+.progressBar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.tab {
+  border-bottom: 2px solid #333;
+}

@@ -109,9 +109,9 @@ function UserPanel() {
             {
               headers: {
                 Authorization: `Bearer ${authToken}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
               },
-              withCredentials: true
+              withCredentials: true,
             }
           );
           if (response.data.success) {
@@ -261,87 +261,89 @@ function UserPanel() {
           </div>
         </div>
 
-        {/* Doğum Tarihi */}
-        <div className={styles.formRow}>
-          <div className={styles.formRowInner}>
-            <label htmlFor='birthDate' className={styles.label}>
-              Birthday
-            </label>
-            <input
-              type='date'
-              id='birthDate'
-              name='birthDate'
-              className={styles.input}
-              value={user.birthDate ? user.birthDate.slice(0, 10) : ''}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        {/* Cinsiyet */}
-        <div className={styles.formRow}>
-          <div className={styles.formRowInner}>
-            <label htmlFor='gender' className={styles.label}>
-              Gender
-            </label>
-            <select
-              id='gender'
-              name='gender'
-              className={styles.input}
-              value={user.gender || ''}
-              onChange={handleChange}
-            >
-              <option value=''>Select</option>
-              <option value='Male'>Male</option>
-              <option value='Female'>Female</option>
-              <option value='Rather not say'>Rather not say</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Şehir */}
-        <div className={styles.formRow}>
-          <div className={styles.formRowInner}>
-            <label htmlFor='city' className={styles.label}>
-              City
-            </label>
-            <select
-              id='city'
-              name='city'
-              className={styles.input}
-              value={user.city || ''}
-              onChange={handleChange}
-            >
-              <option value=''>City</option>
-              {cities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Telefon Numarası */}
-        <div className={styles.formRow}>
-          <div className={styles.formRowInner}>
-            <label htmlFor='phone' className={styles.label}>
-              Phone number
-            </label>
-            <div>
-              {/* <span id='basic-addon1'>+90</span> */}
+        <div className={styles.formSubLayout}>
+          {/* Doğum Tarihi */}
+          <div className={styles.formRow}>
+            <div className={styles.formRowInner}>
+              <label htmlFor='birthDate' className={styles.label}>
+                Birthday
+              </label>
               <input
-                type='tel'
-                id='phone'
-                name='phone'
+                type='date'
+                id='birthDate'
+                name='birthDate'
                 className={styles.input}
-                value={user.phone || ''}
+                value={user.birthDate ? user.birthDate.slice(0, 10) : ''}
                 onChange={handleChange}
-                pattern='\d*'
-                maxLength='10'
-                aria-label='Phone'
-                aria-describedby='basic-addon1'
               />
+            </div>
+          </div>
+
+          {/* Cinsiyet */}
+          <div className={styles.formRow}>
+            <div className={styles.formRowInner}>
+              <label htmlFor='gender' className={styles.label}>
+                Gender
+              </label>
+              <select
+                id='gender'
+                name='gender'
+                className={styles.input}
+                value={user.gender || ''}
+                onChange={handleChange}
+              >
+                <option value=''>Select</option>
+                <option value='Male'>Male</option>
+                <option value='Female'>Female</option>
+                <option value='Rather not say'>Rather not say</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Şehir */}
+          <div className={styles.formRow}>
+            <div className={styles.formRowInner}>
+              <label htmlFor='city' className={styles.label}>
+                City
+              </label>
+              <select
+                id='city'
+                name='city'
+                className={styles.input}
+                value={user.city || ''}
+                onChange={handleChange}
+              >
+                <option value=''>City</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Telefon Numarası */}
+          <div className={styles.formRow}>
+            <div className={styles.formRowInner}>
+              <label htmlFor='phone' className={styles.label}>
+                Phone number
+              </label>
+              <div>
+                {/* <span id='basic-addon1'>+90</span> */}
+                <input
+                  type='tel'
+                  id='phone'
+                  name='phone'
+                  className={styles.input}
+                  value={user.phone || ''}
+                  onChange={handleChange}
+                  pattern='\d*'
+                  maxLength='10'
+                  aria-label='Phone'
+                  aria-describedby='basic-addon1'
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -44,7 +44,7 @@ function Login() {
         .then((response) => {
           console.log('Server response is: ', response);
           if (response.status) {
-            window.alert('Basariyla giris yaptiniz!');
+            window.alert('You have successfully logged in!');
             Cookies.set('authToken', response.data.authToken, {
               expires: 1 / 24,
             });
@@ -53,7 +53,7 @@ function Login() {
               window.location.reload();
             }, 250);
           } else {
-            window.alert('Server hatasi!');
+            window.alert('Server error!');
             resetRecaptcha();
           }
         })
@@ -62,7 +62,7 @@ function Login() {
           if (err.response && err.response.data && err.response.data.errors) {
             setErrorMessage(err.response.data.errors[0]);
           } else {
-            setErrorMessage('Bilinmeyen bir hata oluştu.');
+            setErrorMessage('An unknown error occurred');
           }
         });
     }
@@ -124,6 +124,13 @@ function Login() {
               </div>
             </div>
 
+            {errorMessage && (
+              <div style={{ color: '#e03131' }}>
+                <span style={{ marginRight: '4px' }}>⛔</span>
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
             <div>
               <ReCAPTCHA
                 ref={recaptchaRef}
@@ -146,7 +153,6 @@ function Login() {
             </button>
           </form>
         </div>
-        {errorMessage && <div>{errorMessage}</div>}
       </div>
     </div>
   );

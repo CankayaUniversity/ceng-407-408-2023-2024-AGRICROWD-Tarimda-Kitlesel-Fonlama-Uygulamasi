@@ -1,0 +1,60 @@
+.container {
+  padding: 4rem 8rem 1rem;
+}
+
+.formHeader {
+  padding: 0 3.5rem 1.5rem 0;
+}
+
+.sidebarTitle {
+  font-weight: 400;
+  font-size: 1.8rem;
+  line-height: 1.2;
+  padding-bottom: 2rem;
+}
+
+.content {
+  font-size: 1rem;
+  line-height: 1.4;
+  padding-bottom: 2rem;
+}
+
+.subContent {
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 1.5rem;
+}
+
+.checkboxLayout {
+  display: flex;
+  align-items: center;
+}
+
+input[type='checkbox'] {
+  transform: scale(1.5);
+  margin-right: 10px;
+  margin-left: 4px;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.button {
+  background-color: #333;
+  color: #fff;
+  border-radius: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  /* height: 3rem; */
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  /* width: 9.375rem; */
+  align-self: flex-end;
+}
