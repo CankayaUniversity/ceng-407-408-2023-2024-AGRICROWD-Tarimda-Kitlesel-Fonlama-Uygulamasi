@@ -5,6 +5,8 @@
   justify-content: center;
   align-items: center;
   gap: 1.5rem;
+  background-size: cover;
+  background-position: center;
 }
 
 .heroText {
@@ -29,40 +31,3 @@
   border: none;
   cursor: pointer;
 }
-
-/* .home-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  header {
-    background-color: #3498db;
-    color: #fff;
-    padding: 20px;
-  }
-  
-  header h1 {
-    margin-bottom: 10px;
-  }
-  
-  .cta-section {
-    margin-top: 20px;
-  }
-  
-  .cta-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #2ecc71;
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .cta-button:hover {
-    background-color: #27ae60;
-  }
-   */

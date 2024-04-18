@@ -18,18 +18,19 @@ import Login from './components/Login/Login';
 import UserPanel from './components/User/AccountSettings/AccountSettings';
 
 // import AddProject from './components/addProject/AddProject';
-import AddProjectNav from './components/addProject/navBar/APNavbar';
-import ProjectInform from './components/addProject/details/inform/inform';
-import ProjectBasics from './components/addProject/details/basicInfo/basicInfo';
+import AddProjectNav from './components/addProject/ProgressBar/ProgressBar';
+import ProjectInform from './components/addProject/details/inform/Inform';
+import ProjectBasics from './components/addProject/details/basicInfo/BasicInfo';
 import ProjectReward from './components/addProject/details/reward/Reward';
-import ProjectSubmitForApproval from './components/addProject/details/submit/submitForApproval';
+import ProjectSubmitForApproval from './components/addProject/details/submit/SubmitForApproval';
 
-import AdminLogin from './components/Admin/Login/adminLogin';
+import AdminLogin from './components/Admin/Login/AdminLogin';
 import AdminHome from './components/Admin/Panel/home/home';
 import AdminNavBar from './components/Admin/Panel/adminNavBar';
 import AdminCategories from './components/Admin/Panel/categories/categoriesCrud';
 import AdminChangePsw from './components/Admin/Panel/changePassword/changePsw';
 import AdminPendingProjects from './components/Admin/Panel/pendingProjects/pendingProjects';
+import AddProjects from './components/addProject/AddProject';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -64,6 +65,7 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<SignUp />} />
         <Route path='/admin/login' element={<AdminLogin />} />
+
         <Route
           path='*'
           element={
@@ -83,42 +85,45 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
-                <Route
-                  path='/add-project/*'
-                  element={
-                    <ProtectedRoute>
-                      <AddProjectNav />
-                      <Routes>
-                        <Route path='*' element={<NotFound />} />
-                        <Route path='inform' element={<ProjectInform />} />
-                        <Route path='basics' element={<ProjectBasics />} />
-                        <Route path='reward' element={<ProjectReward />} />
-                        <Route path='submit' element={<ProjectSubmitForApproval />} />
-                      </Routes>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path='/admin/*'
-                  element={
-                    <ProtectedAdminRoute>
-                      <AdminNavBar />
-                      <Routes>
-                        <Route path='*' element={<NotFound />} />
-                        <Route path='home' element={<AdminHome />} />
-                        <Route path='change-password' element={<AdminChangePsw />} />
-                        <Route path='categories' element={<AdminCategories />} />
-                        <Route
-                          path='pending-projects'
-                          element={<AdminPendingProjects />}
-                        />
-                      </Routes>
-                    </ProtectedAdminRoute>
-                  }
-                />
                 <Route path='/logout' element={<Navigate to='/' replace />} />
               </Routes>
             </>
+          }
+        />
+
+        <Route
+          path='/add-project/*'
+          element={
+            <AddProjects>
+              <ProtectedRoute>
+                <Routes>
+                  <Route path='*' element={<NotFound />} />
+                  <Route path='inform' element={<ProjectInform />} />
+                  <Route path='basics' element={<ProjectBasics />} />
+                  <Route path='reward' element={<ProjectReward />} />
+                  <Route path='submit' element={<ProjectSubmitForApproval />} />
+                </Routes>
+              </ProtectedRoute>
+            </AddProjects>
+          }
+        />
+
+        <Route
+          path='/admin/*'
+          element={
+            <ProtectedAdminRoute>
+              <AdminNavBar />
+              <Routes>
+                <Route path='*' element={<NotFound />} />
+                <Route path='home' element={<AdminHome />} />
+                <Route path='change-password' element={<AdminChangePsw />} />
+                <Route path='categories' element={<AdminCategories />} />
+                <Route
+                  path='pending-projects'
+                  element={<AdminPendingProjects />}
+                />
+              </Routes>
+            </ProtectedAdminRoute>
           }
         />
       </Routes>

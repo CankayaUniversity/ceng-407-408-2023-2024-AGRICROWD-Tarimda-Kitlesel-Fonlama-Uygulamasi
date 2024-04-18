@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import './basicInfo.css';
+import styles from './BasicInfo.module.css';
 import MapContainer from './Mapping/MapContainer';
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 
@@ -25,7 +25,9 @@ const BasicInfoForm = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/categories');
+        const response = await axios.get(
+          'http://localhost:3001/api/categories'
+        );
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -45,15 +47,15 @@ const BasicInfoForm = () => {
           {
             headers: {
               Authorization: `Bearer ${authTokenFromCookie}`,
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
-            withCredentials: true
+            withCredentials: true,
           }
         );
         if (response.data.user) {
           setUserID(response.data.user._id);
         } else {
-          console.error("User not found");
+          console.error('User not found');
         }
       } catch (error) {
         console.error('Error fetching user ID:', error);
@@ -65,9 +67,13 @@ const BasicInfoForm = () => {
 
   useEffect(() => {
     if (category && categories.length > 0) {
-      const selectedCategory = categories.find(cat => cat.categoryName === category);
+      const selectedCategory = categories.find(
+        (cat) => cat.categoryName === category
+      );
       if (selectedCategory) {
-        setSubCategories(selectedCategory.subCategories.map(subCat => subCat.subCategoryName));
+        setSubCategories(
+          selectedCategory.subCategories.map((subCat) => subCat.subCategoryName)
+        );
         setRequiresLocation(selectedCategory.requiresLocation);
       }
     }
@@ -97,44 +103,50 @@ const BasicInfoForm = () => {
 
     const validFileExtensions = /\.(jpg|jpeg|png|gif|bmp)$/i;
     let validFiles = true;
-    Array.from(projectImages).forEach(file => {
+    Array.from(projectImages).forEach((file) => {
       if (!validFileExtensions.test(file.name)) {
         validFiles = false;
       }
     });
 
     if (!validFiles) {
-      alert('Dosya formatı desteklenmiyor. Lütfen yalnızca resim ve görüntü dosyaları yükleyin.');
+      alert(
+        'Dosya formatı desteklenmiyor. Lütfen yalnızca resim ve görüntü dosyaları yükleyin.'
+      );
       return;
     }
     try {
       const formData = new FormData();
-      Array.from(projectImages).forEach(image => {
+      Array.from(projectImages).forEach((image) => {
         formData.append('photos', image);
       });
-  
-      const uploadResponse = await axios.post('http://localhost:3001/api/photos/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-  
+
+      const uploadResponse = await axios.post(
+        'http://localhost:3001/api/photos/upload',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
       console.log('Uploaded photos:', uploadResponse.data);
-  
+
       const basicInfo = {
         projectName,
         projectDescription,
         category,
         subCategory,
         country,
-        projectImages: uploadResponse.data, 
+        projectImages: uploadResponse.data,
         targetAmount,
         campaignDuration,
       };
-  
+
       localStorage.setItem(userId, JSON.stringify(basicInfo));
-      localStorage.setItem("isBasicsCompleted", "true");
-  
+      localStorage.setItem('isBasicsCompleted', 'true');
+
       navigate('/add-project/reward');
       console.log('Basic info submitted successfully!');
     } catch (error) {
@@ -143,64 +155,144 @@ const BasicInfoForm = () => {
     }
   };
 
-
   return (
-    <div className="container">
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Project Name:</label>
-          <input type="text" className="form-control" value={projectName} onChange={(e) => setProjectName(e.target.value)} required />
+    <div className={styles.formContainer}>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <div className={styles.formRow}>
+          <div className={styles.formRowInner}>
+            <input
+              type='text'
+              className={styles.input}
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              required
+            />
+            <label className={styles.label}>Project Name</label>
+          </div>
         </div>
-        <div className="mb-3">
-          <label className="form-label">Project Description:</label>
-          <textarea className="form-control" value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} required />
+
+        <div className={styles.formRow}>
+          <div className={styles.formRowInner}>
+            <textarea
+              className={styles.input}
+              value={projectDescription}
+              onChange={(e) => setProjectDescription(e.target.value)}
+              required
+            />
+            <label className={styles.label}>Project Description:</label>
+          </div>
         </div>
-        <div className="mb-3">
-          <label className="form-label">Category:</label>
-          <select className="form-select" value={category} onChange={(e) => setCategory(e.target.value)} required>
-            <option value="">Select Category</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat.categoryName}>
-                {cat.categoryName}
-              </option>
-            ))}
-          </select>
-        </div>
-        {category && (
-          <div className="mb-3">
-            <label className="form-label">Sub-Category:</label>
-            <select className="form-select" value={subCategory} onChange={(e) => setSubCategory(e.target.value)} required>
-              <option value="">Select Sub-Category</option>
-              {subCategories.map((subCat) => (
-                <option key={subCat._id} value={subCat}>
-                  {subCat}
+
+        <div className={styles.formRow}>
+          <div className={styles.formRowInner}>
+            <select
+              className={styles.input}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              required
+            >
+              <option value=''>Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat.categoryName}>
+                  {cat.categoryName}
                 </option>
               ))}
             </select>
+            <label className={styles.label}>Category</label>
+          </div>
+        </div>
+
+        {category && (
+          <div className={styles.formRow}>
+            <div className={styles.formRowInner}>
+              <select
+                className={styles.input}
+                value={subCategory}
+                onChange={(e) => setSubCategory(e.target.value)}
+                required
+              >
+                <option value=''>Select Sub-Category</option>
+                {subCategories.map((subCat) => (
+                  <option key={subCat._id} value={subCat}>
+                    {subCat}
+                  </option>
+                ))}
+              </select>
+              <label className={styles.label}>Sub-Category</label>
+            </div>
           </div>
         )}
-        <div className="mb-3">
-          <label className="form-label">Country (Currently only Turkiye is available!):</label>
-          <select className="form-select" value={country} onChange={(e) => setCountry(e.target.value)} required>
-            <option value="turkey">Turkiye</option>
-          </select>
+
+        <div className={styles.formRow}>
+          <div className={styles.formRowInner}>
+            <select
+              className={styles.input}
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              required
+            >
+              <option value='turkey'>Turkiye</option>
+            </select>
+            <label className={styles.label}>
+              Country (Currently only Turkiye is available!)
+            </label>
+          </div>
         </div>
-        <div className="mb-3">
-          <label className="form-label">Project Images:</label>
-          <input type="file" className="form-control" multiple onChange={(e) => setProjectImages(e.target.files)} required />
+
+        <div className={styles.formRow}>
+          <div className={styles.formRowInner}>
+            <input
+              type='file'
+              className={styles.fileSelector}
+              multiple
+              onChange={(e) => setProjectImages(e.target.files)}
+              required
+            />
+            <label className={styles.label}>Project Images</label>
+          </div>
         </div>
-        <div className="mb-3">
-          <label className="form-label">Target Amount (Turkish Lira ₺):</label>
-          <input type="number" className="form-control" value={targetAmount} onChange={(e) => setTargetAmount(e.target.value)} required min="1" />
+
+        <div className={styles.formRow}>
+          <div className={styles.formRowInner}>
+            <input
+              type='number'
+              className={styles.input}
+              value={targetAmount}
+              onChange={(e) => setTargetAmount(e.target.value)}
+              required
+              min='1'
+            />
+            <label className={styles.label}>
+              Target Amount (Turkish Lira ₺)
+            </label>
+          </div>
         </div>
-        <div className="mb-3">
-          <label className="form-label">Campaign Duration (Days):</label>
-          <input type="text" className="form-control" value={campaignDuration} onChange={(e) => setCampaignDuration(e.target.value)} required min="1" />
+
+        <div className={styles.formRow}>
+          <div className={styles.formRowInner}>
+            <input
+              type='text'
+              className={styles.input}
+              value={campaignDuration}
+              onChange={(e) => setCampaignDuration(e.target.value)}
+              required
+              min='1'
+            />
+            <label className={styles.label}>Campaign Duration (Days)</label>
+          </div>
         </div>
-        <button type="submit" className="btn btn-primary" encType="multipart/form-data">Submit</button>
-        <div className="map-section">
+
+        <button
+          type='submit'
+          className={styles.button}
+          encType='multipart/form-data'
+        >
+          Submit
+        </button>
+
+        <div className='map-section'>
           {requiresLocation && (
-            <div className="mb-3">
+            <div className='mb-3'>
               <p>Emir gerekli konum alma islemlerini gerceklestirecek!</p>
               <MapContainer></MapContainer>
             </div>

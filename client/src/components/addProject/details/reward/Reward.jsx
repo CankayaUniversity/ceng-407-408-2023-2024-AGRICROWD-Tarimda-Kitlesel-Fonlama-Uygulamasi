@@ -1,9 +1,17 @@
 import React from 'react';
 
 const Reward = () => {
-    return(
-        <p>Bura reward bölümü</p>
-    );
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignContent: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <h2>Reward Section</h2>
+    </div>
+  );
 };
 
 export default Reward;
