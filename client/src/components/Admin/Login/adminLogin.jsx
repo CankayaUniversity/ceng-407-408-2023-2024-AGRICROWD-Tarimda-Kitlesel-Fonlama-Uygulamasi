@@ -95,14 +95,14 @@ function AdminLogin() {
       </div>
 
       <div className={styles.rightContainer}>
-        <header className={styles.formHeader}>
+        {/* <header className={styles.formHeader}>
           <p>
             Don't have an account?&nbsp;
             <Link to='/register' className={styles.formSubLink}>
               Sign up
             </Link>
           </p>
-        </header>
+        </header> */}
 
         <div className={styles.formContainer}>
           <h2 className={styles.formTitle}>
