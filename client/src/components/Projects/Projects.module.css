@@ -1,0 +1,11 @@
+.projectsSection {
+  margin: 12rem auto;
+  width: 72rem;
+}
+
+.pageLayout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 1.25rem;
+  grid-row-gap: 1.25rem;
+}

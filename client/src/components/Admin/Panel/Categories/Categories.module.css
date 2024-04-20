@@ -1,0 +1,124 @@
+.pageLayout {
+  display: grid;
+  grid-template-row: 1fr 1fr;
+  gap: 2rem;
+  width: 42rem;
+  margin: 8rem auto;
+}
+
+.container {
+  background-color: #fbf8f6;
+  border-radius: 1.5rem;
+  padding: 2rem;
+}
+
+.formTitle {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formRow {
+  display: flex;
+  align-items: center;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  border: 1px solid #c8c8c8;
+  border-radius: 0.75rem;
+  box-sizing: border-box;
+  cursor: text;
+  padding: 0.4375rem 1rem;
+}
+
+.formRow:hover {
+  background-color: #f8f8f8;
+}
+
+.formRowInner {
+  flex-grow: 1;
+  padding-top: 1rem;
+  position: relative;
+}
+
+.input {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #0000;
+  border: none;
+  line-height: 1.5;
+  outline: none;
+  padding: 0;
+  width: 100%;
+}
+
+.label {
+  color: #767676;
+  cursor: text;
+  left: 0;
+  position: absolute;
+  top: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.button {
+  background-color: #333;
+  color: #fff;
+  border-radius: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  width: 100%;
+  align-self: flex-end;
+  margin-top: 1rem;
+}
+
+.categoryContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #fff;
+  border-radius: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #e9ecef;
+  margin-bottom: 0.825rem;
+}
+
+.operations {
+  align-self: flex-end;
+  justify-self: end;
+}
+
+.btnsContainer {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1.25rem;
+}
+
+.button {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid #c8c8c8;
+  background-color: initial;
+  color: #333;
+  height: 2.5rem;
+  padding: 0.25rem 1.5rem;
+  align-items: center;
+  text-align: center;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  justify-content: center;
+  text-decoration: none;
+}

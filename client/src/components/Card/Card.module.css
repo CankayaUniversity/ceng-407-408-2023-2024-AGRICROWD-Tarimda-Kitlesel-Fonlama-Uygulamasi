@@ -1,0 +1,100 @@
+.cardLayout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: background-color 0.5s cubic-bezier(0.3, 0.01, 0, 1);
+  width: 100%;
+}
+
+.cardLayout:hover {
+  background-color: #f8f8f8;
+}
+
+.imageContainer {
+  aspect-ratio: 3 / 2;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.image {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+  padding: 0 1rem;
+  justify-content: space-between;
+}
+
+.heading {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1rem;
+  margin-top: 1rem;
+}
+
+.locationContainer {
+  display: inline-block;
+  margin-top: 0.25rem;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  background-color: #333;
+  border-radius: 100px;
+  padding: 0.25rem 1rem 0.25rem 0.75rem;
+  color: #fff;
+  line-height: 1.5rem;
+}
+
+.progressBarContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+
+.progressBar {
+  appearance: none;
+  height: 5px;
+  width: 100%;
+  border-radius: 100px;
+
+  /* Chrome and Safari */
+  &::-webkit-progress-bar {
+    background: #e6f6ef;
+    border-radius: 100px;
+  }
+
+  &::-webkit-progress-value {
+    background-color: #02a95c;
+    border-top-left-radius: 100px;
+    border-bottom-left-radius: 100px;
+  }
+
+  /* Firefox */
+  &::-moz-progress-bar {
+    background-color: #02a95c;
+    border-top-left-radius: 100px;
+    border-bottom-left-radius: 100px;
+  }
+}
+
+.progressData {
+  display: flex;
+  font-size: 0.875rem;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.progressDataText {
+  font-size: 0.875rem;
+  font-weight: 700;
+}

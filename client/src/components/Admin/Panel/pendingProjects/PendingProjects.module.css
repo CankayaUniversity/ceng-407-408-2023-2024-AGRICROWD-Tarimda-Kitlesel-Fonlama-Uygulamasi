@@ -1,0 +1,110 @@
+.pageLayout {
+  margin: 6rem auto;
+  width: 72rem;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.cardContainer {
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.3125rem 1rem -0.1875rem #0003;
+  padding: 1.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.projectTitle {
+  font-weight: 600;
+  line-height: 1.2;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.projectContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.projectImagesContainer {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.projectImage {
+  width: 100px;
+  height: 100px;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.userDetailsContent {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btnsContainer {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1.25rem;
+}
+
+.button {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid #c8c8c8;
+  background-color: initial;
+  color: #333;
+  height: 2.5rem;
+  padding: 0.25rem 1.5rem;
+  align-items: center;
+  text-align: center;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  justify-content: center;
+  text-decoration: none;
+}
+
+h4 {
+  font-size: 0.8rem;
+}
+
+.subHeading {
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.message {
+  font-size: 1rem;
+  color: #e03131;
+  margin-top: 1rem;
+}
+
+.input {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #fbf8f6;
+  border: none;
+  border-bottom: 1px solid #333;
+  line-height: 1.5;
+  outline: none;
+  padding: 0;
+  width: 100%;
+}

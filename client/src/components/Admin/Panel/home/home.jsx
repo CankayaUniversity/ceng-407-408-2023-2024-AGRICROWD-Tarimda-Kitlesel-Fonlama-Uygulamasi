@@ -1,23 +1,17 @@
 import React from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import styles from './AdminHome.module.css';
 
 function AdminHome() {
-    return (
-        <Container>
-            <Row className="mt-5">
-                <Col>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Welcome to Admin Panel</Card.Title>
-                            <Card.Text>
-                                This is the home page for admin.
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
-    );
+  return (
+    <div className={styles.container}>
+      <h1>Welcome to Admin Panel!</h1>
+      <div>
+        <p>
+          You can manage your users and projects in system using navigation bar
+        </p>
+      </div>
+    </div>
+  );
 }
 
 export default AdminHome;

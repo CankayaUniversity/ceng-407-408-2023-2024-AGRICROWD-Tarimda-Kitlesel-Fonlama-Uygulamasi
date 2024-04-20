@@ -25,12 +25,13 @@ import ProjectReward from './components/addProject/details/reward/Reward';
 import ProjectSubmitForApproval from './components/addProject/details/submit/SubmitForApproval';
 
 import AdminLogin from './components/Admin/Login/AdminLogin';
-import AdminHome from './components/Admin/Panel/home/home';
-import AdminNavBar from './components/Admin/Panel/adminNavBar';
-import AdminCategories from './components/Admin/Panel/categories/categoriesCrud';
-import AdminChangePsw from './components/Admin/Panel/changePassword/changePsw';
-import AdminPendingProjects from './components/Admin/Panel/pendingProjects/pendingProjects';
+import AdminHome from './components/Admin/Panel/Home/Home';
+import AdminNavBar from './components/Admin/Panel/Navbar/AdminNavbar';
+import AdminCategories from './components/Admin/Panel/Categories/Categories';
+import AdminChangePsw from './components/Admin/Panel/ChangePassword/ChangePassword';
+import AdminPendingProjects from './components/Admin/Panel/PendingProjects/PendingProjects';
 import AddProjects from './components/addProject/AddProject';
+import Projects from './components/Projects/Projects';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -85,6 +86,7 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
+                <Route path='/projects' element={<Projects />} />
                 <Route path='/logout' element={<Navigate to='/' replace />} />
               </Routes>
             </>
