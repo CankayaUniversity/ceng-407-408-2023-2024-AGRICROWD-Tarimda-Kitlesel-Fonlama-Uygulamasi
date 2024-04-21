@@ -1,60 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./Reward.module.css";
 
-const Reward = ({ onRewardDataChange }) => {
-  const [rewardType, setRewardType] = useState('profitShare');
-  const [profitSharePercentage, setProfitSharePercentage] = useState('');
+const Reward = () => {
+  const [percentage, setPercentage] = useState("");
+  const [isRewardCompleted, setIsRewardCompleted] = useState(
+    localStorage.getItem("isRewardCompleted") === "true"
+  );
+  const navigate = useNavigate();
 
-  // Handle changes in reward type
-  const handleRewardTypeChange = (e) => {
-    const selectedRewardType = e.target.value;
-    setRewardType(selectedRewardType);
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-    // Pass the updated reward type and percentage (if applicable) to the parent component
-    onRewardDataChange({
-      rewardType: selectedRewardType,
-      profitSharePercentage:
-        selectedRewardType === 'profitShare' ? profitSharePercentage : null,
-    });
+    // Validate that the percentage is a positive number
+    if (percentage && parseFloat(percentage) > 0) {
+      // Save the percentage value to local storage
+      localStorage.setItem("percentage", percentage);
+
+      // Set isRewardCompleted to true and save it to local storage
+      setIsRewardCompleted(true);
+      localStorage.setItem("isRewardCompleted", "true");
+      navigate("/add-project/reward");
+      console.log("Basic info submitted successfully!");
+
+      // Inform the user about successful submission
+      alert("Reward percentage submitted successfully!");
+    } else {
+      // Inform the user that the input is invalid
+      alert("Please enter a valid percentage.");
+    }
   };
 
-  // Handle changes in profit share percentage
-  const handleProfitSharePercentageChange = (e) => {
-    const percentage = e.target.value;
-    setProfitSharePercentage(percentage);
-
-    // Pass the updated profit share percentage to the parent component
-    onRewardDataChange({
-      rewardType,
-      profitSharePercentage: percentage,
-    });
+  const handlePercentageChange = (event) => {
+    setPercentage(event.target.value);
   };
 
   return (
     <div>
-      <h2>Reward Details</h2>
-      <label>
-        Reward Type:
-        <select value={rewardType} onChange={handleRewardTypeChange}>
-          <option value='profitShare'>Profit Share</option>
-          <option value='product'>Product</option>
-        </select>
-      </label>
-
-      {rewardType === 'profitShare' && (
-        <div>
-          <label>
-            Profit Share Percentage:
-            <input
-              type='number'
-              value={profitSharePercentage}
-              onChange={handleProfitSharePercentageChange}
-              min='0'
-              max='100'
-              placeholder='Enter profit share percentage'
-            />
-          </label>
-        </div>
-      )}
+      <h2>Reward</h2>
+      <p>
+        Please be informed that all future investments made through our platform
+        will incur a 5% commission fee. This fee is automatically applied to
+        each investment and is deducted from the total amount invested. Thank
+        you for your understanding and continued support.
+      </p>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="percentage">
+          How much percentage does the investee want to take?
+        </label>
+        <input
+          type="number"
+          id="percentage"
+          name="percentage"
+          min="0"
+          value={percentage}
+          onChange={handlePercentageChange}
+          placeholder="Enter percentage"
+          required
+        />
+        <br />
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
 };

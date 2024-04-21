@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { ethers } from "./Contracts/ethers-5.7.esm.min.js"; // Import ethers.js for interacting with the smart contract
+import { abi, contractAddress } from "./Contracts/smartContractConstants"; // Import the smart contract ABI and address
 
-import styles from './PendingProjects.module.css';
+import styles from "./PendingProjects.module.css";
 
 const PendingProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [rejectionReason, setRejectionReason] = useState('');
+  const [rejectionReason, setRejectionReason] = useState("");
   const [selectedProjectId, setSelectedProjectId] = useState(null);
-  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [feedbackMessage, setFeedbackMessage] = useState("");
 
   const fetchProjects = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:3001/api/admin/projects/pending'
+        "http://localhost:3001/api/admin/projects/pending"
       );
       const projectsWithUserDetails = await Promise.all(
         response.data.map(async (project) => {
           const userResponse = await axios.post(
-            'http://localhost:3001/api/info/user',
+            "http://localhost:3001/api/info/user",
             { userId: project.userId }
           );
           const userDetails = userResponse.data;
@@ -28,7 +30,7 @@ const PendingProjects = () => {
       setProjects(projectsWithUserDetails);
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching pending projects:', error);
+      console.error("Error fetching pending projects:", error);
     }
   };
 
@@ -38,52 +40,92 @@ const PendingProjects = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setFeedbackMessage('');
+      setFeedbackMessage("");
     }, 15000);
     return () => clearTimeout(timer);
   }, [feedbackMessage]);
 
   const handleApproveProject = async (projectId) => {
     try {
-      const response = await axios.put('http://localhost:3001/api/admin/projects/approve', {
-        projectId,
-      });
+      const response = await axios.put(
+        "http://localhost:3001/api/admin/projects/approve",
+        {
+          projectId,
+        }
+      );
 
       if (response.data.success) {
         setSelectedProjectId(null);
         setFeedbackMessage(response.data.message); // success message !
+
+        // After approving the project, create the project in the smart contract
+        await createProjectInSmartContract(projectId);
+
         fetchProjects();
       } else {
-        setFeedbackMessage('Error approving project. Please try again later.');
+        setFeedbackMessage("Error approving project. Please try again later.");
       }
     } catch (error) {
-      console.error('Error approving project:', error);
-      setFeedbackMessage('Error approving project. Please try again later.');
+      console.error("Error approving project:", error);
+      setFeedbackMessage("Error approving project. Please try again later.");
     }
   };
 
-
   const handleRejectProject = async () => {
     try {
-      const response = await axios.put('http://localhost:3001/api/admin/projects/reject', {
-        projectId: selectedProjectId,
-        rejectionReason,
-      });
+      const response = await axios.put(
+        "http://localhost:3001/api/admin/projects/reject",
+        {
+          projectId: selectedProjectId,
+          rejectionReason,
+        }
+      );
 
       if (response.data.success) {
-        setRejectionReason('');
+        setRejectionReason("");
         setSelectedProjectId(null);
         setFeedbackMessage(response.data.message);
         fetchProjects();
       } else {
-        setFeedbackMessage('Error rejecting project. Please try again later.');
+        setFeedbackMessage("Error rejecting project. Please try again later.");
       }
     } catch (error) {
-      console.error('Error rejecting project:', error);
-      setFeedbackMessage('Error rejecting project. Please try again later.');
+      console.error("Error rejecting project:", error);
+      setFeedbackMessage("Error rejecting project. Please try again later.");
     }
   };
 
+  // Function to create the project in the smart contract
+  const createProjectInSmartContract = async (projectId) => {
+    // Get project data from the database
+    const project = projects.find((p) => p._id === projectId);
+
+    if (!project) {
+      console.error("Project not found");
+      return;
+    }
+
+    // Connect to the Ethereum provider and the smart contract
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(contractAddress, abi, signer);
+
+    try {
+      // Call the createProject function in the smart contract with the project's funding goal in ETH
+      const fundingGoalETH = ethers.utils.parseEther(
+        project.basicInfo.targetAmount
+      );
+      const transactionResponse = await contract.createProject(fundingGoalETH);
+
+      // Wait for the user to confirm the transaction in MetaMask
+      console.log("Waiting for MetaMask confirmation...");
+      await transactionResponse.wait(); // Wait for the transaction to be mined
+
+      console.log("Project created in smart contract!");
+    } catch (error) {
+      console.error("Error creating project in smart contract:", error);
+    }
+  };
 
   const renderProjectData = (projectData) => {
     return (
@@ -127,7 +169,7 @@ const PendingProjects = () => {
               </div>
             </div>
           ) : (
-            <li className='list-group-item'>
+            <li className="list-group-item">
               No photos available for this project!
             </li>
           )}
@@ -161,11 +203,11 @@ const PendingProjects = () => {
       ) : (
         <div className={styles.gridContainer}>
           {projects
-            .filter((project) => project.status === 'pending')
+            .filter((project) => project.status === "pending")
             .map((project) => (
               <div key={project._id} className={styles.cardContainer}>
-                <div className='card'>
-                  <div className='card-body'>
+                <div className="card">
+                  <div className="card-body">
                     {renderProjectData(project.basicInfo)}
 
                     <div>
@@ -195,9 +237,9 @@ const PendingProjects = () => {
                       {selectedProjectId === project._id && (
                         <div className={styles.btnsContainer}>
                           <input
-                            type='text'
+                            type="text"
                             className={styles.input}
-                            placeholder='Rejection Reason'
+                            placeholder="Rejection Reason"
                             value={rejectionReason}
                             onChange={(e) => setRejectionReason(e.target.value)}
                           />

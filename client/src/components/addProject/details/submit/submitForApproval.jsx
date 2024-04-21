@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import styles from './SubmitForm.module.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
+import styles from "./SubmitForm.module.css";
 
 const SubmitForm = () => {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [submitMessage, setSubmitMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [remainingTime, setRemainingTime] = useState(5);
-  const [userId, setUserID] = useState('');
+  const [userId, setUserID] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const authTokenFromCookie = Cookies.get('authToken');
+    const authTokenFromCookie = Cookies.get("authToken");
     const fetchUserID = async () => {
       try {
         const response = await axios.post(
-          'http://localhost:3001/api/auth',
+          "http://localhost:3001/api/auth",
           {},
           {
             headers: {
               Authorization: `Bearer ${authTokenFromCookie}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             withCredentials: true,
           }
@@ -30,10 +30,10 @@ const SubmitForm = () => {
         if (response.data.user) {
           setUserID(response.data.user._id);
         } else {
-          console.error('User not found');
+          console.error("User not found");
         }
       } catch (error) {
-        console.error('Error fetching user ID:', error);
+        console.error("Error fetching user ID:", error);
       }
     };
 
@@ -67,7 +67,7 @@ const SubmitForm = () => {
     try {
       const basicInfo = JSON.parse(localStorage.getItem(userId));
       const response = await axios.post(
-        'http://localhost:3001/api/admin/projects/add-pending',
+        "http://localhost:3001/api/admin/projects/add-pending",
         {
           userId,
           basicInfo,
@@ -76,17 +76,19 @@ const SubmitForm = () => {
       setSubmitMessage(response.data.message);
       setIsCheckboxChecked(false);
       setTimeout(() => {
-        setSubmitMessage('');
-        navigate('/user/my-projects');
+        setSubmitMessage("");
+        navigate("/user/my-projects");
       }, 5000);
       localStorage.removeItem(userId);
-      localStorage.removeItem('isInformCompleted');
-      localStorage.removeItem('isBasicsCompleted');
+      localStorage.removeItem("isInformCompleted");
+      localStorage.removeItem("isBasicsCompleted");
+      localStorage.removeItem("isRewardCompleted");
+      localStorage.removeItem("percentage");
     } catch (error) {
-      console.error('Error submitting project for approval:', error);
+      console.error("Error submitting project for approval:", error);
       const errorMessage = error.response
         ? error.response.data.message
-        : 'Bir hata oluştu, lütfen tekrar deneyin.';
+        : "Bir hata oluştu, lütfen tekrar deneyin.";
       setErrorMessage(errorMessage);
     }
   };
@@ -98,9 +100,9 @@ const SubmitForm = () => {
           Submit Your Project for Approval
         </h2>
       </header>
-  
+
       {submitMessage ? (
-        <div className='submit-message'>{submitMessage}</div>
+        <div className="submit-message">{submitMessage}</div>
       ) : (
         <div>
           {!isCheckboxChecked ? (
@@ -113,38 +115,38 @@ const SubmitForm = () => {
           ) : (
             <p className={styles.content}>
               If everything is in order, your project will be approved and will
-              appear in the Projects section. If there are any issues, you will be
-              contacted with details. You can track the status of your project in
-              the "My Projects" section of your dashboard.
+              appear in the Projects section. If there are any issues, you will
+              be contacted with details. You can track the status of your
+              project in the "My Projects" section of your dashboard.
             </p>
           )}
         </div>
       )}
-  
+
       {!submitMessage && (
         <div>
           <div className={styles.checkboxLayout}>
             <input
-              type='checkbox'
+              type="checkbox"
               className={styles.input}
-              id='approvalCheckbox'
+              id="approvalCheckbox"
               checked={isCheckboxChecked}
               onChange={handleCheckboxChange}
               disabled={remainingTime > 0 && !isCheckboxChecked}
             />
-            <label className={styles.label} htmlFor='approvalCheckbox'>
+            <label className={styles.label} htmlFor="approvalCheckbox">
               {remainingTime > 0
                 ? `You can check the box in ${remainingTime} seconds`
-                : 'I confirm my project'}
+                : "I confirm my project"}
             </label>
           </div>
-  
-          {errorMessage && <div className='error-message'>{errorMessage}</div>}
-  
+
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
+
           {isCheckboxChecked && (
             <div className={styles.buttonContainer}>
               <button
-                type='button'
+                type="button"
                 className={styles.button}
                 onClick={handleApprovalSubmit}
                 disabled={!isCheckboxChecked}
