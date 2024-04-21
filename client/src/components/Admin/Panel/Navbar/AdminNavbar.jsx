@@ -54,8 +54,7 @@ function AdminNavBar() {
             >
               Pending Projects
             </NavLink>
-
-            <NavLink onClick={handleLogout}>Logout</NavLink>
+            <button onClick={handleLogout}>Logout</button>
           </ul>
         </div>
       </nav>

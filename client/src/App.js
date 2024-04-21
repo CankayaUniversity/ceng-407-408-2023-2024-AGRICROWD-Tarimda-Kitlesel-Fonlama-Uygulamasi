@@ -25,7 +25,7 @@ import ProjectReward from './components/addProject/details/reward/Reward';
 import ProjectSubmitForApproval from './components/addProject/details/submit/SubmitForApproval';
 
 import AdminLogin from './components/Admin/Login/AdminLogin';
-import AdminHome from './components/Admin/Panel/Home/Home';
+import AdminHome from './components/Admin/Panel/Home/AdminHome';
 import AdminNavBar from './components/Admin/Panel/Navbar/AdminNavbar';
 import AdminCategories from './components/Admin/Panel/Categories/Categories';
 import AdminChangePsw from './components/Admin/Panel/ChangePassword/ChangePassword';

@@ -93,7 +93,7 @@ router.post('/projects/add-pending', async (req, res) => {
             basicInfo
         });
         await newPendingProject.save();
-        res.status(201).json({ success: true, message: 'Project submitted for approval successfully!' });
+        res.status(201).json({ success: true, message: 'Project submitted for approval successfully! You are directed to the screen where you can see your own projects...' });
     } catch (error) {
         console.error('Error submitting project for approval:', error);
         res.status(500).json({ message: 'An error occurred while submitting the project for approval. Please try again.' });
@@ -110,6 +110,26 @@ router.get('/projects/pending', async (req, res) => {
     }
 });
 
+router.put('/projects/approve', async (req, res) => {
+    const { projectId } = req.body;
+    try {
+        const updatedProject = await PendingProject.findByIdAndUpdate(
+            projectId,
+            { status: 'approved' },
+            { new: true }
+        );
+
+        if (!updatedProject) {
+            return res.status(404).json({ success: false, error: 'Project not found' });
+        }
+        res.json({ success: true, message: 'Project approved successfully!' });
+    } catch (error) {
+        console.error('Error approving project:', error);
+        res.status(500).json({ success: false, error: 'Server error' });
+    }
+});
+
+
 router.put('/projects/reject', async (req, res) => {
     const { projectId, rejectionReason } = req.body;
     try {
@@ -120,14 +140,16 @@ router.put('/projects/reject', async (req, res) => {
         );
 
         if (!updatedProject) {
-            return res.status(404).json({ error: 'Project not found' });
+            return res.status(404).json({ success: false, error: 'Project not found' });
         }
-        res.json(updatedProject);
+        res.json({ success: true, message: 'Project rejected successfully!' });
     } catch (error) {
         console.error('Error rejecting project:', error);
-        res.status(500).json({ error: 'Server error' });
+        res.status(500).json({ success: false, error: 'Server error' });
     }
 });
+
+
 
 
 
