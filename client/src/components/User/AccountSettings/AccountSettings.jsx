@@ -171,29 +171,28 @@ function UserPanel() {
     }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const authToken = Cookies.get('authToken');
-    const updatedUser = { ...user };
+// UserPanel.js içinde handleSubmit fonksiyonunda
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  const authToken = Cookies.get('authToken');
+  const userId = user._id; // Bu satırı ekleyin
+  const updatedUser = { ...user };
 
-    if (!updatedUser.password || updatedUser.password.trim() === '') {
-      delete updatedUser.password;
-    }
+  try {
+    const response = await axios.put(
+      `http://localhost:3001/api/user/update-info`,
+      { updates: updatedUser, userId: userId }, // 'updates' ve 'userId' doğru şekilde gönderildiğinden emin olun
+      {
+        headers: { Authorization: `Bearer ${authToken}` },
+      }
+    );
+    alert('Kullanıcı bilgileri başarıyla güncellendi.');
+  } catch (error) {
+    console.error('Bilgiler güncellenirken hata oluştu', error);
+    alert('Bilgiler güncellenirken bir hata oluştu.');
+  }
+};
 
-    try {
-      await axios.put(
-        `http://localhost:3001/api/user/${user._id}`,
-        updatedUser,
-        {
-          headers: { Authorization: `Bearer ${authToken}` },
-        }
-      );
-      alert('Kullanıcı bilgileri başarıyla güncellendi.');
-    } catch (error) {
-      console.error('Bilgiler güncellenirken hata oluştu', error);
-      alert('Bilgiler güncellenirken bir hata oluştu.');
-    }
-  };
 
   if (!user) {
     return <div>Loading...</div>;

@@ -15,21 +15,26 @@ import Home from './components/Home/Home';
 import Navbar from './components/Navbar/Navbar';
 import SignUp from './components/SignUp/SignUp';
 import Login from './components/Login/Login';
+//User
 import UserPanel from './components/User/AccountSettings/AccountSettings';
+import UserHome from './components/User/Home/UserHome';
+import ChangePassword from './components/User/ChangePassword/ChangePassword';
+import MyProjects from './components/User/MyProjects/MyProjects';
+import UserNavBar from './components/User/UserNavBar/UserNavBar';
 
 // import AddProject from './components/addProject/AddProject';
 import AddProjectNav from './components/addProject/ProgressBar/ProgressBar';
-import ProjectInform from './components/addProject/details/inform/Inform';
-import ProjectBasics from './components/addProject/details/basicInfo/BasicInfo';
+import ProjectInform from './components/addProject/details/inform/inform';
+import ProjectBasics from './components/addProject/details/basicInfo/basicInfo';
 import ProjectReward from './components/addProject/details/reward/Reward';
-import ProjectSubmitForApproval from './components/addProject/details/submit/SubmitForApproval';
+import ProjectSubmitForApproval from './components/addProject/details/submit/submitForApproval';
 
-import AdminLogin from './components/Admin/Login/AdminLogin';
-import AdminHome from './components/Admin/Panel/Home/AdminHome';
+import AdminLogin from './components/Admin/Login/adminLogin';
+import AdminHome from './components/Admin/Panel/home/AdminHome';
 import AdminNavBar from './components/Admin/Panel/Navbar/AdminNavbar';
 import AdminCategories from './components/Admin/Panel/Categories/Categories';
 import AdminChangePsw from './components/Admin/Panel/ChangePassword/ChangePassword';
-import AdminPendingProjects from './components/Admin/Panel/PendingProjects/PendingProjects';
+import AdminPendingProjects from './components/Admin/Panel/pendingProjects/pendingProjects';
 import AddProjects from './components/addProject/AddProject';
 import Projects from './components/Projects/Projects';
 
@@ -79,9 +84,13 @@ const App = () => {
                   path='/user/*'
                   element={
                     <ProtectedRoute>
+                      <UserNavBar />
                       <Routes>
                         <Route path='*' element={<NotFound />} />
                         <Route path='panel' element={<UserPanel />} />
+                        <Route path='home' element={<UserHome />} />
+                        <Route path='change-password' element={<ChangePassword />} />
+                        <Route path='my-projects' element={<MyProjects />} />
                       </Routes>
                     </ProtectedRoute>
                   }
