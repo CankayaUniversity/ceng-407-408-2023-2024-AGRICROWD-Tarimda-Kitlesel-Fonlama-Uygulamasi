@@ -7,8 +7,8 @@ const Inform = () => {
   const [isAgreed, setIsAgreed] = useState(false);
   const [canToggleCheckbox, setCanToggleCheckbox] = useState(false);
   const [canProceed, setCanProceed] = useState(false);
-  const [checkboxRemainingTime, setCheckboxRemainingTime] = useState(20);
-  const [proceedRemainingTime, setProceedRemainingTime] = useState(15);
+  const [checkboxRemainingTime, setCheckboxRemainingTime] = useState(10);
+  const [proceedRemainingTime, setProceedRemainingTime] = useState(5);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const Inform = () => {
     } else {
       const checkboxTimer = setTimeout(() => {
         setCanToggleCheckbox(true);
-      }, 20000);
+      }, 10000);
 
       const checkboxInterval = setInterval(() => {
         setCheckboxRemainingTime((prevTime) =>
@@ -37,7 +37,7 @@ const Inform = () => {
     if (isAgreed) {
       const proceedTimer = setTimeout(() => {
         setCanProceed(true);
-      }, 15000);
+      }, 5000);
 
       const proceedInterval = setInterval(() => {
         setProceedRemainingTime((prevTime) =>

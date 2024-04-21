@@ -8,7 +8,7 @@ const SubmitForm = () => {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [remainingTime, setRemainingTime] = useState(15);
+  const [remainingTime, setRemainingTime] = useState(5);
   const [userId, setUserID] = useState('');
   const navigate = useNavigate();
 
@@ -78,7 +78,7 @@ const SubmitForm = () => {
       setTimeout(() => {
         setSubmitMessage('');
         navigate('/user/my-projects');
-      }, 15000);
+      }, 5000);
       localStorage.removeItem(userId);
       localStorage.removeItem('isInformCompleted');
       localStorage.removeItem('isBasicsCompleted');
@@ -98,54 +98,63 @@ const SubmitForm = () => {
           Submit Your Project for Approval
         </h2>
       </header>
-
-      <div>
-        {!isCheckboxChecked ? (
-          <p className={styles.content}>
-            Please review the information you provided carefully. By checking
-            the box below, you confirm that the information is accurate and
-            complete. Upon submission, your project will be sent to Agricrowd
-            for approval.
-          </p>
-        ) : (
-          <p className={styles.content}>
-            If everything is in order, your project will be approved and will
-            appear in the Projects section. If there are any issues, you will be
-            contacted with details. You can track the status of your project in
-            the "My Projects" section of your dashboard.
-          </p>
-        )}
-      </div>
-
-      <div className={styles.checkboxLayout}>
-        <input
-          type='checkbox'
-          className={styles.input}
-          id='approvalCheckbox'
-          checked={isCheckboxChecked}
-          onChange={handleCheckboxChange}
-          disabled={remainingTime > 0 && !isCheckboxChecked}
-        />
-        <label className={styles.label} htmlFor='approvalCheckbox'>
-          {remainingTime > 0
-            ? `You can check the box in ${remainingTime} seconds`
-            : 'I confirm my project'}
-        </label>
-      </div>
-
-      {submitMessage && <div className='submit-message'>{submitMessage}</div>}
-      {errorMessage && <div className='error-message'>{errorMessage}</div>}
-
-      <div className={styles.buttonContainer}>
-        <button
-          type='button'
-          className={styles.button}
-          onClick={handleApprovalSubmit}
-          disabled={!isCheckboxChecked}
-        >
-          Submit
-        </button>
-      </div>
+  
+      {submitMessage ? (
+        <div className='submit-message'>{submitMessage}</div>
+      ) : (
+        <div>
+          {!isCheckboxChecked ? (
+            <p className={styles.content}>
+              Please review the information you provided carefully. By checking
+              the box below, you confirm that the information is accurate and
+              complete. Upon submission, your project will be sent to Agricrowd
+              for approval.
+            </p>
+          ) : (
+            <p className={styles.content}>
+              If everything is in order, your project will be approved and will
+              appear in the Projects section. If there are any issues, you will be
+              contacted with details. You can track the status of your project in
+              the "My Projects" section of your dashboard.
+            </p>
+          )}
+        </div>
+      )}
+  
+      {!submitMessage && (
+        <div>
+          <div className={styles.checkboxLayout}>
+            <input
+              type='checkbox'
+              className={styles.input}
+              id='approvalCheckbox'
+              checked={isCheckboxChecked}
+              onChange={handleCheckboxChange}
+              disabled={remainingTime > 0 && !isCheckboxChecked}
+            />
+            <label className={styles.label} htmlFor='approvalCheckbox'>
+              {remainingTime > 0
+                ? `You can check the box in ${remainingTime} seconds`
+                : 'I confirm my project'}
+            </label>
+          </div>
+  
+          {errorMessage && <div className='error-message'>{errorMessage}</div>}
+  
+          {isCheckboxChecked && (
+            <div className={styles.buttonContainer}>
+              <button
+                type='button'
+                className={styles.button}
+                onClick={handleApprovalSubmit}
+                disabled={!isCheckboxChecked}
+              >
+                Submit
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

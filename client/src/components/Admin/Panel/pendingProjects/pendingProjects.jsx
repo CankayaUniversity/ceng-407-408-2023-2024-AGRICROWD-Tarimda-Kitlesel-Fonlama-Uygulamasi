@@ -45,32 +45,45 @@ const PendingProjects = () => {
 
   const handleApproveProject = async (projectId) => {
     try {
-      await axios.put('http://localhost:3001/api/admin/projects/approve', {
+      const response = await axios.put('http://localhost:3001/api/admin/projects/approve', {
         projectId,
       });
-      setFeedbackMessage('Project approved successfully!');
-      fetchProjects();
+
+      if (response.data.success) {
+        setSelectedProjectId(null);
+        setFeedbackMessage(response.data.message); // success message !
+        fetchProjects();
+      } else {
+        setFeedbackMessage('Error approving project. Please try again later.');
+      }
     } catch (error) {
       console.error('Error approving project:', error);
       setFeedbackMessage('Error approving project. Please try again later.');
     }
   };
 
+
   const handleRejectProject = async () => {
     try {
-      await axios.put('http://localhost:3001/api/admin/projects/reject', {
+      const response = await axios.put('http://localhost:3001/api/admin/projects/reject', {
         projectId: selectedProjectId,
         rejectionReason,
       });
-      setRejectionReason('');
-      setSelectedProjectId(null);
-      setFeedbackMessage('Project rejected successfully!');
-      fetchProjects();
+
+      if (response.data.success) {
+        setRejectionReason('');
+        setSelectedProjectId(null);
+        setFeedbackMessage(response.data.message);
+        fetchProjects();
+      } else {
+        setFeedbackMessage('Error rejecting project. Please try again later.');
+      }
     } catch (error) {
       console.error('Error rejecting project:', error);
       setFeedbackMessage('Error rejecting project. Please try again later.');
     }
   };
+
 
   const renderProjectData = (projectData) => {
     return (
