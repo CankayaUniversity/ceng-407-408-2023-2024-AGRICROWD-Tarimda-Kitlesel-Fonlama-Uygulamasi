@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import styles from './AccountSettings.module.css';
+
 const cities = [
   'Adana',
   'Adıyaman',
@@ -171,28 +172,27 @@ function UserPanel() {
     }
   };
 
-// UserPanel.js içinde handleSubmit fonksiyonunda
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  const authToken = Cookies.get('authToken');
-  const userId = user._id; // Bu satırı ekleyin
-  const updatedUser = { ...user };
+  // UserPanel.js içinde handleSubmit fonksiyonunda
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const authToken = Cookies.get('authToken');
+    const userId = user._id; // Bu satırı ekleyin
+    const updatedUser = { ...user };
 
-  try {
-    const response = await axios.put(
-      `http://localhost:3001/api/user/update-info`,
-      { updates: updatedUser, userId: userId }, // 'updates' ve 'userId' doğru şekilde gönderildiğinden emin olun
-      {
-        headers: { Authorization: `Bearer ${authToken}` },
-      }
-    );
-    alert('Kullanıcı bilgileri başarıyla güncellendi.');
-  } catch (error) {
-    console.error('Bilgiler güncellenirken hata oluştu', error);
-    alert('Bilgiler güncellenirken bir hata oluştu.');
-  }
-};
-
+    try {
+      const response = await axios.put(
+        `http://localhost:3001/api/user/update-info`,
+        { updates: updatedUser, userId: userId }, // 'updates' ve 'userId' doğru şekilde gönderildiğinden emin olun
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }
+      );
+      alert('Kullanıcı bilgileri başarıyla güncellendi.');
+    } catch (error) {
+      console.error('Bilgiler güncellenirken hata oluştu', error);
+      alert('Bilgiler güncellenirken bir hata oluştu.');
+    }
+  };
 
   if (!user) {
     return <div>Loading...</div>;
@@ -200,8 +200,8 @@ const handleSubmit = async (event) => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.heading}>Account Settings</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
+        <h1 className={styles.heading}>Account Settings</h1>
         {/* E-posta */}
         <div className={styles.formRow}>
           <div className={styles.formRowInner}>
