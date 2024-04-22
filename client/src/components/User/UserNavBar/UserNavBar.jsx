@@ -1,44 +1,43 @@
-import React from "react";
-import { Button, Nav, Navbar } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom";
-import Cookies from "js-cookie";
-import "./UserNavBar.module.css";
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import styles from './UserNavBar.module.css';
 
 function UserNavBar() {
-    const location = useLocation();
+  const location = useLocation();
 
-    const handleLogout = () => {
-        Cookies.remove('authToken');  // Kullanıcı token'ını sil
-        window.location = '/login';  
-        alert('You have successfully logged out.');
-    };
+  const handleLogout = () => {
+    Cookies.remove('authToken'); // Kullanıcı token'ını sil
+    window.location = '/login';
+    alert('You have successfully logged out.');
+  };
 
-    return (
-        <Navbar bg="light" expand="md">
-            <Navbar.Toggle aria-controls="user-navbar-nav" />
-            <Navbar.Collapse id="user-navbar-nav">
-                <Nav className="mr-auto">
-                    <Button variant="light" as={Link} to="/user/home" className={location.pathname === "/user/home" ? 'active' : ''}>
-                        Home
-                    </Button>
-                    <Button variant="light" as={Link} to="/user/panel" className={location.pathname === "/user/panel" ? 'active' : ''}>
-                        Account Settings
-                    </Button>
-                    <Button variant="light" as={Link} to="/user/change-password" className={location.pathname === "/user/change-password" ? 'active' : ''}>
-                        Change Password
-                    </Button>
-                    <Button variant="light" as={Link} to="/user/my-projects" className={location.pathname === "/user/my-projects" ? 'active' : ''}>
-                        My Projects
-                    </Button>
-                </Nav>
-                <Nav>
-                    <Button variant="light" onClick={handleLogout}>
-                        Logout
-                    </Button>
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
-    );
+  return (
+    <nav className={styles.container}>
+      <div className={styles.navLayout}>
+        <div className={styles.line}></div>
+        <div className={styles.navItems}>
+          <button as={Link} to='/user/my-projects' className={styles.navLink}>
+            My Projects
+          </button>
+          <button as={Link} to='/user/panel' className={styles.navLink}>
+            Account settings
+          </button>
+          <button
+            as={Link}
+            to='/user/change-password'
+            className={styles.navLink}
+          >
+            Change password
+          </button>
+
+          <button className={styles.navLink} onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
+      </div>
+    </nav>
+  );
 }
 
 export default UserNavBar;
