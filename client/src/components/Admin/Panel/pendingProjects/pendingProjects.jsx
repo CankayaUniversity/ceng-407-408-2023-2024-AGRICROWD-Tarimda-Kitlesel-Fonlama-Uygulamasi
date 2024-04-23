@@ -197,6 +197,9 @@ const PendingProjects = () => {
   return (
     <div className={styles.pageLayout}>
       <h2 className={styles.title}>*manage pending projects</h2>
+      {feedbackMessage && (
+        <div className={styles.message}>{feedbackMessage}</div>
+      )}
 
       {loading ? (
         <div>Loading...</div>
@@ -209,14 +212,8 @@ const PendingProjects = () => {
                 <div className="card">
                   <div className="card-body">
                     {renderProjectData(project.basicInfo)}
-
                     <div>
                       {renderUserDetails(project.userDetails)}
-
-                      {feedbackMessage && (
-                        <div className={styles.message}>{feedbackMessage}</div>
-                      )}
-
                       {selectedProjectId !== project._id && (
                         <div className={styles.btnsContainer}>
                           <button
