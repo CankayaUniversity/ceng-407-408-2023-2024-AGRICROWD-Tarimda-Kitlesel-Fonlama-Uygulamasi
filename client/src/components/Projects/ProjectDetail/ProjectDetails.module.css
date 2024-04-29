@@ -1,0 +1,37 @@
+.project-detail-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.slider-container {
+    margin-right: 20px;
+}
+
+.slider {
+    position: relative;
+}
+
+.main-image-container {
+    position: relative;
+}
+
+.main-image {
+    max-width: 100%;
+    height: auto;
+}
+
+.thumbnail-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.thumbnail {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.thumbnail img {
+    max-width: 100px;
+    height: auto;
+}
