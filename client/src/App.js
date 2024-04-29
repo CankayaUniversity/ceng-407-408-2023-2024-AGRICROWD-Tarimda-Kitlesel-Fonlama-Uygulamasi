@@ -22,21 +22,22 @@ import ChangePassword from './components/User/ChangePassword/ChangePassword';
 import MyProjects from './components/User/MyProjects/MyProjects';
 import UserNavBar from './components/User/UserNavBar/UserNavBar';
 
-// import AddProject from './components/addProject/AddProject';
+//ProjectAddition
 import AddProjectNav from './components/addProject/ProgressBar/ProgressBar';
-import ProjectInform from './components/addProject/details/inform/inform';
-import ProjectBasics from './components/addProject/details/basicInfo/basicInfo';
+import AddProjects from './components/addProject/AddProject';
+import ProjectInform from './components/addProject/details/inform/Inform';
+import ProjectBasics from './components/addProject/details/basicInfo/BasicInfo';
 import ProjectReward from './components/addProject/details/reward/Reward';
 import ProjectSubmitForApproval from './components/addProject/details/submit/submitForApproval';
 
-import AdminLogin from './components/Admin/Login/adminLogin';
+import AdminLogin from './components/Admin/Login/AdminLogin';
 import AdminHome from './components/Admin/Panel/home/AdminHome';
 import AdminNavBar from './components/Admin/Panel/Navbar/AdminNavbar';
 import AdminCategories from './components/Admin/Panel/Categories/Categories';
 import AdminChangePsw from './components/Admin/Panel/ChangePassword/ChangePassword';
-import AdminPendingProjects from './components/Admin/Panel/pendingProjects/pendingProjects';
-import AddProjects from './components/addProject/AddProject';
-import Projects from './components/Projects/Projects';
+import AdminPendingProjects from './components/Admin/Panel/PendingProjects/pendingProjects';
+
+import Projects from './components/Projects/ApprovedProjects/Projects';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
