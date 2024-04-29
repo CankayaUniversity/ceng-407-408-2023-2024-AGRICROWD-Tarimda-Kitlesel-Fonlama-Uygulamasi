@@ -59,7 +59,7 @@ const PendingProjects = () => {
         setFeedbackMessage(response.data.message); // success message !
 
         // After approving the project, create the project in the smart contract
-        await createProjectInSmartContract(projectId);
+        // await createProjectInSmartContract(projectId);
 
         fetchProjects();
       } else {
