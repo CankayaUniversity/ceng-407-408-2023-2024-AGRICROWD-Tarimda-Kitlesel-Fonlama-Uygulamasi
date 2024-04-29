@@ -10,6 +10,9 @@ const SubmitForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [remainingTime, setRemainingTime] = useState(5);
   const [userId, setUserID] = useState("");
+  const [isInformCompleted, setIsInformCompleted] = useState(false);
+  const [isBasicsCompleted, setIsBasicsCompleted] = useState(false);
+  const [isRewardCompleted, setIsRewardCompleted] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,31 +62,47 @@ const SubmitForm = () => {
     return () => clearInterval(countdownInterval);
   }, [remainingTime]);
 
+  useEffect(() => {
+    setIsInformCompleted(localStorage.getItem("isInformCompleted") === "true");
+    setIsBasicsCompleted(localStorage.getItem("isBasicsCompleted") === "true");
+    setIsRewardCompleted(localStorage.getItem("isRewardCompleted") === "true");
+  }, []);
+
   const handleCheckboxChange = () => {
     setIsCheckboxChecked(!isCheckboxChecked);
   };
 
   const handleApprovalSubmit = async () => {
     try {
-      const basicInfo = JSON.parse(localStorage.getItem(userId));
-      const response = await axios.post(
-        "http://localhost:3001/api/admin/projects/add-pending",
-        {
-          userId,
-          basicInfo,
+      if (isInformCompleted && isBasicsCompleted && isRewardCompleted) {
+        const basicInfo = JSON.parse(localStorage.getItem(userId));
+        const response = await axios.post(
+          "http://localhost:3001/api/admin/projects/add-pending",
+          {
+            userId,
+            basicInfo,
+          }
+        );
+        setSubmitMessage(response.data.message);
+        setIsCheckboxChecked(false);
+        setTimeout(() => {
+          setSubmitMessage("");
+          navigate("/user/my-projects");
+        }, 5000);
+        localStorage.removeItem(userId);
+        localStorage.removeItem("isInformCompleted");
+        localStorage.removeItem("isBasicsCompleted");
+        localStorage.removeItem("isRewardCompleted");
+        localStorage.removeItem("percentage");
+      } else {
+        if (!isInformCompleted) {
+          navigate("/add-project/inform");
+        } else if (!isBasicsCompleted) {
+          navigate("/add-project/basics");
+        } else if (!isRewardCompleted) {
+          navigate("/add-project/reward");
         }
-      );
-      setSubmitMessage(response.data.message);
-      setIsCheckboxChecked(false);
-      setTimeout(() => {
-        setSubmitMessage("");
-        navigate("/user/my-projects");
-      }, 5000);
-      localStorage.removeItem(userId);
-      localStorage.removeItem("isInformCompleted");
-      localStorage.removeItem("isBasicsCompleted");
-      localStorage.removeItem("isRewardCompleted");
-      localStorage.removeItem("percentage");
+      }
     } catch (error) {
       console.error("Error submitting project for approval:", error);
       const errorMessage = error.response
@@ -143,7 +162,7 @@ const SubmitForm = () => {
 
           {errorMessage && <div className="error-message">{errorMessage}</div>}
 
-          {isCheckboxChecked && (
+          {isCheckboxChecked && isInformCompleted && isBasicsCompleted && isRewardCompleted ? (
             <div className={styles.buttonContainer}>
               <button
                 type="button"
@@ -153,6 +172,18 @@ const SubmitForm = () => {
               >
                 Submit
               </button>
+            </div>
+          ) : (
+            <div>
+              {!isInformCompleted && (
+                <p>Please complete the project information section.</p>
+              )}
+              {!isBasicsCompleted && (
+                <p>Please complete the basic information section.</p>
+              )}
+              {!isRewardCompleted && (
+                <p>Please complete the reward section.</p>
+              )}
             </div>
           )}
         </div>

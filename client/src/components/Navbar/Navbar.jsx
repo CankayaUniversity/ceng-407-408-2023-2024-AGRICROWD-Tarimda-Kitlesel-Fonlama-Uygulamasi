@@ -24,7 +24,6 @@ const MainNavbar = ({ isAuthenticated, onLogout }) => {
                 <li>
                   <NavLink to='/add-project/inform'>Add Project</NavLink>
                 </li>
-
                 <li>
                   <NavLink to='/user/panel'>Account</NavLink>
                 </li>
@@ -37,6 +36,9 @@ const MainNavbar = ({ isAuthenticated, onLogout }) => {
               </>
             ) : (
               <>
+                <li>
+                  <NavLink to='/projects'>Projects</NavLink>
+                </li>
                 <li>
                   <NavLink to='/login'>Login</NavLink>
                 </li>
