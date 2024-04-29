@@ -47,6 +47,9 @@ app.use('/api/info', getUserInfoRoutes);
 const photosRoutes = require('./routes/PhotoRoutes.js');
 app.use('/api/photos', photosRoutes);
 
+const projectsRoutes = require('./routes/ProjectRoutes.js');
+app.use('/api/projects', projectsRoutes);
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

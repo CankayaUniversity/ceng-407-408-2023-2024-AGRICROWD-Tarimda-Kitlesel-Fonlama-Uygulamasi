@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const PendingProject = require('../models/pendingProjectsSchema');
 
-router.get('/', async (req, res) => {
+router.get('/fetch-approved-projects', async (req, res) => {
     try {
         const approvedProjects = await PendingProject.find({ status: 'approved' });
         res.status(200).json(approvedProjects);

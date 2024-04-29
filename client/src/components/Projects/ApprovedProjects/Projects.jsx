@@ -51,7 +51,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchApprovedProjects = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/projects/approved');
+        const response = await axios.get('http://localhost:3001/api/projects/fetch-approved-projects');
         setApprovedProjects(response.data);
         setLoading(false);
       } catch (error) {
