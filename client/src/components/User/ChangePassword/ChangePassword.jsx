@@ -53,15 +53,15 @@ function ChangePassword() {
     }
 
     try {
-      const admToken = Cookies.get('admToken');
+      const authToken = Cookies.get('authToken');
       const response = await axios.put(
-        'http://localhost:3001/api/admin/change-password',
+        'http://localhost:3001/api/user/change-password',
         {
           oldPassword,
           newPassword,
         },
         {
-          headers: { Authorization: `Bearer ${admToken}` },
+          headers: { Authorization: `Bearer ${authToken}` },
         }
       );
       if (response.data.success) {
