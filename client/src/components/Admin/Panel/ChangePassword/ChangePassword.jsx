@@ -111,7 +111,7 @@ function ChangePassword() {
               className={styles.input}
               id='newPassword'
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={handlePasswordChange}
               pattern='^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$'
               required
             />
