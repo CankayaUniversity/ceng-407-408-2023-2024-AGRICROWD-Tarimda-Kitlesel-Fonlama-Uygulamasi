@@ -115,7 +115,7 @@ router.put('/projects/approve', async (req, res) => {
     try {
         const updatedProject = await PendingProject.findByIdAndUpdate(
             projectId,
-            { status: 'approved' },
+            { status: 'approved', approvalDate: new Date() },
             { new: true }
         );
 
