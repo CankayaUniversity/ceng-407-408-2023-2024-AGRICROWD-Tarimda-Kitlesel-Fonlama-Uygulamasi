@@ -1,47 +1,50 @@
 import React, { useState, useEffect } from 'react';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 import styles from './Projects.module.css';
 
 const ProjectCard = ({ project }) => (
-  <div className={styles.cardContainer}>
-    <div className={styles.card}>
-      <div className={styles.cardBody}>
-        <h3 className={styles.projectTitle}>{project.projectName}</h3>
-        <div className={styles.projectContent}>
-        <div className={styles.projectDetail}>
-            <h4>Project Name</h4>
-            {project.basicInfo.projectName}
-          </div>
-          <div className={styles.projectDetail}>
-            <h4>Country</h4> {project.basicInfo.country}
-          </div>
-          <div className={styles.projectDetail}>
-            <h4>Target Amount</h4> {project.basicInfo.targetAmount}
-          </div>
-          <div className={styles.projectDetail}>
-            <h4>Campaign Duration</h4> {project.basicInfo.campaignDuration} days
-          </div>
-        </div>
-        {project.basicInfo.projectImages && project.basicInfo.projectImages.length > 0 ? (
-          <div className={styles.projectImagesContainer}>
-            <h4>Project Photos</h4>
-            <div>
-              {project.basicInfo.projectImages.map((photo, index) => (
-                <img
-                  key={index}
-                  src={`http://localhost:3001/api/photos/${photo._id}`}
-                  alt={`Project ${index}`}
-                  className={styles.projectImage}
-                />
-              ))}
+  <Link to={`/project/${encodeURIComponent(project.basicInfo.projectName)}-pid-${project._id}`} className={styles.cardLink}>
+    <div className={styles.cardContainer}>
+      <div className={styles.card}>
+        <div className={styles.cardBody}>
+          <h3 className={styles.projectTitle}>{project.projectName}</h3>
+          <div className={styles.projectContent}>
+            <div className={styles.projectDetail}>
+              <h4>Project Name</h4>
+              {project.basicInfo.projectName}
+            </div>
+            <div className={styles.projectDetail}>
+              <h4>Country</h4> {project.basicInfo.country}
+            </div>
+            <div className={styles.projectDetail}>
+              <h4>Target Amount</h4> {project.basicInfo.targetAmount}
+            </div>
+            <div className={styles.projectDetail}>
+              <h4>Campaign Duration</h4> {project.basicInfo.campaignDuration} days
             </div>
           </div>
-        ) : (
-          <div className={styles.noPhotos}>No photos available for this project!</div>
-        )}
+          {project.basicInfo.projectImages && project.basicInfo.projectImages.length > 0 ? (
+            <div className={styles.projectImagesContainer}>
+              <h4>Project Photos</h4>
+              <div>
+                {project.basicInfo.projectImages.map((photo, index) => (
+                  <img
+                    key={index}
+                    src={`http://localhost:3001/api/photos/${photo._id}`}
+                    alt={`Project ${index}`}
+                    className={styles.projectImage}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className={styles.noPhotos}>No photos available for this project!</div>
+          )}
+        </div>
       </div>
     </div>
-  </div>
+  </Link>
 );
 
 const Projects = () => {

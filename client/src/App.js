@@ -37,7 +37,9 @@ import AdminCategories from './components/Admin/Panel/Categories/Categories';
 import AdminChangePsw from './components/Admin/Panel/ChangePassword/ChangePassword';
 import AdminPendingProjects from './components/Admin/Panel/PendingProjects/pendingProjects';
 
+//Projects
 import Projects from './components/Projects/ApprovedProjects/Projects';
+import ProjectDetail from './components/Projects/ProjectDetail/ProjectDetail';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -109,6 +111,7 @@ const App = () => {
                   }
                 />
                 <Route path='/projects' element={<Projects />} />
+                <Route path="/project/:projectNameandId" element={<ProjectDetail />} />
                 <Route path='/logout' element={<Navigate to='/' replace />} />
               </Routes>
             </>
