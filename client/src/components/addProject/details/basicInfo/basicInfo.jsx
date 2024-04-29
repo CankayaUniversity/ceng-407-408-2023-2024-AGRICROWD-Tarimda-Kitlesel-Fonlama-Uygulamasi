@@ -157,6 +157,7 @@ const BasicInfoForm = () => {
 
   return (
     <div className={styles.formContainer}>
+      <h2 className={styles.sidebarTitle}>Let's start with the basics!</h2>
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.formRow}>
           <div className={styles.formRowInner}>
@@ -167,7 +168,7 @@ const BasicInfoForm = () => {
               onChange={(e) => setProjectName(e.target.value)}
               required
             />
-            <label className={styles.label}>Project Name</label>
+            <label className={styles.label}>Main title of your project</label>
           </div>
         </div>
 
@@ -179,7 +180,7 @@ const BasicInfoForm = () => {
               onChange={(e) => setProjectDescription(e.target.value)}
               required
             />
-            <label className={styles.label}>Project Description:</label>
+            <label className={styles.label}>Description of your project</label>
           </div>
         </div>
 
@@ -198,7 +199,7 @@ const BasicInfoForm = () => {
                 </option>
               ))}
             </select>
-            <label className={styles.label}>Category</label>
+            <label className={styles.label}>Select Project Category</label>
           </div>
         </div>
 
@@ -263,7 +264,7 @@ const BasicInfoForm = () => {
               min='1'
             />
             <label className={styles.label}>
-              Target Amount (Turkish Lira ₺)
+              Target Amount (ETH) (1 ETH = 5000$)
             </label>
           </div>
         </div>
@@ -278,7 +279,7 @@ const BasicInfoForm = () => {
               required
               min='1'
             />
-            <label className={styles.label}>Campaign Duration (Days)</label>
+            <label className={styles.label}>Your investment collection period (in Days)</label>
           </div>
         </div>
 
@@ -293,7 +294,6 @@ const BasicInfoForm = () => {
         <div className='map-section'>
           {requiresLocation && (
             <div className='mb-3'>
-              <p>Emir gerekli konum alma islemlerini gerceklestirecek!</p>
               <MapContainer></MapContainer>
             </div>
           )}

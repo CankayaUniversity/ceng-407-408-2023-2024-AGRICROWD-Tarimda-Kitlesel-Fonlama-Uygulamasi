@@ -20,13 +20,9 @@ const Reward = () => {
       // Set isRewardCompleted to true and save it to local storage
       setIsRewardCompleted(true);
       localStorage.setItem("isRewardCompleted", "true");
-      navigate("/add-project/reward");
-      console.log("Basic info submitted successfully!");
-
-      // Inform the user about successful submission
-      alert("Reward percentage submitted successfully!");
+      navigate("/add-project/submit");
+      console.log("Reward info submitted successfully!");
     } else {
-      // Inform the user that the input is invalid
       alert("Please enter a valid percentage.");
     }
   };

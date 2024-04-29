@@ -99,7 +99,7 @@ const Inform = () => {
             </>
           ) : (
             <>
-              <h2 className={styles.sidebarTitle}>Welcome to Agricrowd!</h2>
+              <h2 className={styles.sidebarTitle}>Bring your creative project to life!</h2>
               <p className={styles.content}>
                 First and foremost, we extend our gratitude for choosing our
                 platform. Our mission is to lead initiatives that will enhance
