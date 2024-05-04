@@ -20,9 +20,9 @@ router.get('/:userId', async (req, res) => {
     }
 });
 router.get('/projects/:userId', async (req, res) => {
-    console.log("asdasdasd");
+    
     const userId = req.params.userId;
-    console.log(userId);
+    
     try {
         const projects = await PendingProject.find({ userId });
         if (projects.length === 0) {
