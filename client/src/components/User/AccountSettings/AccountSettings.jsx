@@ -172,17 +172,17 @@ function UserPanel() {
     }
   };
 
-  // UserPanel.js içinde handleSubmit fonksiyonunda
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     const authToken = Cookies.get('authToken');
-    const userId = user._id; // Bu satırı ekleyin
+    const userId = user._id; 
     const updatedUser = { ...user };
 
     try {
       const response = await axios.put(
         `http://localhost:3001/api/user/update-info`,
-        { updates: updatedUser, userId: userId }, // 'updates' ve 'userId' doğru şekilde gönderildiğinden emin olun
+        { updates: updatedUser, userId: userId }, 
         {
           headers: { Authorization: `Bearer ${authToken}` },
         }

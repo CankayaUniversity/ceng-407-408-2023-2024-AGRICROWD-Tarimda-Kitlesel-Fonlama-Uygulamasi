@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const axios = require('axios');
 const UserModel = require('../models/User');
+const PendingProject = require('../models/pendingProjectsSchema');
 
 
 router.get('/:userId', async (req, res) => {
@@ -18,8 +19,20 @@ router.get('/:userId', async (req, res) => {
         res.status(500).json({ error: 'Kullanıcı bilgileri alınırken sunucu hatası oluştu', details: error.message });
     }
 });
-
-
+router.get('/projects/:userId', async (req, res) => {
+    console.log("asdasdasd");
+    const userId = req.params.userId;
+    console.log(userId);
+    try {
+        const projects = await PendingProject.find({ userId });
+        if (projects.length === 0) {
+            return res.status(404).json({ error: 'Projeler bulunamadı' });
+        }
+        res.status(200).json(projects);
+    } catch (error) {
+        res.status(500).json({ error: 'Projeler yüklenirken bir hata oluştu', details: error.message });
+    }
+});
 router.put('/update-info', async (req, res) => {
     const { updates, userId } = req.body;
 
