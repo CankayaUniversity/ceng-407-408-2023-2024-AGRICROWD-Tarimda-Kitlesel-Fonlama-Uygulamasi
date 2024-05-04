@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
 import styles from './MyProjects.module.css';
 
 function MyProjects() {
@@ -56,8 +57,6 @@ function MyProjects() {
         fetchUserId();
     }, []);
 
-
-
     const calculateRemainingDays = (approvalDate, campaignDuration) => {
         const endDate = new Date(approvalDate);
         endDate.setDate(endDate.getDate() + parseInt(campaignDuration));
@@ -67,55 +66,67 @@ function MyProjects() {
         return daysLeft > 0 ? daysLeft : 0;
     };
 
-
     return (
         <div className={styles.container}>
             <h1>My Projects</h1>
             {projects.length > 0 ? (
                 projects.map((project, index) => (
-                    <div key={index} className={styles.projectCard}>
-                        <h2 className={styles.title}>{project.basicInfo.projectName}</h2>
-                        <p className={styles.description}>Description: {project.basicInfo.projectDescription}</p>
-                        <p className={styles.info}>Category: {project.basicInfo.category}</p>
-                        <p className={styles.info}>Sub-category: {project.basicInfo.subCategory}</p>
-                        <p className={styles.info}>Country: {project.basicInfo.country}</p>
-                        <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>
-                        <p className={styles.info}>Target Amount: {project.basicInfo.targetAmount}</p>
-                        <p className={styles.info}>Status: {project.status}</p>
-                        {project.status === 'approved' && (
-                            <>
-                                <p className={styles.info}>Approval Date: {new Date(project.approvalDate).toLocaleDateString()}</p>
-                                <p className={styles.info}>Days Remaining: {calculateRemainingDays(project.approvalDate, project.basicInfo.campaignDuration)}</p>
-                            </>
-                        )}
-                        {project.status === 'rejected' && (
-                            <p className={styles.rejectionReason}>Rejection Reason: {project.rejectionReason}</p>
-                        )}
-                        {project.basicInfo.projectImages && project.basicInfo.projectImages.length > 0 ? (
-                            <div className={styles.projectImagesContainer}>
-                                <h4>Project Photos</h4>
-                                <div>
-                                    {project.basicInfo.projectImages.map((photo, index) => (
-                                        <img
-                                            key={index}
-                                            src={`http://localhost:3001/api/photos/${photo._id}`}
-                                            alt={`Project ${index}`}
-                                            className={styles.projectImage}
-                                        />
-                                    ))}
-                                </div>
+                    project.status === 'approved' ? (
+                        <Link to={`/project/${encodeURIComponent(project.basicInfo.projectName)}-pid-${project._id}`} className={styles.cardLink} key={index}>
+                            <div className={styles.projectCard}>
+                                {projectCardContents(project, calculateRemainingDays)}
                             </div>
-                        ) : (
-                            <div className={styles.noPhotos}>No photos available for this project!</div>
-                        )}
-                    </div>
+                        </Link>
+                    ) : (
+                        <div key={index} className={styles.projectCard}>
+                            {projectCardContents(project, calculateRemainingDays)}
+                        </div>
+                    )
                 ))
             ) : (
                 <p>No projects found.</p>
             )}
         </div>
     );
+}
 
+function projectCardContents(project, calculateRemainingDays) {
+    return (
+        <>
+            <h2 className={styles.title}>{project.basicInfo.projectName}</h2>
+            <p className={styles.description}>Description: {project.basicInfo.projectDescription}</p>
+            <p className={styles.info}>Category: {project.basicInfo.category}</p>
+            <p className={styles.info}>Sub-category: {project.basicInfo.subCategory}</p>
+            <p className={styles.info}>Country: {project.basicInfo.country}</p>
+            <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>
+            <p className={styles.info}>Target Amount: {project.basicInfo.targetAmount}</p>
+            <p className={styles.info}>Status: {project.status}</p>
+            {project.status === 'approved' && (
+                <>
+                    <p className={styles.info}>Approval Date: {new Date(project.approvalDate).toLocaleDateString()}</p>
+                    <p className={styles.info}>Days Remaining: {calculateRemainingDays(project.approvalDate, project.basicInfo.campaignDuration)}</p>
+                </>
+            )}
+            {project.status === 'rejected' && (
+                <p className={styles.rejectionReason}>Rejection Reason: {project.rejectionReason}</p>
+            )}
+            {project.basicInfo.projectImages && project.basicInfo.projectImages.length > 0 ? (
+                <div className={styles.projectImagesContainer}>
+                    <h4>Project Photos</h4>
+                    {project.basicInfo.projectImages.map((photo, index) => (
+                        <img
+                            key={index}
+                            src={`http://localhost:3001/api/photos/${photo._id}`}
+                            alt={`Project ${index}`}
+                            className={styles.projectImage}
+                        />
+                    ))}
+                </div>
+            ) : (
+                <div className={styles.noPhotos}>No photos available for this project!</div>
+            )}
+        </>
+    );
 }
 
 export default MyProjects;
