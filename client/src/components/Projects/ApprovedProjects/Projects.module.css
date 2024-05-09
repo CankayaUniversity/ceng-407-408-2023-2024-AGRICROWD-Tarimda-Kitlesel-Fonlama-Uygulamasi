@@ -1,9 +1,7 @@
 .pageLayout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .title {
@@ -11,19 +9,57 @@
   margin-bottom: 20px;
 }
 
+.filters {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.searchInput,
+.categorySelect {
+  margin-right: 10px;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.sortButtons {
+  margin-bottom: 20px;
+}
+
+.sortButtons button {
+  margin-right: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.sortButtons button:hover {
+  background-color: #0056b3;
+}
+
 .gridContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-gap: 20px;
-  max-width: 1200px;
-  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.cardContainer {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .card {
-  background-color: #f4f4f4;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  background-color: #fff;
 }
 
 .cardBody {
@@ -31,12 +67,12 @@
 }
 
 .projectTitle {
-  font-size: 20px;
+  margin-top: 0;
   margin-bottom: 10px;
 }
 
 .projectContent {
-  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .projectDetail {
@@ -44,15 +80,21 @@
 }
 
 .projectImagesContainer {
-  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.projectImagesContainer h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
 }
 
 .projectImage {
-  max-width: 100%;
+  width: 100%;
   height: auto;
   margin-bottom: 10px;
 }
 
 .noPhotos {
-  color: #777;
+  font-style: italic;
+  color: #666;
 }

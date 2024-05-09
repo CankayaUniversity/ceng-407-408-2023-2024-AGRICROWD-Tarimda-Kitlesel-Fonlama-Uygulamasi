@@ -12,6 +12,7 @@ const ProjectDetail = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navigate = useNavigate();
   const [remainingTime, setRemainingTime] = useState(null);
+  const [loginTime, setLoginTime] = useState(null);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -29,6 +30,10 @@ const ProjectDetail = () => {
   }, [pId]);
 
   useEffect(() => {
+    setLoginTime(new Date()); // Kullanıcının giriş zamanını al
+  }, []);
+
+  useEffect(() => {
     if (project) {
       const interval = setInterval(updateRemainingTime, 60000); 
       updateRemainingTime();
@@ -37,6 +42,8 @@ const ProjectDetail = () => {
   }, [project]);
 
   const updateRemainingTime = () => {
+    if (!loginTime) return; // Giriş zamanı henüz ayarlanmadıysa fonksiyondan çık
+
     const campaignDuration = project.basicInfo.campaignDuration;
     const approvalDate = new Date(project.approvalDate);
     const currentDate = new Date();
@@ -44,9 +51,13 @@ const ProjectDetail = () => {
     const timeDifference = Math.max((currentDate - approvalDate) / 1000, 0);
     const remainingTimeInSeconds = campaignDuration * 24 * 60 * 60 - timeDifference;
 
-    const days = Math.floor(remainingTimeInSeconds / (24 * 60 * 60));
-    const hours = Math.floor((remainingTimeInSeconds % (24 * 60 * 60)) / (60 * 60));
-    const minutes = Math.floor((remainingTimeInSeconds % (60 * 60)) / 60);
+    // Girişten geçen süreyi hesapla
+    const elapsedTimeInSeconds = Math.max((currentDate - loginTime) / 1000, 0);
+    const remainingTimeAdjusted = remainingTimeInSeconds - elapsedTimeInSeconds;
+
+    const days = Math.floor(remainingTimeAdjusted / (24 * 60 * 60));
+    const hours = Math.floor((remainingTimeAdjusted % (24 * 60 * 60)) / (60 * 60));
+    const minutes = Math.floor((remainingTimeAdjusted % (60 * 60)) / 60);
 
     setRemainingTime({ days, hours, minutes });
   };
