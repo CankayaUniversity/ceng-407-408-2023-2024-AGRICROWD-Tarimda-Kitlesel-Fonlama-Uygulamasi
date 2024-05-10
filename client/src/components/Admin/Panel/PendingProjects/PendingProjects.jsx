@@ -4,7 +4,7 @@ import { ethers } from "../../../Contracts/ethers-5.7.esm.min.js"; // Import eth
 import {
   abi,
   contractAddress,
-} from "../../../Contracts/smartContractConstants"; // Import the smart contract ABI and address
+} from "../../../Contracts/smartContractConstants.js"; // Import the smart contract ABI and address
 
 import styles from "./PendingProjects.module.css";
 
@@ -166,10 +166,10 @@ const PendingProjects = () => {
         <h4>User Details </h4>
         <div className={styles.userDetailsContent}>
           <div>
-            <h5 className={styles.subHeading}>Name:</h5> {userDetails.name}
+            <h5 className={styles.subHeading}>Name:</h5> {userDetails.data.name}
           </div>
           <div>
-            <h5 className={styles.subHeading}>Email:</h5> {userDetails.email}
+            <h5 className={styles.subHeading}>Email:</h5> {userDetails.data.email}
           </div>
         </div>
       </div>

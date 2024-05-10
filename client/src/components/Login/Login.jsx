@@ -1,6 +1,6 @@
 import { React, useState, useRef } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Cookies from 'js-cookie';
 
@@ -15,6 +15,9 @@ function Login() {
   const [recaptchaValue, setRecaptchaValue] = useState(null);
   const recaptchaRef = useRef();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { state } = location;
+  const { returnUrl } = state || {};
 
   const handleRecaptchaChange = (value) => {
     setRecaptchaValue(value);
@@ -49,7 +52,12 @@ function Login() {
               expires: 1 / 24,
             });
             setTimeout(() => {
-              navigate(`/user/panel`);
+              console.log(returnUrl);
+              if(returnUrl){
+                navigate(returnUrl);
+              } else {
+                navigate(`/user/panel`);
+              }
               window.location.reload();
             }, 250);
           } else {

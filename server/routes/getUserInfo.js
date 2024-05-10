@@ -9,8 +9,7 @@ router.post('/user', async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
         }
-        const { name, email } = user;
-        res.json({ name, email });
+        res.json({ success: true, data: user });
     } catch (error) {
         console.error('Error fetching user data:', error);
         res.status(500).json({ message: 'An error occurred while fetching user data.' });
