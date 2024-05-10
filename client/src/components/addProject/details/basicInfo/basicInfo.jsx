@@ -19,6 +19,7 @@ const BasicInfoForm = () => {
   const [requiresLocation, setRequiresLocation] = useState(false); // Konum bilgisi istenmesi flag'i
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [coverImageIndex, setCoverImageIndex] = useState(0);
 
   const navigate = useNavigate();
 
@@ -140,6 +141,7 @@ const BasicInfoForm = () => {
         subCategory,
         country,
         projectImages: uploadResponse.data,
+        coverImage : coverImageIndex,
         targetAmount,
         campaignDuration,
       };
@@ -250,9 +252,28 @@ const BasicInfoForm = () => {
               required
             />
             <label className={styles.label}>Project Images</label>
+            <div className={styles.imagePreviewContainer}>
+              {Array.from(projectImages).map((file, index) => (
+                <div key={index} className={styles.imagePreviewItem}>
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={`Preview ${index}`}
+                    className={styles.imagePreview}
+                  />
+                  <button
+                    className={styles.coverPhotoButton}
+                    onClick={(e) => {
+                      e.preventDefault(); 
+                      setCoverImageIndex(index);
+                    }}
+                  >
+                    Choose Cover Photo
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
         <div className={styles.formRow}>
           <div className={styles.formRowInner}>
             <input
@@ -268,7 +289,6 @@ const BasicInfoForm = () => {
             </label>
           </div>
         </div>
-
         <div className={styles.formRow}>
           <div className={styles.formRowInner}>
             <input
