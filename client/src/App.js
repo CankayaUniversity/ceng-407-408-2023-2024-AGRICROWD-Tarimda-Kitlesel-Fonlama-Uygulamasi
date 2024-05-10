@@ -25,17 +25,17 @@ import UserNavBar from './components/User/UserNavBar/UserNavBar';
 //ProjectAddition
 import AddProjectNav from './components/addProject/ProgressBar/ProgressBar';
 import AddProjects from './components/addProject/AddProject';
-import ProjectInform from './components/addProject/details/inform/inform';
-import ProjectBasics from './components/addProject/details/basicInfo/basicInfo';
+import ProjectInform from './components/addProject/details/inform/Inform';
+import ProjectBasics from './components/addProject/details/basicInfo/BasicInfo';
 import ProjectReward from './components/addProject/details/reward/Reward';
 import ProjectSubmitForApproval from './components/addProject/details/submit/submitForApproval';
 
-import AdminLogin from './components/Admin/Login/adminLogin';
-import AdminHome from './components/Admin/Panel/home/AdminHome';
+import AdminLogin from './components/Admin/Login/AdminLogin';
+import AdminHome from './components/Admin/Panel/AdminHome/AdminHome';
 import AdminNavBar from './components/Admin/Panel/Navbar/AdminNavbar';
 import AdminCategories from './components/Admin/Panel/Categories/Categories';
 import AdminChangePsw from './components/Admin/Panel/ChangePassword/ChangePassword';
-import AdminPendingProjects from './components/Admin/Panel/pendingProjects/pendingProjects';
+import AdminPendingProjects from './components/Admin/Panel/PendingProjects/pendingProjects';
 
 //Projects
 import Projects from './components/Projects/ApprovedProjects/Projects';
