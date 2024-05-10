@@ -1,17 +1,17 @@
 .pageLayout {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 100px auto;
   padding: 20px;
 }
 
 .title {
   font-size: 24px;
-  margin-bottom: 20px;
 }
 
 .filters {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 20px;
 }
 
@@ -21,24 +21,6 @@
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
-}
-
-.sortButtons {
-  margin-bottom: 20px;
-}
-
-.sortButtons button {
-  margin-right: 10px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: #fff;
-  cursor: pointer;
-}
-
-.sortButtons button:hover {
-  background-color: #0056b3;
 }
 
 .gridContainer {

@@ -1,37 +1,96 @@
-.project-detail-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+.projectDetailContainer {
+  margin: 120px auto;
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: start;
+  justify-content: center;
 }
 
-.slider-container {
-    margin-right: 20px;
+.sliderContainer {
+  border-radius: 10px;
+  width: 730px;
 }
 
-.slider {
-    position: relative;
+.mainImageContainer {
+  position: relative;
 }
 
-.main-image-container {
-    position: relative;
+.mainImage {
+  border-radius: 10px;
+  width: 100%; /* Genişliği tamamen dolduracak şekilde ayarla */
+  height: 400px; /* Yüksekliği 400px olarak sabitle */
 }
 
-.main-image {
-    max-width: 100%;
-    height: auto;
+.prevButton,
+.nextButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.thumbnail-container {
-    display: flex;
-    flex-wrap: wrap;
+.prevButton:hover,
+.nextButton:hover {
+  background: rgba(0, 0, 0, 0.7);
 }
 
-.thumbnail {
-    margin-right: 10px;
-    margin-bottom: 10px;
+.prevButton {
+  left: 10px;
 }
 
-.thumbnail img {
-    max-width: 5px;
-    height: auto;
+.nextButton {
+  right: 10px;
+}
+
+.projectInfo {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 360px;
+  gap: 1.5rem;
+}
+
+.tagsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.mainTag {
+  color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 100px;
+  padding: 5px 10px;
+  background: linear-gradient(
+    90deg,
+    hsla(58, 100%, 68%, 1) 0%,
+    hsla(33, 100%, 53%, 1) 100%
+  );
+}
+
+.subTag {
+  color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 100px;
+  padding: 5px 10px;
+  background: linear-gradient(
+    90deg,
+    hsla(167, 68%, 73%, 1) 0%,
+    hsla(178, 59%, 48%, 1) 100%
+  );
+}
+
+.infoContainer {
+  display: flex;
+  justify-content: space-between;
 }
