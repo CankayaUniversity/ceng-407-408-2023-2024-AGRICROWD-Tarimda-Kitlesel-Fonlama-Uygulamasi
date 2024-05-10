@@ -1,116 +1,116 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import styles from './AccountSettings.module.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+import styles from "./AccountSettings.module.css";
 
 const cities = [
-  'Adana',
-  'Adıyaman',
-  'Afyonkarahisar',
-  'Ağrı',
-  'Aksaray',
-  'Amasya',
-  'Ankara',
-  'Antalya',
-  'Ardahan',
-  'Artvin',
-  'Aydın',
-  'Balıkesir',
-  'Bartın',
-  'Batman',
-  'Bayburt',
-  'Bilecik',
-  'Bingöl',
-  'Bitlis',
-  'Bolu',
-  'Burdur',
-  'Bursa',
-  'Çanakkale',
-  'Çankırı',
-  'Çorum',
-  'Denizli',
-  'Diyarbakır',
-  'Düzce',
-  'Edirne',
-  'Elazığ',
-  'Erzincan',
-  'Erzurum',
-  'Eskişehir',
-  'Gaziantep',
-  'Giresun',
-  'Gümüşhane',
-  'Hakkari',
-  'Hatay',
-  'Iğdır',
-  'Isparta',
-  'İstanbul',
-  'İzmir',
-  'Kahramanmaraş',
-  'Karabük',
-  'Karaman',
-  'Kars',
-  'Kastamonu',
-  'Kayseri',
-  'Kilis',
-  'Kırıkkale',
-  'Kırklareli',
-  'Kırşehir',
-  'Kocaeli',
-  'Konya',
-  'Kütahya',
-  'Malatya',
-  'Manisa',
-  'Mardin',
-  'Mersin',
-  'Muğla',
-  'Muş',
-  'Nevşehir',
-  'Niğde',
-  'Ordu',
-  'Osmaniye',
-  'Rize',
-  'Sakarya',
-  'Samsun',
-  'Şanlıurfa',
-  'Siirt',
-  'Sinop',
-  'Sivas',
-  'Şırnak',
-  'Tekirdağ',
-  'Tokat',
-  'Trabzon',
-  'Tunceli',
-  'Uşak',
-  'Van',
-  'Yalova',
-  'Yozgat',
-  'Zonguldak',
+  "Adana",
+  "Adıyaman",
+  "Afyonkarahisar",
+  "Ağrı",
+  "Aksaray",
+  "Amasya",
+  "Ankara",
+  "Antalya",
+  "Ardahan",
+  "Artvin",
+  "Aydın",
+  "Balıkesir",
+  "Bartın",
+  "Batman",
+  "Bayburt",
+  "Bilecik",
+  "Bingöl",
+  "Bitlis",
+  "Bolu",
+  "Burdur",
+  "Bursa",
+  "Çanakkale",
+  "Çankırı",
+  "Çorum",
+  "Denizli",
+  "Diyarbakır",
+  "Düzce",
+  "Edirne",
+  "Elazığ",
+  "Erzincan",
+  "Erzurum",
+  "Eskişehir",
+  "Gaziantep",
+  "Giresun",
+  "Gümüşhane",
+  "Hakkari",
+  "Hatay",
+  "Iğdır",
+  "Isparta",
+  "İstanbul",
+  "İzmir",
+  "Kahramanmaraş",
+  "Karabük",
+  "Karaman",
+  "Kars",
+  "Kastamonu",
+  "Kayseri",
+  "Kilis",
+  "Kırıkkale",
+  "Kırklareli",
+  "Kırşehir",
+  "Kocaeli",
+  "Konya",
+  "Kütahya",
+  "Malatya",
+  "Manisa",
+  "Mardin",
+  "Mersin",
+  "Muğla",
+  "Muş",
+  "Nevşehir",
+  "Niğde",
+  "Ordu",
+  "Osmaniye",
+  "Rize",
+  "Sakarya",
+  "Samsun",
+  "Şanlıurfa",
+  "Siirt",
+  "Sinop",
+  "Sivas",
+  "Şırnak",
+  "Tekirdağ",
+  "Tokat",
+  "Trabzon",
+  "Tunceli",
+  "Uşak",
+  "Van",
+  "Yalova",
+  "Yozgat",
+  "Zonguldak",
 ];
 
 function UserPanel() {
   const [user, setUser] = useState({
-    email: '',
-    name: '',
-    surname: '',
-    birthDate: '',
-    gender: '',
-    city: '',
-    phone: '',
+    email: "",
+    name: "",
+    surname: "",
+    birthDate: "",
+    gender: "",
+    city: "",
+    phone: "",
   });
 
   useEffect(() => {
-    const authToken = Cookies.get('authToken');
+    const authToken = Cookies.get("authToken");
 
     const fetchUserId = async () => {
       try {
         if (authToken) {
           const response = await axios.post(
-            'http://localhost:3001/api/auth',
+            "http://localhost:3001/api/auth",
             {},
             {
               headers: {
                 Authorization: `Bearer ${authToken}`,
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               withCredentials: true,
             }
@@ -118,11 +118,11 @@ function UserPanel() {
           if (response.data.success) {
             fetchUserDetails(response.data.user._id, authToken);
           } else {
-            console.error('Kullanıcı kimliği alınamadı.');
+            console.error("Kullanıcı kimliği alınamadı.");
           }
         }
       } catch (error) {
-        console.error('Sunucuyla iletişim hatası:', error);
+        console.error("Sunucuyla iletişim hatası:", error);
       }
     };
 
@@ -137,10 +137,10 @@ function UserPanel() {
         if (userDetailsResponse.data) {
           setUser(userDetailsResponse.data);
         } else {
-          console.error('Kullanıcı bilgileri alınamadı.');
+          console.error("Kullanıcı bilgileri alınamadı.");
         }
       } catch (error) {
-        console.error('Kullanıcı bilgileri alınırken bir hata oluştu:', error);
+        console.error("Kullanıcı bilgileri alınırken bir hata oluştu:", error);
       }
     };
 
@@ -150,14 +150,14 @@ function UserPanel() {
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    if (name === 'name' || name === 'surname') {
-      const onlyLetters = value.replace(/[^a-zA-ZğüşöçİĞÜŞÖÇ\s]/g, '');
+    if (name === "name" || name === "surname") {
+      const onlyLetters = value.replace(/[^a-zA-ZğüşöçİĞÜŞÖÇ\s]/g, "");
       setUser((prevState) => ({
         ...prevState,
         [name]: onlyLetters,
       }));
-    } else if (name === 'phone') {
-      const onlyNums = value.replace(/[^0-9]/g, '');
+    } else if (name === "phone") {
+      const onlyNums = value.replace(/[^0-9]/g, "");
       if (onlyNums.length <= 10) {
         setUser((prevState) => ({
           ...prevState,
@@ -172,25 +172,24 @@ function UserPanel() {
     }
   };
 
-  
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const authToken = Cookies.get('authToken');
-    const userId = user._id; 
+    const authToken = Cookies.get("authToken");
+    const userId = user._id;
     const updatedUser = { ...user };
 
     try {
       const response = await axios.put(
         `http://localhost:3001/api/user/update-info`,
-        { updates: updatedUser, userId: userId }, 
+        { updates: updatedUser, userId: userId },
         {
           headers: { Authorization: `Bearer ${authToken}` },
         }
       );
-      alert('Kullanıcı bilgileri başarıyla güncellendi.');
+      alert("Kullanıcı bilgileri başarıyla güncellendi.");
     } catch (error) {
-      console.error('Bilgiler güncellenirken hata oluştu', error);
-      alert('Bilgiler güncellenirken bir hata oluştu.');
+      console.error("Bilgiler güncellenirken hata oluştu", error);
+      alert("Bilgiler güncellenirken bir hata oluştu.");
     }
   };
 
@@ -205,15 +204,15 @@ function UserPanel() {
         {/* E-posta */}
         <div className={styles.formRow}>
           <div className={styles.formRowInner}>
-            <label htmlFor='email' className={styles.label}>
+            <label htmlFor="email" className={styles.label}>
               Email Address
             </label>
             <input
-              type='email'
-              id='email'
-              name='email'
+              type="email"
+              id="email"
+              name="email"
               className={styles.input}
-              value={user.email || ''}
+              value={user.email || ""}
               onChange={handleChange}
               disabled
             />
@@ -223,19 +222,19 @@ function UserPanel() {
         {/* Ad */}
         <div className={styles.formRow}>
           <div className={styles.formRowInner}>
-            <label htmlFor='name' className={styles.label}>
+            <label htmlFor="name" className={styles.label}>
               Name
             </label>
             <input
-              type='text'
-              id='name'
-              name='name'
+              type="text"
+              id="name"
+              name="name"
               className={styles.input}
-              value={user.name || ''}
+              value={user.name || ""}
               onChange={handleChange}
-              pattern='[a-zA-ZğüşöçİĞÜŞÖÇ\s]*'
-              title='Rakam ve özel karakter içeremez.'
-              maxLength='25'
+              pattern="[a-zA-ZğüşöçİĞÜŞÖÇ\s]*"
+              title="Rakam ve özel karakter içeremez."
+              maxLength="25"
             />
           </div>
         </div>
@@ -243,19 +242,19 @@ function UserPanel() {
         {/* Soyad */}
         <div className={styles.formRow}>
           <div className={styles.formRowInner}>
-            <label htmlFor='surname' className={styles.label}>
+            <label htmlFor="surname" className={styles.label}>
               Surname
             </label>
             <input
-              type='text'
-              id='surname'
-              name='surname'
+              type="text"
+              id="surname"
+              name="surname"
               className={styles.input}
-              value={user.surname || ''}
+              value={user.surname || ""}
               onChange={handleChange}
-              pattern='[a-zA-ZğüşöçİĞÜŞÖÇ\s]*'
-              title='Rakam ve özel karakter içeremez.'
-              maxLength='25'
+              pattern="[a-zA-ZğüşöçİĞÜŞÖÇ\s]*"
+              title="Rakam ve özel karakter içeremez."
+              maxLength="25"
             />
           </div>
         </div>
@@ -264,15 +263,15 @@ function UserPanel() {
           {/* Doğum Tarihi */}
           <div className={styles.formRow}>
             <div className={styles.formRowInner}>
-              <label htmlFor='birthDate' className={styles.label}>
+              <label htmlFor="birthDate" className={styles.label}>
                 Birthday
               </label>
               <input
-                type='date'
-                id='birthDate'
-                name='birthDate'
+                type="date"
+                id="birthDate"
+                name="birthDate"
                 className={styles.input}
-                value={user.birthDate ? user.birthDate.slice(0, 10) : ''}
+                value={user.birthDate ? user.birthDate.slice(0, 10) : ""}
                 onChange={handleChange}
               />
             </div>
@@ -281,20 +280,20 @@ function UserPanel() {
           {/* Cinsiyet */}
           <div className={styles.formRow}>
             <div className={styles.formRowInner}>
-              <label htmlFor='gender' className={styles.label}>
+              <label htmlFor="gender" className={styles.label}>
                 Gender
               </label>
               <select
-                id='gender'
-                name='gender'
+                id="gender"
+                name="gender"
                 className={styles.input}
-                value={user.gender || ''}
+                value={user.gender || ""}
                 onChange={handleChange}
               >
-                <option value=''>Select</option>
-                <option value='Male'>Male</option>
-                <option value='Female'>Female</option>
-                <option value='Rather not say'>Rather not say</option>
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Rather not say">Rather not say</option>
               </select>
             </div>
           </div>
@@ -302,17 +301,17 @@ function UserPanel() {
           {/* Şehir */}
           <div className={styles.formRow}>
             <div className={styles.formRowInner}>
-              <label htmlFor='city' className={styles.label}>
+              <label htmlFor="city" className={styles.label}>
                 City
               </label>
               <select
-                id='city'
-                name='city'
+                id="city"
+                name="city"
                 className={styles.input}
-                value={user.city || ''}
+                value={user.city || ""}
                 onChange={handleChange}
               >
-                <option value=''>City</option>
+                <option value="">City</option>
                 {cities.map((city) => (
                   <option key={city} value={city}>
                     {city}
@@ -325,22 +324,22 @@ function UserPanel() {
           {/* Telefon Numarası */}
           <div className={styles.formRow}>
             <div className={styles.formRowInner}>
-              <label htmlFor='phone' className={styles.label}>
+              <label htmlFor="phone" className={styles.label}>
                 Phone number
               </label>
               <div>
                 {/* <span id='basic-addon1'>+90</span> */}
                 <input
-                  type='tel'
-                  id='phone'
-                  name='phone'
+                  type="tel"
+                  id="phone"
+                  name="phone"
                   className={styles.input}
-                  value={user.phone || ''}
+                  value={user.phone || ""}
                   onChange={handleChange}
-                  pattern='\d*'
-                  maxLength='10'
-                  aria-label='Phone'
-                  aria-describedby='basic-addon1'
+                  pattern="\d*"
+                  maxLength="10"
+                  aria-label="Phone"
+                  aria-describedby="basic-addon1"
                 />
               </div>
             </div>
@@ -348,7 +347,7 @@ function UserPanel() {
         </div>
 
         {/* Güncelleme Butonu */}
-        <button className={styles.button} type='submit'>
+        <button className={styles.button} type="submit">
           Update
         </button>
       </form>
