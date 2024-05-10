@@ -15,27 +15,29 @@ import Home from "./components/Home/Home";
 import Navbar from "./components/Navbar/Navbar";
 import SignUp from "./components/SignUp/SignUp";
 import Login from "./components/Login/Login";
+
 //User
 import UserPanel from "./components/User/AccountSettings/AccountSettings";
 import UserHome from "./components/User/Home/UserHome";
 import ChangePassword from "./components/User/ChangePassword/ChangePassword";
 import MyProjects from "./components/User/MyProjects/MyProjects";
 import UserNavBar from "./components/User/UserNavBar/UserNavBar";
+import MyInvestments from "./components/User/MyInvestments/MyInvestments";
 
 //ProjectAddition
 import AddProjectNav from "./components/addProject/ProgressBar/ProgressBar";
 import AddProjects from "./components/addProject/AddProject";
-import ProjectInform from "./components/addProject/details/inform/inform";
-import ProjectBasics from "./components/addProject/details/basicInfo/basicInfo";
+import ProjectInform from "./components/addProject/details/inform/Inform";
+import ProjectBasics from "./components/addProject/details/basicInfo/BasicInfo";
 import ProjectReward from "./components/addProject/details/reward/Reward";
 import ProjectSubmitForApproval from "./components/addProject/details/submit/submitForApproval";
 
-import AdminLogin from "./components/Admin/Login/adminLogin";
+import AdminLogin from "./components/Admin/Login/AdminLogin";
 import AdminHome from "./components/Admin/Panel/AdminHome/AdminHome";
 import AdminNavBar from "./components/Admin/Panel/Navbar/AdminNavbar";
 import AdminCategories from "./components/Admin/Panel/Categories/Categories";
 import AdminChangePsw from "./components/Admin/Panel/ChangePassword/ChangePassword";
-import AdminPendingProjects from "./components/Admin/Panel/pendingProjects/pendingProjects";
+import AdminPendingProjects from "./components/Admin/Panel/PendingProjects/PendingProjects";
 
 //Projects
 import Projects from "./components/Projects/ApprovedProjects/Projects";
@@ -103,6 +105,10 @@ const App = () => {
                             <Route
                               path="my-projects"
                               element={<MyProjects />}
+                            />
+                            <Route
+                              path="my-investments"
+                              element={<MyInvestments />}
                             />
                           </Routes>
                         </diV>

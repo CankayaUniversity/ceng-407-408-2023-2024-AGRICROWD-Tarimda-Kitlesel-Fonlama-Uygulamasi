@@ -20,6 +20,9 @@ function UserNavBar() {
           <Link to='/user/my-projects' className={styles.navLink}>
             My Projects
           </Link>
+          <Link to='/user/my-investments' className={styles.navLink}>
+            My Investments
+          </Link>
         </div>
       </div>
     </nav>

@@ -15,19 +15,20 @@ const ProjectDetail = () => {
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const navigate = useNavigate();
   const [remainingTime, setRemainingTime] = useState(null);
   const [loginTime, setLoginTime] = useState(null);
   const [amountFundedETH, setAmountFundedETH] = useState(0);
   const [isFunding, setIsFunding] = useState(false);
   const [isDonating, setIsDonating] = useState(false);
+  const [projectOwner, setProjectOwner] = useState(null);
+
+
+  const navigate = useNavigate();
 
   // Function to check if the user is logged in
   const isLoggedIn = () => {
-    // Check for authentication token in local storage or cookies
-    const authToken =
-      localStorage.getItem("authToken") ||
-      document.cookie.includes("authToken");
+    // Check for authentication token in cookies
+    const authToken = document.cookie.includes("authToken");
     return !!authToken;
   };
 
@@ -48,6 +49,24 @@ const ProjectDetail = () => {
 
     fetchProject();
   }, [pId]);
+
+  useEffect(() => {
+    const fetchProjectOwnerInfo = async () => {
+      if (!project) return;
+
+      try {
+        const userResponse = await axios.post(
+          "http://localhost:3001/api/info/user",
+          { userId: project.userId }
+        );
+        setProjectOwner(userResponse.data);
+      } catch (error) {
+        console.error("Error fetching project owner's info:", error);
+      }
+    };
+
+    fetchProjectOwnerInfo();
+  }, [project]);
 
   useEffect(() => {
     setLoginTime(new Date()); // Kullanıcının giriş zamanını al
@@ -136,6 +155,8 @@ const ProjectDetail = () => {
     // Check if the user is logged in
     if (!isLoggedIn()) {
       alert("Please log in to fund the project.");
+      const returnUrl = window.location.pathname;
+      navigate("/login", { state: { returnUrl } });
       return;
     }
 
@@ -165,6 +186,8 @@ const ProjectDetail = () => {
     // Check if the user is logged in
     if (!isLoggedIn()) {
       alert("Please log in to donate to the project.");
+      const returnUrl = window.location.pathname;
+      navigate("/login", { state: { returnUrl } });
       return;
     }
 
@@ -221,7 +244,7 @@ const ProjectDetail = () => {
       <div className={styles.sliderContainer}>
         <div className={styles.slider}>
           {project.basicInfo.projectImages &&
-          project.basicInfo.projectImages.length > 0 ? (
+            project.basicInfo.projectImages.length > 0 ? (
             <div className={styles.mainImageContainer}>
               <img
                 className={styles.mainImage}
@@ -298,6 +321,17 @@ const ProjectDetail = () => {
         <button onClick={donateProject} disabled={isDonating}>
           {isDonating ? "Donating..." : "Donate"}
         </button>
+      </div>
+
+      <div className={styles.projectOwnerInfo}>
+        {projectOwner && (
+          <>
+            <h3>Project Owner</h3>
+            <p>{projectOwner.data.name} {projectOwner.data.surname}</p>
+            <p>Phone: {projectOwner.data.phone}</p>
+            <p>Email: {projectOwner.data.email}</p>
+          </>
+        )}
       </div>
     </div>
   );
