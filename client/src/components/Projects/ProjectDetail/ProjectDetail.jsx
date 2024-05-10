@@ -1,18 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import NotFound from '../../NotFound/NotFound.jsx';
-import styles from './ProjectDetails.module.css';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ethers } from "../../Contracts/ethers-5.7.esm.min.js";
+import {
+  abi,
+  contractAddress,
+} from "../../Contracts/smartContractConstants.js";
+import NotFound from "../../NotFound/NotFound.jsx";
+import styles from "./ProjectDetails.module.css";
 
 const ProjectDetail = () => {
   const { projectNameandId } = useParams();
-  const [encodedProjectName, pId] = projectNameandId.split('-pid-');
+  const [encodedProjectName, pId] = projectNameandId.split("-pid-");
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navigate = useNavigate();
   const [remainingTime, setRemainingTime] = useState(null);
   const [loginTime, setLoginTime] = useState(null);
+  const [amountFundedETH, setAmountFundedETH] = useState(0);
+  const [isFunding, setIsFunding] = useState(false);
+  const [isDonating, setIsDonating] = useState(false);
+
+  // Function to check if the user is logged in
+  const isLoggedIn = () => {
+    // Check for authentication token in local storage or cookies
+    const authToken =
+      localStorage.getItem("authToken") ||
+      document.cookie.includes("authToken");
+    return !!authToken;
+  };
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -24,7 +41,7 @@ const ProjectDetail = () => {
         setProject(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching project:', error);
+        console.error("Error fetching project:", error);
         setLoading(false);
       }
     };
@@ -97,6 +114,100 @@ const ProjectDetail = () => {
     );
   };
 
+  // Fetch the amountFunded value from the smart contract
+  useEffect(() => {
+    const fetchAmountFunded = async () => {
+      if (!project) return;
+
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const contract = new ethers.Contract(contractAddress, abi, provider);
+        const projectDetails = await contract.getProjectDetails(pId);
+        setAmountFundedETH(ethers.utils.formatEther(projectDetails[4]));
+      } catch (error) {
+        console.error("Error fetching amount funded:", error);
+      }
+    };
+
+    fetchAmountFunded();
+  }, [project, pId]);
+
+  const fundProject = async () => {
+    // Check if the user is logged in
+    if (!isLoggedIn()) {
+      alert("Please log in to fund the project.");
+      return;
+    }
+
+    const ethAmount = prompt("Enter the amount in ETH you want to fund:");
+    if (ethAmount) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, abi, signer);
+
+      try {
+        setIsFunding(true);
+        const transactionResponse = await contract.fundProject(pId, {
+          value: ethers.utils.parseEther(ethAmount),
+        });
+        await listenForTransactionMine(transactionResponse, provider);
+        alert("Successfully funded the project!");
+        setIsFunding(false);
+      } catch (error) {
+        console.error("Error funding the project:", error);
+        alert("An error occurred while funding the project.");
+        setIsFunding(false);
+      }
+    }
+  };
+
+  const donateProject = async () => {
+    // Check if the user is logged in
+    if (!isLoggedIn()) {
+      alert("Please log in to donate to the project.");
+      return;
+    }
+
+    const ethAmount = prompt("Enter the amount in ETH you want to donate:");
+    if (ethAmount) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, abi, signer);
+
+      try {
+        setIsDonating(true);
+        const transactionResponse = await contract.donateProject(pId, {
+          value: ethers.utils.parseEther(ethAmount),
+        });
+        await listenForTransactionMine(transactionResponse, provider);
+        alert("Successfully donated to the project!");
+        setIsDonating(false);
+      } catch (error) {
+        console.error("Error donating to the project:", error);
+        alert("An error occurred while donating to the project.");
+        setIsDonating(false);
+      }
+    }
+  };
+
+  const listenForTransactionMine = async (transactionResponse, provider) => {
+    try {
+      const receipt = await transactionResponse.wait();
+      if (receipt.status === 1) {
+        console.log("Transaction successful!");
+      } else {
+        console.error("Transaction failed!");
+      }
+    } catch (error) {
+      console.error("Error during transaction mining:", error);
+    }
+  };
+
+  const calculateFundingProgress = () => {
+    const targetAmount = project.basicInfo.targetAmount;
+    return (amountFundedETH / targetAmount) * 100;
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -134,7 +245,7 @@ const ProjectDetail = () => {
         <h3>{project.basicInfo.projectName}</h3>
         <p>{project.basicInfo.projectDescription}</p>
         <div className={styles.tagsContainer}>
-          <div style={{ display: 'flex', gap: '.5rem' }}>
+          <div style={{ display: "flex", gap: ".5rem" }}>
             <div className={styles.mainTag}>
               <span>🏷️</span>
               {project.basicInfo.category}
@@ -159,10 +270,34 @@ const ProjectDetail = () => {
           </p> */}
         </div>
         <p className={styles.remainingTime}>
-          <span>⏱️</span> Investment Remaining Time:{' '}
+          <span>⏱️</span> Investment Remaining Time:{" "}
           {remainingTime &&
             `${remainingTime.days} days, ${remainingTime.hours} hours, ${remainingTime.minutes} minutes left`}
         </p>
+      </div>
+      {/* Progress bar */}
+      <div className="progress-bar-container">
+        <div className="progress-bar">
+          <div
+            className="progress-bar-filled"
+            style={{ width: `${calculateFundingProgress()}%` }}
+          >
+            {calculateFundingProgress().toFixed(1)}%
+          </div>
+        </div>
+      </div>
+
+      <div className="project-actions">
+        {/* Disable the "Fund" button if the project is fully funded */}
+        <button
+          onClick={fundProject}
+          disabled={isFunding || calculateFundingProgress() >= 100}
+        >
+          {isFunding ? "Funding..." : "Fund"}
+        </button>
+        <button onClick={donateProject} disabled={isDonating}>
+          {isDonating ? "Donating..." : "Donate"}
+        </button>
       </div>
     </div>
   );

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { ethers } from "./Contracts/ethers-5.7.esm.min.js"; // Import ethers.js for interacting with the smart contract
-import { abi, contractAddress } from "./Contracts/smartContractConstants"; // Import the smart contract ABI and address
+import { ethers } from "../../../Contracts/ethers-5.7.esm.min.js"; // Import ethers.js for interacting with the smart contract
+import {
+  abi,
+  contractAddress,
+} from "../../../Contracts/smartContractConstants"; // Import the smart contract ABI and address
 
 import styles from "./PendingProjects.module.css";
 
@@ -45,8 +48,23 @@ const PendingProjects = () => {
     return () => clearTimeout(timer);
   }, [feedbackMessage]);
 
-  const handleApproveProject = async (projectId) => {
+  const handleApproveProject = async (projectId, fundingGoalETH) => {
     try {
+      // Connect to Ethereum blockchain and interact with the smart contract
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, abi, signer);
+
+      // Call createProject function in the smart contract
+      const transactionResponse = await contract.createProject(
+        projectId, // MongoDB ObjectId as a parameter
+        ethers.utils.parseEther(fundingGoalETH.toString())
+      );
+
+      // Wait for the transaction to be mined
+      await transactionResponse.wait();
+
+      // Once the transaction is successful, proceed with backend approval
       const response = await axios.put(
         "http://localhost:3001/api/admin/projects/approve",
         {
@@ -57,10 +75,6 @@ const PendingProjects = () => {
       if (response.data.success) {
         setSelectedProjectId(null);
         setFeedbackMessage(response.data.message); // success message !
-
-        // After approving the project, create the project in the smart contract
-        // await createProjectInSmartContract(projectId); //simdilik yorumda
-
         fetchProjects();
       } else {
         setFeedbackMessage("Error approving project. Please try again later.");
@@ -92,38 +106,6 @@ const PendingProjects = () => {
     } catch (error) {
       console.error("Error rejecting project:", error);
       setFeedbackMessage("Error rejecting project. Please try again later.");
-    }
-  };
-
-  // Function to create the project in the smart contract
-  const createProjectInSmartContract = async (projectId) => {
-    // Get project data from the database
-    const project = projects.find((p) => p._id === projectId);
-
-    if (!project) {
-      console.error("Project not found");
-      return;
-    }
-
-    // Connect to the Ethereum provider and the smart contract
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(contractAddress, abi, signer);
-
-    try {
-      // Call the createProject function in the smart contract with the project's funding goal in ETH
-      const fundingGoalETH = ethers.utils.parseEther(
-        project.basicInfo.targetAmount
-      );
-      const transactionResponse = await contract.createProject(fundingGoalETH);
-
-      // Wait for the user to confirm the transaction in MetaMask
-      console.log("Waiting for MetaMask confirmation...");
-      await transactionResponse.wait(); // Wait for the transaction to be mined
-
-      console.log("Project created in smart contract!");
-    } catch (error) {
-      console.error("Error creating project in smart contract:", error);
     }
   };
 
@@ -197,9 +179,6 @@ const PendingProjects = () => {
   return (
     <div className={styles.pageLayout}>
       <h2 className={styles.title}>*manage pending projects</h2>
-      {feedbackMessage && (
-        <div className={styles.message}>{feedbackMessage}</div>
-      )}
 
       {loading ? (
         <div>Loading...</div>
@@ -212,13 +191,24 @@ const PendingProjects = () => {
                 <div className="card">
                   <div className="card-body">
                     {renderProjectData(project.basicInfo)}
+
                     <div>
                       {renderUserDetails(project.userDetails)}
+
+                      {feedbackMessage && (
+                        <div className={styles.message}>{feedbackMessage}</div>
+                      )}
+
                       {selectedProjectId !== project._id && (
                         <div className={styles.btnsContainer}>
                           <button
                             className={styles.button}
-                            onClick={() => handleApproveProject(project._id)}
+                            onClick={() =>
+                              handleApproveProject(
+                                project._id,
+                                project.basicInfo.targetAmount
+                              )
+                            }
                           >
                             Approve
                           </button>
