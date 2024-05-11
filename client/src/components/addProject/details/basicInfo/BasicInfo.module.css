@@ -132,3 +132,54 @@
   width: 9.375rem;
   align-self: flex-end;
 }
+
+.imagePreviewContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.imagePreviewItem {
+  position: relative;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.imagePreview {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+}
+
+.coverPhotoButton {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 5px 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.imagePreviewItem:hover .coverPhotoButton {
+  visibility: visible;
+}
+
+.coverIcon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: green;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.coverIcon::after {
+  content: 'V';
+  color: white;
+}
