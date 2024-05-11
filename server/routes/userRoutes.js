@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const axios = require('axios');
 const UserModel = require('../models/User');
-const PendingProject = require('../models/pendingProjectsSchema');
+const PendingProject = require('../models/ProjectsSchema');
 
 
 router.get('/:userId', async (req, res) => {
