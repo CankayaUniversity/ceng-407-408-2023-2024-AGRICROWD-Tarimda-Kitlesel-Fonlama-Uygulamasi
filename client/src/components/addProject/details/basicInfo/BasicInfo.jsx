@@ -260,6 +260,10 @@ const BasicInfoForm = () => {
                     alt={`Preview ${index}`}
                     className={styles.imagePreview}
                   />
+                  {coverImageIndex === index && (
+                    <div className={styles.coverIcon}>
+                    </div>
+                  )}
                   <button
                     className={styles.coverPhotoButton}
                     onClick={(e) => {
