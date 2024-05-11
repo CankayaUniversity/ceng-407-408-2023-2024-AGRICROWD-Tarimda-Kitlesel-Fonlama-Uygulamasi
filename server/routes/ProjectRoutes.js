@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const PendingProject = require('../models/pendingProjectsSchema');
+const PendingProject = require('../models/ProjectsSchema');
 
 router.get('/fetch-approved-projects', async (req, res) => {
     try {

@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const cors = require('cors');
+const cron = require('node-cron');
+
 require('dotenv').config();
 
 const app = express();
@@ -51,6 +52,13 @@ const projectsRoutes = require('./routes/ProjectRoutes.js');
 app.use('/api/projects', projectsRoutes);
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+server.on('listening', () => {
+  cron.schedule('*/15 * * * *', () => { // every 15 min check the projects
+    require('./cronJobs/projectCron.js');
+  });
+});
+

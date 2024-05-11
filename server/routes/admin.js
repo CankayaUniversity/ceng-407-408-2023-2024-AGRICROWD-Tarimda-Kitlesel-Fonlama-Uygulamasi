@@ -7,7 +7,7 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 const Admin = require('../models/Admin');
-const PendingProject = require('../models/pendingProjectsSchema');
+const PendingProject = require('../models/ProjectsSchema');
 
 
 router.post('/login', async (req, res) => {
