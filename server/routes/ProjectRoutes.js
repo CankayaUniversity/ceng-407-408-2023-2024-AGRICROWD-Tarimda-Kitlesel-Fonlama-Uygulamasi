@@ -23,7 +23,7 @@ router.post('/details', async (req, res) => {
         if (!approvedProject) {
             return res.status(404).json({ success:false,message: 'Project not found.' });
         }
-        res.status(200).json(approvedProject);
+        res.status(200).json({ success: true, project: approvedProject });
     } catch (error) {
         console.error('Error fetching approved project:', error);
         res.status(500).json({ success:false, message: 'An error occurred while fetching the approved project.' });

@@ -11,6 +11,9 @@ function UserNavBar() {
       <div className={styles.navLayout}>
         <div className={styles.line}></div>
         <div className={styles.navItems}>
+          <Link to='/user/home' className={styles.navLink}>
+            Home
+          </Link>
           <Link to='/user/panel' className={styles.navLink}>
             Account settings
           </Link>
