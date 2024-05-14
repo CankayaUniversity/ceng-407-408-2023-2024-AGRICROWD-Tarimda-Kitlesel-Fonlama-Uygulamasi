@@ -5,9 +5,7 @@ import styles from './Projects.module.css';
 
 const ProjectCard = ({ project }) => (
   <Link
-    to={`/project/${encodeURIComponent(project.basicInfo.projectName)}-pid-${
-      project._id
-    }`}
+    to={`/project/${project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${project._id}`}
     className={styles.cardLink}
   >
     <div className={styles.cardContainer}>
@@ -31,17 +29,18 @@ const ProjectCard = ({ project }) => (
             </div>
           </div>
           {project.basicInfo.projectImages &&
-          project.basicInfo.projectImages.length > 0 ? (
+            project.basicInfo.projectImages.length > 0 ? (
             <div className={styles.projectImagesContainer}>
-              <h4>Project Photos</h4>
               <div>
                 {project.basicInfo.projectImages.map((photo, index) => (
-                  <img
-                    key={index}
-                    src={`http://localhost:3001/api/photos/${photo._id}`}
-                    alt={`Project ${index}`}
-                    className={styles.projectImage}
-                  />
+                  index === project.basicInfo.coverImage && (
+                    <img
+                      key={index}
+                      src={`http://localhost:3001/api/photos/${photo._id}`}
+                      alt={`Project ${index}`}
+                      className={styles.projectImage}
+                    />
+                  )
                 ))}
               </div>
             </div>
@@ -50,6 +49,9 @@ const ProjectCard = ({ project }) => (
               No photos available for this project!
             </div>
           )}
+        </div>
+        <div className={styles.projectDetail}>
+          <h4>Listing Date</h4> {new Date(project.approvalDate).toLocaleDateString()}
         </div>
       </div>
     </div>
@@ -179,7 +181,7 @@ const Projects = () => {
                   : true) &&
                 (targetAmountFilter
                   ? project.basicInfo.targetAmount >=
-                    parseInt(targetAmountFilter)
+                  parseInt(targetAmountFilter)
                   : true)
             )
             .map((project) => (

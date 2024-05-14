@@ -25,9 +25,8 @@ const MainNavbar = ({ isAuthenticated, onLogout }) => {
                   <NavLink to='/add-project/inform'>Add Project</NavLink>
                 </li>
                 <li>
-                  <NavLink to='/user/panel'>Account</NavLink>
+                  <NavLink to='/user/home'>Account</NavLink>
                 </li>
-
                 <li>
                   <NavLink to='/logout' onClick={onLogout}>
                     Sign Out

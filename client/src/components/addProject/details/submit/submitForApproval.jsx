@@ -111,38 +111,54 @@ const SubmitForm = () => {
       setErrorMessage(errorMessage);
     }
   };
+  const areAllRequirementsCompleted = isInformCompleted && isBasicsCompleted && isRewardCompleted;
 
   return (
     <div className={styles.container}>
       <header className={styles.formHeader}>
         <h2 className={styles.sidebarTitle}>
-          Submit Your Project for Approval
+          {areAllRequirementsCompleted
+            ? "Submit Your Project for Approval"
+            : "Complete All Requirements Before Submission"}
         </h2>
       </header>
-
+  
       {submitMessage ? (
         <div className="submit-message">{submitMessage}</div>
       ) : (
         <div>
-          {!isCheckboxChecked ? (
-            <p className={styles.content}>
-              Please review the information you provided carefully. By checking
-              the box below, you confirm that the information is accurate and
-              complete. Upon submission, your project will be sent to Agricrowd
-              for approval.
-            </p>
-          ) : (
+          {!areAllRequirementsCompleted && (
+            <div>
+              {!isInformCompleted && (
+                <p>Please complete the inform section.</p>
+              )}
+              {!isBasicsCompleted && (
+                <p>Please complete the basic information section.</p>
+              )}
+              {!isRewardCompleted && (
+                <p>Please complete the reward section.</p>
+              )}
+            </div>
+          )}
+          {isCheckboxChecked && areAllRequirementsCompleted ? (
             <p className={styles.content}>
               If everything is in order, your project will be approved and will
               appear in the Projects section. If there are any issues, you will
               be contacted with details. You can track the status of your
               project in the "My Projects" section of your dashboard.
             </p>
+          ) : (
+            <p className={styles.content}>
+              {areAllRequirementsCompleted
+                ? "Please review the information you provided carefully. By checking the box below, you confirm that the information is accurate and complete. Upon submission, your project will be sent to Agricrowd for approval."
+                : "Please complete all the requirements before submission."
+              }
+            </p>
           )}
         </div>
       )}
-
-      {!submitMessage && (
+  
+      {!submitMessage && areAllRequirementsCompleted && (
         <div>
           <div className={styles.checkboxLayout}>
             <input
@@ -159,10 +175,9 @@ const SubmitForm = () => {
                 : "I confirm my project"}
             </label>
           </div>
-
+  
           {errorMessage && <div className="error-message">{errorMessage}</div>}
-
-          {isCheckboxChecked && isInformCompleted && isBasicsCompleted && isRewardCompleted ? (
+          {isCheckboxChecked && (
             <div className={styles.buttonContainer}>
               <button
                 type="button"
@@ -172,18 +187,6 @@ const SubmitForm = () => {
               >
                 Submit
               </button>
-            </div>
-          ) : (
-            <div>
-              {!isInformCompleted && (
-                <p>Please complete the project information section.</p>
-              )}
-              {!isBasicsCompleted && (
-                <p>Please complete the basic information section.</p>
-              )}
-              {!isRewardCompleted && (
-                <p>Please complete the reward section.</p>
-              )}
             </div>
           )}
         </div>

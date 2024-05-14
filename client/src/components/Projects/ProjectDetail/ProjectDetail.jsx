@@ -39,16 +39,26 @@ const ProjectDetail = () => {
           `http://localhost:3001/api/projects/details`,
           { projectId: pId }
         );
-        setProject(response.data);
+        if (response.data.success) {
+          setProject(response.data.project);
+        } else {
+          console.error("Error fetching project:", response.data.message);
+        }
         setLoading(false);
       } catch (error) {
         console.error("Error fetching project:", error);
         setLoading(false);
       }
     };
-
+  
     fetchProject();
   }, [pId]);
+
+  useEffect(() => {
+    if (project && project.basicInfo) {
+      setCurrentImageIndex(project.basicInfo.coverImage);
+    }
+  }, [project])
 
   useEffect(() => {
     const fetchProjectOwnerInfo = async () => {
@@ -105,9 +115,8 @@ const ProjectDetail = () => {
   };
 
   const handleInvalidUrl = () => {
-    const correctedUrl = `/project/${encodeURIComponent(
-      project.basicInfo.projectName
-    )}-pid-${pId}`;
+    const projectNameInUrl = project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase();
+    const correctedUrl = `/project/${projectNameInUrl}-pid-${project._id}`;
     navigate(correctedUrl);
   };
 
