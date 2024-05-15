@@ -183,3 +183,21 @@
   content: 'V';
   color: white;
 }
+
+.deletePhotoButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.deletePhotoButton:hover {
+  transform: scale(1.1);
+}
+
