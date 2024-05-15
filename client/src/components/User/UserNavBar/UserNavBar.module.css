@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: row;
-  justify-content: end;
+  justify-content: flex-end;
   width: 33%;
   padding-top: 7.2rem;
   height: 100%;
@@ -9,6 +9,7 @@
 
 .navLayout {
   display: flex;
+  align-items: center;
 }
 
 .line {
@@ -45,4 +46,52 @@
   background-color: #e7f5ff;
   font-weight: 500;
   color: #339af0;
+}
+
+.dropdownOpen .navItems {
+  margin-top: 1rem;
+}
+
+.dropdownButton {
+  position: relative;
+}
+
+.dropdownContentContainer {
+  position: relative;
+}
+
+.dropdownContent {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdownContent a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  background-color: #f1f1f1;
+}
+
+.dropdown .dropdownContent {
+  display: block;
+}
+
+.dropdownButton {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.arrowIcon {
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.rotate180 {
+  transform: rotate(180deg);
 }

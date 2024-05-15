@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { Link } from 'react-router-dom';
-import styles from './MyProjects.module.css';
+import styles from './InactiveProjects.module.css';
 
-function MyProjects() {
+function InactiveProjects() {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
@@ -68,23 +67,17 @@ function MyProjects() {
 
     return (
         <div className={styles.container}>
-            <h1>My Projects</h1>
+            <h1>My Approved Projects</h1>
             {projects.length > 0 ? (
                 projects.map((project, index) => (
-                    project.status === 'approved' ? (
-                        <Link to={`/project/${project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${project._id}`} className={styles.cardLink} key={index}>
-                            <div className={styles.projectCard}>
-                                {projectCardContents(project, calculateRemainingDays)}
-                            </div>
-                        </Link>
-                    ) : (
-                        <div key={index} className={styles.projectCard}>
+                    (project.status === 'expired' || project.status === 'pending') && (
+                        <div className={styles.projectCard}>
                             {projectCardContents(project, calculateRemainingDays)}
                         </div>
                     )
                 ))
             ) : (
-                <p>No projects found.</p>
+                <p>No approved projects found.</p>
             )}
         </div>
     );
@@ -113,6 +106,12 @@ function projectCardContents(project, calculateRemainingDays) {
                     <p className={styles.info}>Days Remaining: {calculateRemainingDays(project.approvalDate, project.basicInfo.campaignDuration)}</p>
                 </>
             )}
+            {project.status === 'expired' && (
+                <p className={styles.info}>Expired: {project.expirationDate}</p>
+            )}
+            {project.status === 'pending' && (
+                <p className={styles.info}>Project is under review by our team. You will be contacted soon.</p>
+            )}
             {project.status === 'rejected' && (
                 <p className={styles.rejectionReason}>Rejection Reason: {project.rejectionReason}</p>
             )}
@@ -136,4 +135,4 @@ function projectCardContents(project, calculateRemainingDays) {
     );
 }
 
-export default MyProjects;
+export default InactiveProjects;

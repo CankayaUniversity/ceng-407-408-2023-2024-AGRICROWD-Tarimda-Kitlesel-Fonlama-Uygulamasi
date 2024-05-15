@@ -1,0 +1,41 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.projectCard {
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin: 10px 0;
+    width: 80%;
+    padding: 20px;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.projectCard:hover {
+    transform: translateY(-5px);
+}
+
+.title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.description, .info {
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #666;
+}
+
+.info {
+    font-weight: bold;
+}
+
+.rejectionReason {
+    color: #ff6b6b;
+    font-weight: bold;
+}
