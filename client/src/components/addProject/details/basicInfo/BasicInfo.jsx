@@ -14,12 +14,14 @@ const BasicInfoForm = () => {
   const [subCategory, setSubCategory] = useState('');
   const [country, setCountry] = useState('Turkey');
   const [projectImages, setProjectImages] = useState([]);
-  const [targetAmount, setTargetAmount] = useState(null);
-  const [campaignDuration, setCampaignDuration] = useState(null);
+  const [targetAmount, setTargetAmount] = useState('');
+  const [campaignDuration, setCampaignDuration] = useState('');
   const [requiresLocation, setRequiresLocation] = useState(false); // Konum bilgisi istenmesi flag'i
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [coverImageIndex, setCoverImageIndex] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
+  const MAX_IMAGES = 10;
 
   const navigate = useNavigate();
 
@@ -94,11 +96,31 @@ const BasicInfoForm = () => {
     }
   }, [userId]);
 
+  const handleImageChange = (e) => {
+    const files = e.target.files;
+    if (files.length + projectImages.length <= MAX_IMAGES) {
+      setProjectImages([...projectImages, ...files]);
+    } else {
+      alert(`You can upload maximum ${MAX_IMAGES} images.`);
+    }
+  };
+
+  const handleDeleteImage = (index) => {
+    const updatedImages = [...projectImages];
+    updatedImages.splice(index, 1);
+    setProjectImages(updatedImages);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (targetAmount <= 0) {
       alert('Hedef miktar pozitif bir değer olmalıdır.');
+      return;
+    }
+
+    if (projectImages.length === 0 || projectImages.length > MAX_IMAGES) {
+      alert(`Lütfen 1 ila ${MAX_IMAGES} arasında resim yükleyin.`);
       return;
     }
 
@@ -141,7 +163,7 @@ const BasicInfoForm = () => {
         subCategory,
         country,
         projectImages: uploadResponse.data,
-        coverImage : coverImageIndex,
+        coverImage: coverImageIndex,
         targetAmount: Number(targetAmount),
         campaignDuration: Number(campaignDuration),
       };
@@ -160,6 +182,7 @@ const BasicInfoForm = () => {
   return (
     <div className={styles.formContainer}>
       <h2 className={styles.sidebarTitle}>Let's start with the basics!</h2>
+      {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.formRow}>
           <div className={styles.formRowInner}>
@@ -167,7 +190,7 @@ const BasicInfoForm = () => {
               type='text'
               className={styles.input}
               value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
+              onChange={(e) => setProjectName(e.target.value.replace(/[^\w\s]/gi, ''))}
               required
             />
             <label className={styles.label}>Main title of your project</label>
@@ -248,12 +271,12 @@ const BasicInfoForm = () => {
               type='file'
               className={styles.fileSelector}
               multiple
-              onChange={(e) => setProjectImages(e.target.files)}
+              onChange={handleImageChange}
               required
             />
-            <label className={styles.label}>Project Images</label>
+            <label className={styles.label}>Project Images (Number of photos uploaded: {projectImages.length} / 10. You can upload up to 10 photos. )</label>
             <div className={styles.imagePreviewContainer}>
-              {Array.from(projectImages).map((file, index) => (
+              {projectImages.map((file, index) => (
                 <div key={index} className={styles.imagePreviewItem}>
                   <img
                     src={URL.createObjectURL(file)}
@@ -267,11 +290,24 @@ const BasicInfoForm = () => {
                   <button
                     className={styles.coverPhotoButton}
                     onClick={(e) => {
-                      e.preventDefault(); 
+                      e.preventDefault();
                       setCoverImageIndex(index);
                     }}
                   >
                     Choose Cover Photo
+                  </button>
+                  <button
+                    className={styles.deletePhotoButton}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDeleteImage(index);
+                    }}
+                  >
+                    <img
+                      src="/images/trash.svg"
+                      alt="Delete"
+                      className={styles.trashIcon}
+                    />
                   </button>
                 </div>
               ))}
