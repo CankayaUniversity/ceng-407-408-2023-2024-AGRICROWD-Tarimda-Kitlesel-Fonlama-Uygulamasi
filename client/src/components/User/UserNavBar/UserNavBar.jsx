@@ -14,7 +14,7 @@ function UserNavBar() {
           <Link to='/user/home' className={styles.navLink}>
             Home
           </Link>
-          <Link to='/user/panel' className={styles.navLink}>
+          <Link to='/user/account-settings' className={styles.navLink}>
             Account settings
           </Link>
           <Link to='/user/change-password' className={styles.navLink}>

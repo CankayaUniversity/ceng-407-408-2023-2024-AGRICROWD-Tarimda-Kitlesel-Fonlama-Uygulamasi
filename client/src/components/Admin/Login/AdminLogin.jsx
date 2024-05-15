@@ -67,7 +67,6 @@ function AdminLogin() {
             });
             setTimeout(() => {
               navigate(`/admin/home`);
-              window.location.reload();
             }, 250);
           } else {
             window.alert('Server error!');

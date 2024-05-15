@@ -96,7 +96,7 @@ const App = () => {
                         <diV className={styles.userContainerRightContainer}>
                           <Routes>
                             <Route path="*" element={<NotFound />} />
-                            <Route path="panel" element={<UserPanel />} />
+                            <Route path="account-settings" element={<UserPanel />} />
                             <Route path="home" element={<UserHome />} />
                             <Route
                               path="change-password"
