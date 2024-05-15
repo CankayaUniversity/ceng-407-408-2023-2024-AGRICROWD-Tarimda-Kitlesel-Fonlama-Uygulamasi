@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import styles from './ActiveProjects.module.css';
 
-function ActiveProjects() {
+const ActiveProjects = () => {
     const [projects, setProjects] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const authToken = Cookies.get('authToken');
@@ -38,10 +40,7 @@ function ActiveProjects() {
         const fetchProjects = async (userId) => {
             try {
                 const projectResponse = await axios.get(
-                    `http://localhost:3001/api/user/projects/${userId}`,
-                    {
-                        headers: { Authorization: `Bearer ${authToken}` }
-                    }
+                    `http://localhost:3001/api/user/projects/${userId}`
                 );
                 if (projectResponse.data.length > 0) {
                     setProjects(projectResponse.data);
@@ -65,6 +64,87 @@ function ActiveProjects() {
         return daysLeft > 0 ? daysLeft : 0;
     };
 
+    const ProjectCard = ({ project }) => {
+        const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+        const redirectToDashboard = (projectId) => {
+            navigate(`/user/my-projects/${project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${projectId}/dashboard`);
+        };
+
+        const handleDropdownClick = () => {
+            setIsDropdownOpen(!isDropdownOpen);
+        };
+
+        return (
+            <>
+                <h2 className={styles.title}>
+                    <a
+                        href={`/project/${project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${project._id}`}
+                        className={styles.titleLink}
+                    >
+                        {project.basicInfo.projectName}
+                    </a>
+                </h2>
+                {project.basicInfo.projectImages && project.basicInfo.projectImages.length > 0 ? (
+                    <a
+                        href={`/project/${project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${project._id}`}
+                        className={styles.coverLink}
+                    >
+                        {project.basicInfo.projectImages.map((photo, index) => (
+                            index === project.basicInfo.coverImage && (
+                                <img
+                                    key={index}
+                                    src={`http://localhost:3001/api/photos/${photo._id}`}
+                                    alt={`Project ${index}`}
+                                    className={styles.coverImage}
+                                />
+                            )
+                        ))}
+                    </a>
+                ) : (
+                    <div className={styles.noCover}>No cover photo available</div>
+                )}
+                <p className={styles.info}>
+                    {project.basicInfo.category} -&gt; {project.basicInfo.subCategory}
+                </p>
+                <p className={styles.info}>Country: {project.basicInfo.country}</p>
+                <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>
+                <p className={styles.info}>Target Amount: {project.basicInfo.targetAmount}</p>
+                <p className={styles.info}>Status: {project.status}</p>
+                {project.status === 'approved' && (
+                    <>
+                        <p className={styles.info}>
+                            Approval Date:{" "}
+                            {new Date(project.approvalDate).toLocaleString(undefined, {
+                                dateStyle: "medium",
+                                timeStyle: "short",
+                            })}
+                        </p>
+                        <p className={styles.info}>
+                            Expired Date:{" "}
+                            {new Date(project.expiredDate).toLocaleString(undefined, {
+                                dateStyle: "medium",
+                                timeStyle: "short",
+                            })}
+                        </p>
+                        <p className={styles.info}>Days Remaining: {calculateRemainingDays(project.approvalDate, project.basicInfo.campaignDuration)}</p>
+                    </>
+                )}
+                <div className={styles.dropdown}>
+                    <button className={styles.dropdownBtn} onClick={handleDropdownClick}>
+                        Operations
+                    </button>
+                    {isDropdownOpen && (
+                        <div className={styles.dropdownContent}>
+                            <button className={styles.dropdownItem} onClick={() => redirectToDashboard(project._id)}>Dashboard</button>
+                            <button className={styles.dropdownItem}>Deactive</button>
+                        </div>
+                    )}
+                </div>
+            </>
+        );
+    };
+
     return (
         <div className={styles.container}>
             <h1>My Approved Projects</h1>
@@ -72,60 +152,14 @@ function ActiveProjects() {
                 projects.map((project, index) => (
                     project.status === 'approved' && (
                         <div className={styles.projectCard}>
-                            {projectCardContents(project, calculateRemainingDays)}
+                            <ProjectCard project={project} />
                         </div>
                     )
                 ))
             ) : (
-                <p>No approved projects found.</p>
+                <p>You do not have any approved projects.</p>
             )}
         </div>
-    );
-}
-
-function projectCardContents(project, calculateRemainingDays) {
-    return (
-        <>
-            <h2 className={styles.title}>{project.basicInfo.projectName}</h2>
-            <p className={styles.info}>
-                {project.basicInfo.category} -&gt; {project.basicInfo.subCategory}
-            </p>
-            <p className={styles.info}>Country: {project.basicInfo.country}</p>
-            <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>
-            <p className={styles.info}>Target Amount: {project.basicInfo.targetAmount}</p>
-            <p className={styles.info}>Status: {project.status}</p>
-            {project.status === 'approved' && (
-                <>
-                    <p className={styles.info}>
-                        Approval Date:{" "}
-                        {new Date(project.approvalDate).toLocaleString(undefined, {
-                            dateStyle: "medium",
-                            timeStyle: "short",
-                        })}
-                    </p>
-                    <p className={styles.info}>Days Remaining: {calculateRemainingDays(project.approvalDate, project.basicInfo.campaignDuration)}</p>
-                </>
-            )}
-            {project.status === 'rejected' && (
-                <p className={styles.rejectionReason}>Rejection Reason: {project.rejectionReason}</p>
-            )}
-            {project.basicInfo.projectImages && project.basicInfo.projectImages.length > 0 ? (
-                <div className={styles.projectImagesContainer}>
-                    {project.basicInfo.projectImages.map((photo, index) => (
-                        index === project.basicInfo.coverImage && (
-                            <img
-                                key={index}
-                                src={`http://localhost:3001/api/photos/${photo._id}`}
-                                alt={`Project ${index}`}
-                                className={styles.projectImage}
-                            />
-                        )
-                    ))}
-                </div>
-            ) : (
-                <div className={styles.noPhotos}>No photos available for this project!</div>
-            )}
-        </>
     );
 }
 

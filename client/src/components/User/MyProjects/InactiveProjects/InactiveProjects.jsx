@@ -56,65 +56,28 @@ function InactiveProjects() {
         fetchUserId();
     }, []);
 
-    const calculateRemainingDays = (approvalDate, campaignDuration) => {
-        const endDate = new Date(approvalDate);
-        endDate.setDate(endDate.getDate() + parseInt(campaignDuration));
-        const now = new Date();
-        const difference = endDate - now;
-        const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
-        return daysLeft > 0 ? daysLeft : 0;
-    };
-
     return (
         <div className={styles.container}>
-            <h1>My Approved Projects</h1>
+            <h1>My Inactive Projects</h1>
             {projects.length > 0 ? (
                 projects.map((project, index) => (
-                    (project.status === 'expired' || project.status === 'pending') && (
+                    (project.status === 'pending' || project.status === 'rejected' || project.status === 'expired') && (
                         <div className={styles.projectCard}>
-                            {projectCardContents(project, calculateRemainingDays)}
+                            {projectCardContents(project)}
                         </div>
                     )
                 ))
             ) : (
-                <p>No approved projects found.</p>
+                <p>You do not have any projects awaiting approval or with expired deadlines.</p>
             )}
         </div>
     );
 }
 
-function projectCardContents(project, calculateRemainingDays) {
+function projectCardContents(project) {
     return (
         <>
             <h2 className={styles.title}>{project.basicInfo.projectName}</h2>
-            <p className={styles.info}>
-                {project.basicInfo.category} -&gt; {project.basicInfo.subCategory}
-            </p>
-            <p className={styles.info}>Country: {project.basicInfo.country}</p>
-            <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>
-            <p className={styles.info}>Target Amount: {project.basicInfo.targetAmount}</p>
-            <p className={styles.info}>Status: {project.status}</p>
-            {project.status === 'approved' && (
-                <>
-                    <p className={styles.info}>
-                        Approval Date:{" "}
-                        {new Date(project.approvalDate).toLocaleString(undefined, {
-                            dateStyle: "medium",
-                            timeStyle: "short",
-                        })}
-                    </p>
-                    <p className={styles.info}>Days Remaining: {calculateRemainingDays(project.approvalDate, project.basicInfo.campaignDuration)}</p>
-                </>
-            )}
-            {project.status === 'expired' && (
-                <p className={styles.info}>Expired: {project.expirationDate}</p>
-            )}
-            {project.status === 'pending' && (
-                <p className={styles.info}>Project is under review by our team. You will be contacted soon.</p>
-            )}
-            {project.status === 'rejected' && (
-                <p className={styles.rejectionReason}>Rejection Reason: {project.rejectionReason}</p>
-            )}
             {project.basicInfo.projectImages && project.basicInfo.projectImages.length > 0 ? (
                 <div className={styles.projectImagesContainer}>
                     {project.basicInfo.projectImages.map((photo, index) => (
@@ -123,13 +86,29 @@ function projectCardContents(project, calculateRemainingDays) {
                                 key={index}
                                 src={`http://localhost:3001/api/photos/${photo._id}`}
                                 alt={`Project ${index}`}
-                                className={styles.projectImage}
+                                className={styles.coverImage}
                             />
                         )
                     ))}
                 </div>
             ) : (
                 <div className={styles.noPhotos}>No photos available for this project!</div>
+            )}
+            <p className={styles.info}>
+                {project.basicInfo.category} -&gt; {project.basicInfo.subCategory}
+            </p>
+            <p className={styles.info}>Country: {project.basicInfo.country}</p>
+            <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>
+            <p className={styles.info}>Target Amount: {project.basicInfo.targetAmount}</p>
+            <p className={styles.info}>Status: {project.status}</p>
+            {project.status === 'expired' && (
+                <p className={styles.info}>Expired: {project.expirationDate}</p>
+            )}
+            {project.status === 'pending' && (
+                <p className={styles.info}>Project is under review by our team. You will be contacted soon.</p>
+            )}
+            {project.status === 'rejected' && (
+                <p className={styles.rejectionReason}>Rejection Reason: {project.rejectionReason}</p>
             )}
         </>
     );
