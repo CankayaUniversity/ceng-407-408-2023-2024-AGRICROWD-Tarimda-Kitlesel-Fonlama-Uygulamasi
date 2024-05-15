@@ -23,6 +23,7 @@ import UserHome from "./components/User/Home/UserHome";
 import ChangePassword from "./components/User/AccountSettings/ChangePassword/ChangePassword";
 import ActiveProjects from "./components/User/MyProjects/ActiveProjects/ActiveProjects";
 import InactiveProjects from "./components/User/MyProjects/InactiveProjects/InactiveProjects";
+import DashboardforActiveProject from './components/User/MyProjects/ActiveProjects/DashboardforActiveProject/DashboardforActiveProject';
 import MyInvestments from "./components/User/MyInvestments/MyInvestments";
 
 
@@ -45,10 +46,8 @@ import AdminPendingProjects from "./components/Admin/Panel/PendingProjects/Pendi
 import Projects from "./components/Projects/ApprovedProjects/Projects";
 import ProjectDetail from "./components/Projects/ProjectDetail/ProjectDetail";
 
-// import 'bootstrap/dist/css/bootstrap.min.css';
 
 import styles from "./App.module.css";
-
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -114,6 +113,7 @@ const App = () => {
                                 <Routes>
                                   <Route path="*" element={<NotFound />} />
                                   <Route path="inactive" element={<InactiveProjects />} />
+                                  <Route path=":projectNameandID/dashboard" element={<DashboardforActiveProject />} />
                                 </Routes>
                               }
                             />
