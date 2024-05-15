@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import styles from "./AccountSettings.module.css";
+import styles from "./Personalinformation.module.css";
 
 const cities = [
   "Adana",
@@ -87,7 +87,7 @@ const cities = [
   "Zonguldak",
 ];
 
-function UserPanel() {
+function Personalinformation() {
   const [user, setUser] = useState({
     email: "",
     name: "",
@@ -200,7 +200,7 @@ function UserPanel() {
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
-        <h1 className={styles.heading}>Account Settings</h1>
+        <h1 className={styles.heading}>Personal Information</h1>
         {/* E-posta */}
         <div className={styles.formRow}>
           <div className={styles.formRowInner}>
@@ -355,4 +355,4 @@ function UserPanel() {
   );
 }
 
-export default UserPanel;
+export default Personalinformation;

@@ -17,12 +17,14 @@ import SignUp from "./components/SignUp/SignUp";
 import Login from "./components/Login/Login";
 
 //User
-import UserPanel from "./components/User/AccountSettings/AccountSettings";
-import UserHome from "./components/User/Home/UserHome";
-import ChangePassword from "./components/User/ChangePassword/ChangePassword";
-import MyProjects from "./components/User/MyProjects/MyProjects";
+import UserSettings from "./components/User/AccountSettings/Personalinformation/Personalinformation";
 import UserNavBar from "./components/User/UserNavBar/UserNavBar";
+import UserHome from "./components/User/Home/UserHome";
+import ChangePassword from "./components/User/AccountSettings/ChangePassword/ChangePassword";
+import ActiveProjects from "./components/User/MyProjects/ActiveProjects/ActiveProjects";
+import InactiveProjects from "./components/User/MyProjects/InactiveProjects/InactiveProjects";
 import MyInvestments from "./components/User/MyInvestments/MyInvestments";
+
 
 //ProjectAddition
 import AddProjectNav from "./components/addProject/ProgressBar/ProgressBar";
@@ -96,7 +98,7 @@ const App = () => {
                         <diV className={styles.userContainerRightContainer}>
                           <Routes>
                             <Route path="*" element={<NotFound />} />
-                            <Route path="account-settings" element={<UserPanel />} />
+                            <Route path="account-settings" element={<UserSettings />} />
                             <Route path="home" element={<UserHome />} />
                             <Route
                               path="change-password"
@@ -104,7 +106,16 @@ const App = () => {
                             />
                             <Route
                               path="my-projects"
-                              element={<MyProjects />}
+                              element={<ActiveProjects />}
+                            />
+                            <Route
+                              path="my-projects/*"
+                              element={
+                                <Routes>
+                                  <Route path="*" element={<NotFound />} />
+                                  <Route path="inactive" element={<InactiveProjects />} />
+                                </Routes>
+                              }
                             />
                             <Route
                               path="my-investments"
