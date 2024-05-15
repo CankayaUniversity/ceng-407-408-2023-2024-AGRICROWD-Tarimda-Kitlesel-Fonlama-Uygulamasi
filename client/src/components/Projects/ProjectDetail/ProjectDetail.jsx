@@ -165,7 +165,7 @@ const ProjectDetail = () => {
     if (!isLoggedIn()) {
       alert("Please log in to fund the project.");
       const returnUrl = window.location.pathname;
-      navigate("/login", { state: { returnUrl } });
+      navigate(`/login?returnUrl=${encodeURIComponent(returnUrl)}`);
       return;
     }
 
@@ -196,7 +196,7 @@ const ProjectDetail = () => {
     if (!isLoggedIn()) {
       alert("Please log in to donate to the project.");
       const returnUrl = window.location.pathname;
-      navigate("/login", { state: { returnUrl } });
+      navigate(`/login?returnUrl=${encodeURIComponent(returnUrl)}`);
       return;
     }
 

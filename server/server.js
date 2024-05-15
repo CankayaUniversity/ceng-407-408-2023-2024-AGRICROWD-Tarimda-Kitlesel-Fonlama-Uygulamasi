@@ -56,9 +56,10 @@ const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
+const projectCron = require('./cronJobs/projectCron.js');
 server.on('listening', () => {
   cron.schedule('*/15 * * * *', () => { // every 15 min check the projects
-    require('./cronJobs/projectCron.js');
+    projectCron();
   });
 });
 

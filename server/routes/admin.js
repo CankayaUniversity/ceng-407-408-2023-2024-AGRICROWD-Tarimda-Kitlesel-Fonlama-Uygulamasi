@@ -113,16 +113,20 @@ router.get('/projects/pending', async (req, res) => {
 router.put('/projects/approve', async (req, res) => {
     const { projectId } = req.body;
     try {
-        const updatedProject = await PendingProject.findByIdAndUpdate(
-            projectId,
-            { status: 'approved', approvalDate: new Date() },
-            { new: true }
-        );
-
-        if (!updatedProject) {
+        const project = await PendingProject.findById(projectId);
+        if (!project) {
             return res.status(404).json({ success: false, error: 'Project not found' });
+        } else {
+            const currentDate = new Date();
+            const expiredDate = new Date(currentDate.getTime() + project.basicInfo.campaignDuration * 24 * 60 * 60 * 1000);
+            await PendingProject.findByIdAndUpdate(
+                projectId,
+                { status: 'approved', approvalDate: currentDate, expiredDate },
+                { new: true }
+            );
+            res.json({ success: true, message: 'Project approved successfully!' });
         }
-        res.json({ success: true, message: 'Project approved successfully!' });
+
     } catch (error) {
         console.error('Error approving project:', error);
         res.status(500).json({ success: false, error: 'Server error' });

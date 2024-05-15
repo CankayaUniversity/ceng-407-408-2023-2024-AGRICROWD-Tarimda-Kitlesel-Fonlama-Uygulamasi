@@ -60,7 +60,7 @@ const PendingProjects = () => {
         projectId, // MongoDB ObjectId as a parameter
         ethers.utils.parseEther(fundingGoalETH.toString())
       );
-
+      
       // Wait for the transaction to be mined
       await transactionResponse.wait();
 
@@ -114,7 +114,6 @@ const PendingProjects = () => {
       <div>
         <div>
           <h3 className={styles.projectTitle}>{projectData.projectName}</h3>
-
           <div className={styles.projectContent}>
             <div>
               <h4>Project Description</h4>
@@ -180,6 +179,10 @@ const PendingProjects = () => {
     <div className={styles.pageLayout}>
       <h2 className={styles.title}>*manage pending projects</h2>
 
+      {feedbackMessage && (
+        <div className={styles.message}>{feedbackMessage}</div>
+      )}
+
       {loading ? (
         <div>Loading...</div>
       ) : (
@@ -194,11 +197,6 @@ const PendingProjects = () => {
 
                     <div>
                       {renderUserDetails(project.userDetails)}
-
-                      {feedbackMessage && (
-                        <div className={styles.message}>{feedbackMessage}</div>
-                      )}
-
                       {selectedProjectId !== project._id && (
                         <div className={styles.btnsContainer}>
                           <button

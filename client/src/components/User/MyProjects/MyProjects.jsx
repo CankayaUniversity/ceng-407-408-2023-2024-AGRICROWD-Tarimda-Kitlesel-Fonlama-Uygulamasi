@@ -72,7 +72,7 @@ function MyProjects() {
             {projects.length > 0 ? (
                 projects.map((project, index) => (
                     project.status === 'approved' ? (
-                        <Link to={`/project/${encodeURIComponent(project.basicInfo.projectName)}-pid-${project._id}`} className={styles.cardLink} key={index}>
+                        <Link to={`/project/${project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${project._id}`} className={styles.cardLink} key={index}>
                             <div className={styles.projectCard}>
                                 {projectCardContents(project, calculateRemainingDays)}
                             </div>
@@ -94,16 +94,22 @@ function projectCardContents(project, calculateRemainingDays) {
     return (
         <>
             <h2 className={styles.title}>{project.basicInfo.projectName}</h2>
-            <p className={styles.description}>Description: {project.basicInfo.projectDescription}</p>
-            <p className={styles.info}>Category: {project.basicInfo.category}</p>
-            <p className={styles.info}>Sub-category: {project.basicInfo.subCategory}</p>
+            <p className={styles.info}>
+                {project.basicInfo.category} -&gt; {project.basicInfo.subCategory}
+            </p>
             <p className={styles.info}>Country: {project.basicInfo.country}</p>
             <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>
             <p className={styles.info}>Target Amount: {project.basicInfo.targetAmount}</p>
             <p className={styles.info}>Status: {project.status}</p>
             {project.status === 'approved' && (
                 <>
-                    <p className={styles.info}>Approval Date: {new Date(project.approvalDate).toLocaleDateString()}</p>
+                    <p className={styles.info}>
+                        Approval Date:{" "}
+                        {new Date(project.approvalDate).toLocaleString(undefined, {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                        })}
+                    </p>
                     <p className={styles.info}>Days Remaining: {calculateRemainingDays(project.approvalDate, project.basicInfo.campaignDuration)}</p>
                 </>
             )}
@@ -112,14 +118,15 @@ function projectCardContents(project, calculateRemainingDays) {
             )}
             {project.basicInfo.projectImages && project.basicInfo.projectImages.length > 0 ? (
                 <div className={styles.projectImagesContainer}>
-                    <h4>Project Photos</h4>
                     {project.basicInfo.projectImages.map((photo, index) => (
-                        <img
-                            key={index}
-                            src={`http://localhost:3001/api/photos/${photo._id}`}
-                            alt={`Project ${index}`}
-                            className={styles.projectImage}
-                        />
+                        index === project.basicInfo.coverImage && (
+                            <img
+                                key={index}
+                                src={`http://localhost:3001/api/photos/${photo._id}`}
+                                alt={`Project ${index}`}
+                                className={styles.projectImage}
+                            />
+                        )
                     ))}
                 </div>
             ) : (

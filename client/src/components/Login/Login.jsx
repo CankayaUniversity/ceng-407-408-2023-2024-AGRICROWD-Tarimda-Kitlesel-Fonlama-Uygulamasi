@@ -16,8 +16,7 @@ function Login() {
   const recaptchaRef = useRef();
   const navigate = useNavigate();
   const location = useLocation();
-  const { state } = location;
-  const { returnUrl } = state || {};
+  const returnUrl = new URLSearchParams(location.search).get('returnUrl');
 
   const handleRecaptchaChange = (value) => {
     setRecaptchaValue(value);
@@ -56,7 +55,7 @@ function Login() {
               if(returnUrl){
                 navigate(returnUrl);
               } else {
-                navigate(`/user/panel`);
+                navigate(`/user/home`);
               }
               window.location.reload();
             }, 250);

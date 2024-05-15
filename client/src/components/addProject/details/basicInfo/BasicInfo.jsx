@@ -14,8 +14,8 @@ const BasicInfoForm = () => {
   const [subCategory, setSubCategory] = useState('');
   const [country, setCountry] = useState('Turkey');
   const [projectImages, setProjectImages] = useState([]);
-  const [targetAmount, setTargetAmount] = useState('');
-  const [campaignDuration, setCampaignDuration] = useState('');
+  const [targetAmount, setTargetAmount] = useState(null);
+  const [campaignDuration, setCampaignDuration] = useState(null);
   const [requiresLocation, setRequiresLocation] = useState(false); // Konum bilgisi istenmesi flag'i
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
@@ -142,8 +142,8 @@ const BasicInfoForm = () => {
         country,
         projectImages: uploadResponse.data,
         coverImage : coverImageIndex,
-        targetAmount,
-        campaignDuration,
+        targetAmount: Number(targetAmount),
+        campaignDuration: Number(campaignDuration),
       };
 
       localStorage.setItem(userId, JSON.stringify(basicInfo));
@@ -296,7 +296,7 @@ const BasicInfoForm = () => {
         <div className={styles.formRow}>
           <div className={styles.formRowInner}>
             <input
-              type='text'
+              type='number'
               className={styles.input}
               value={campaignDuration}
               onChange={(e) => setCampaignDuration(e.target.value)}

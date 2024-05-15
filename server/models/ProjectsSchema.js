@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const pendingProjectSchema = new mongoose.Schema({
+const ProjectSchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true
@@ -18,9 +18,12 @@ const pendingProjectSchema = new mongoose.Schema({
   },
   approvalDate: {
     type: Date
+  },
+  expiredDate: {
+    type: Date
   }
 });
 
-const PendingProject = mongoose.model('PendingProject', pendingProjectSchema);
+const Project = mongoose.model('Project', ProjectSchema, 'projects');
 
-module.exports = PendingProject;
+module.exports = Project;

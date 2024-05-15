@@ -10,13 +10,8 @@ async function checkAndUpdateProjectStatus() {
         }
         else {
             for (const project of projects) {
-                const endDate = new Date(project.approvalDate);
-                const daysInMilliseconds = 1000 * 60 * 60 * 24; // Bir günün milisaniye cinsinden değeri
-                const campaignDurationInDays = project.basicInfo.campaignDuration; // Projelerin kampanya süresi gün cinsinden
-                const campaignDurationInMilliseconds = campaignDurationInDays * daysInMilliseconds; // Kampanya süresi milisaniye cinsinden
-                endDate.setTime(endDate.getTime() + campaignDurationInMilliseconds);
-                console.log("endDate:", endDate);
-                if (currentDate >= endDate) {
+                console.log("endDate:", project.expiredDate);
+                if (currentDate >= project.expiredDate) {
                     project.status = 'expired';
                     console.log('Project statuses updated successfully');
                     await project.save();
@@ -29,5 +24,4 @@ async function checkAndUpdateProjectStatus() {
     }
 }
 
-checkAndUpdateProjectStatus();
-
+module.exports = checkAndUpdateProjectStatus;
