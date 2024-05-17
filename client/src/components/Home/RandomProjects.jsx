@@ -47,12 +47,12 @@ const RandomProjects = () => {
         {randomProjects.length > 0 && (
           <div className={styles.projectContainer} key={randomProjects[currentIndex]._id}>
             <button className={styles.prevButton} onClick={handlePrevClick}>◀◀</button>
-            <Link to={`/project/${encodeURIComponent(randomProjects[currentIndex].basicInfo.projectName)}-pid-${randomProjects[currentIndex]._id}`} className={styles.projectLink}>
+            <Link to={`/project/${randomProjects[currentIndex].basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${randomProjects[currentIndex]._id}`} className={styles.projectLink}>
               <div className={styles.projectCard}>
                 <div className={styles.projectImageContainer}>
                   {randomProjects[currentIndex].basicInfo.projectImages && randomProjects[currentIndex].basicInfo.projectImages.length > 0 ? (
                     <img
-                      src={`http://localhost:3001/api/photos/${randomProjects[currentIndex].basicInfo.projectImages[0]._id}`}
+                      src={`http://localhost:3001/api/photos/${randomProjects[currentIndex].basicInfo.projectImages[randomProjects[currentIndex].basicInfo.coverImage]._id}`}
                       alt={`Project ${randomProjects[currentIndex]._id}`}
                       className={styles.projectImage}
                     />
@@ -62,8 +62,8 @@ const RandomProjects = () => {
                 </div>
                 <div className={styles.projectContent}>
                   <h3>{randomProjects[currentIndex].basicInfo.projectName}</h3>
-                  <p><strong>Target Amount:</strong> ${randomProjects[currentIndex].basicInfo.targetAmount}</p>
-                  <p><strong>Listed Date:</strong> {new Date(randomProjects[currentIndex].listingDate).toLocaleDateString()}</p>
+                  <p><strong>Target Amount:</strong> {randomProjects[currentIndex].basicInfo.targetAmount} ETH</p>
+                  <p><strong>Listed Date:</strong> {new Date(randomProjects[currentIndex].approvalDate).toLocaleDateString()}</p>
                 </div>
               </div>
             </Link>
