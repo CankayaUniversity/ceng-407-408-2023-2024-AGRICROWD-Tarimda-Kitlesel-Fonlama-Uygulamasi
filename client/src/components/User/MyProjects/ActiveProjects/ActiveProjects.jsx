@@ -6,6 +6,7 @@ import styles from './ActiveProjects.module.css';
 
 const ActiveProjects = () => {
     const [projects, setProjects] = useState([]);
+    const [searchQuery, setSearchQuery] = useState(""); // Arama sorgusu için state
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -148,14 +149,26 @@ const ActiveProjects = () => {
     return (
         <div className={styles.container}>
             <h1>My Approved Projects</h1>
+            {/* Arama çubuğu */}
+            <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={styles.searchBar}
+            />
             {projects.length > 0 ? (
-                projects.map((project, index) => (
-                    project.status === 'approved' && (
-                        <div className={styles.projectCard}>
-                            <ProjectCard project={project} />
-                        </div>
+                projects
+                    .filter((project) =>
+                        project.basicInfo.projectName.toLowerCase().includes(searchQuery.toLowerCase())
                     )
-                ))
+                    .map((project, index) => (
+                        project.status === 'approved' && (
+                            <div className={styles.projectCard}>
+                                <ProjectCard project={project} />
+                            </div>
+                        )
+                    ))
             ) : (
                 <p>You do not have any approved projects.</p>
             )}

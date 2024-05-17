@@ -51,18 +51,18 @@ const PendingProjects = () => {
   const handleApproveProject = async (projectId, fundingGoalETH) => {
     try {
       // Connect to Ethereum blockchain and interact with the smart contract
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, abi, signer);
+      //const provider = new ethers.providers.Web3Provider(window.ethereum);
+      //const signer = provider.getSigner();
+      //const contract = new ethers.Contract(contractAddress, abi, signer);
 
       // Call createProject function in the smart contract
-      const transactionResponse = await contract.createProject(
-        projectId, // MongoDB ObjectId as a parameter
-        ethers.utils.parseEther(fundingGoalETH.toString())
-      );
+      //const transactionResponse = await contract.createProject(
+        //projectId, // MongoDB ObjectId as a parameter
+        //ethers.utils.parseEther(fundingGoalETH.toString())
+      //);
       
       // Wait for the transaction to be mined
-      await transactionResponse.wait();
+      //await transactionResponse.wait();
 
       // Once the transaction is successful, proceed with backend approval
       const response = await axios.put(

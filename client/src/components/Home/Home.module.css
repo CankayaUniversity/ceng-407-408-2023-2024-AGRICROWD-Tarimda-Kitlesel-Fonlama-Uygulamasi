@@ -15,10 +15,12 @@
   align-items: center;
   font-size: 32px;
   color: #18412d;
+  text-align: center; /* Yeni eklenen özellik: Metin hizalama */
 }
 
 .subText {
   font-size: 16px;
+  text-align: center; /* Yeni eklenen özellik: Metin hizalama */
 }
 
 .button {
@@ -30,4 +32,44 @@
   padding: 1rem 1.5rem;
   border: none;
   cursor: pointer;
+}
+
+/* Yeni eklenen stil kuralları */
+
+.randomProjects {
+  margin-top: 2rem; /* Rastgele projeler bileşeninden ana bileşene boşluk ekle */
+}
+
+.projectList {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap; /* Projeleri bir sıra dışına sığmalarını sağla */
+}
+
+.projectLink {
+  text-decoration: none;
+}
+
+.projectCard {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  width: 300px; /* Kartların genişliğini ayarla */
+  background-color: #f9f9f9;
+}
+
+.projectImageContainer {
+  height: 200px; /* Proje resim konteynerinin yüksekliğini ayarla */
+  overflow: hidden; /* Aşırı büyük resimleri kırpmak için taşmayı gizle */
+}
+
+.projectImage {
+  width: 100%;
+  height: auto;
+  object-fit: cover; /* Resimlerin konteyneri doldurmasını sağla */
+}
+
+.noImage {
+  text-align: center;
+  color: #777;
 }

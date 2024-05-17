@@ -5,6 +5,7 @@ import styles from './InactiveProjects.module.css';
 
 function InactiveProjects() {
     const [projects, setProjects] = useState([]);
+    const [searchQuery, setSearchQuery] = useState(""); // Arama sorgusu için state
 
     useEffect(() => {
         const authToken = Cookies.get('authToken');
@@ -59,14 +60,26 @@ function InactiveProjects() {
     return (
         <div className={styles.container}>
             <h1>My Inactive Projects</h1>
+            {/* Arama çubuğu */}
+            <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={styles.searchBar}
+            />
             {projects.length > 0 ? (
-                projects.map((project, index) => (
-                    (project.status === 'pending' || project.status === 'rejected' || project.status === 'expired') && (
-                        <div className={styles.projectCard}>
-                            {projectCardContents(project)}
-                        </div>
+                projects
+                    .filter((project) =>
+                        project.basicInfo.projectName.toLowerCase().includes(searchQuery.toLowerCase())
                     )
-                ))
+                    .map((project, index) => (
+                        (project.status === 'pending' || project.status === 'rejected' || project.status === 'expired') && (
+                            <div className={styles.projectCard}>
+                                {projectCardContents(project)}
+                            </div>
+                        )
+                    ))
             ) : (
                 <p>You do not have any projects awaiting approval or with expired deadlines.</p>
             )}
