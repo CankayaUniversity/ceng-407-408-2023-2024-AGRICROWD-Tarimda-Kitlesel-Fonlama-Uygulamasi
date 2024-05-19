@@ -1,6 +1,7 @@
 .layoutContainer {
   display: flex;
-  background-color: #fbf8f6;
+  /* background-color: #fbf8f6; */
+  background-color: #ebfbee;
   width: 100%;
   height: 100vh;
 }

@@ -1,73 +1,100 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
 .projectCard {
-    display: flex;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    margin: 10px 0;
-    width: 80%;
-    padding: 20px;
-    border-radius: 10px;
-    transition: transform 0.3s ease-in-out;
+  display: flex;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+  width: 80%;
+  padding: 20px;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
 }
 
-.projectCard:hover {
+/* .projectCard:hover {
     transform: translateY(-5px);
+  } */
+
+.projectCardLayout {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.projectInformation {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 1rem;
 }
 
 .coverImage {
-    width: 150px;
-    height: 150px;
-    border-radius: 10px;
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
 }
 
 .projectDetails {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-left: 20px; /* Fotoğraf ile bilgiler arasında boşluk bırakmak için */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 20px; /* Fotoğraf ile bilgiler arasında boşluk bırakmak için */
 }
 
 .title {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 10px;
+  font-size: 24px;
+  color: #333;
 }
 
-.description, .info {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 5px;
+.description,
+.info {
+  font-size: 16px;
+  color: #666;
 }
 
 .info {
-    font-weight: bold;
+  font-weight: bold;
+}
+
+.statusContainer {
+  width: 10rem;
+  align-self: center;
+  margin-left: auto;
 }
 
 .rejectionReason {
-    color: #ff6b6b;
-    font-weight: bold;
+  color: #ff6b6b;
+  font-weight: bold;
 }
 
 @media (max-width: 768px) {
-    .projectCard {
-        width: 100%;
-        flex-direction: column;
-    }
+  .projectCard {
+    width: 100%;
+    flex-direction: column;
+  }
 
-    .projectDetails {
-        margin-left: 0; /* Mobil görünümde fotoğraf ile bilgiler arasında boşluk bırakmak için */
-        margin-top: 10px; /* Mobil görünümde fotoğraf ile bilgiler arasında biraz boşluk bırakmak için */
-    }
+  .projectDetails {
+    margin-left: 0; /* Mobil görünümde fotoğraf ile bilgiler arasında boşluk bırakmak için */
+    margin-top: 10px; /* Mobil görünümde fotoğraf ile bilgiler arasında biraz boşluk bırakmak için */
+  }
 
-    .coverImage {
-        width: 100%;
-        height: auto;
-        margin-bottom: 10px; /* Mobil görünümde fotoğrafın altında biraz boşluk bırakmak için */
-    }
+  .coverImage {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px; /* Mobil görünümde fotoğrafın altında biraz boşluk bırakmak için */
+  }
 }
