@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import AddCategoryModal from '../../../Modal/Modal';
 import styles from './Categories.module.css';
@@ -18,11 +18,7 @@ function Categories() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await axios.get(
         'http://localhost:3001/api/categories/fetch-main-categories'
@@ -40,7 +36,7 @@ function Categories() {
       console.error('Error fetching categories:', error);
       setCategories([]);
     }
-  };
+  }, []);
 
   const fetchSubCategories = async (categoryId) => {
     try {
@@ -73,7 +69,12 @@ function Categories() {
     }
   };
 
-  const handleAddCategory = async () => {
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  const handleAddCategory = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.post(
         'http://localhost:3001/api/categories/add-new-main-category',
@@ -88,10 +89,16 @@ function Categories() {
         setSuccessMessage(response.data.message);
         setTimeout(() => setSuccessMessage(''), 10000);
         fetchCategories();
+      } else {
+        setErrorMessage(response.data.message);
+        setTimeout(() => setErrorMessage(''), 10000);
       }
     } catch (error) {
-      console.error('Error adding category:', error);
-      setErrorMessage('Failed to add category. Please try again.');
+      if (error.response && error.response.status === 400) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage('Failed to add main category. Please try again.');
+      }
       setTimeout(() => setErrorMessage(''), 10000);
     }
   };
@@ -132,7 +139,8 @@ function Categories() {
     }
   };
 
-  const handleAddSubCategory = async () => {
+  const handleAddSubCategory = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.post(
         `http://localhost:3001/api/categories/add-subcategory`,
@@ -148,10 +156,14 @@ function Categories() {
         fetchCategories();
       } else {
         setErrorMessage(response.data.message);
+        setTimeout(() => setErrorMessage(''), 10000);
       }
     } catch (error) {
-      console.error('Error adding sub category:', error);
-      setErrorMessage('Failed to add sub category. Please try again.');
+      if (error.response && error.response.status === 400) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage('Failed to add sub category. Please try again.');
+      }
       setTimeout(() => setErrorMessage(''), 10000);
     }
   };
@@ -162,18 +174,19 @@ function Categories() {
 
   return (
     <div className={styles.pageLayout}>
-      {successMessage && <div variant='success'>{successMessage}</div>}
-      {errorMessage && <div variant='danger'>{errorMessage}</div>}
+      {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
+      {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
       <div className={styles.container}>
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={handleAddCategory}>
           <h2 className={styles.formTitle}>New Category</h2>
           <div className={styles.formRow}>
             <div className={styles.formRowInner}>
               <input
-                type='text'
+                type="text"
                 className={styles.input}
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
+                required
               />
               <label className={styles.label}>Category Name</label>
             </div>
@@ -182,7 +195,7 @@ function Categories() {
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <label style={{ display: 'flex', alignItems: 'center' }}>
               <input
-                type='checkbox'
+                type="checkbox"
                 checked={requiresLocation}
                 onChange={(e) => setRequiresLocation(e.target.checked)}
                 style={{ marginRight: '8px' }}
@@ -191,7 +204,7 @@ function Categories() {
             </label>
           </div>
 
-          <button className={styles.button} onClick={handleAddCategory}>
+          <button className={styles.button} type="submit">
             Add
           </button>
         </form>
@@ -211,7 +224,7 @@ function Categories() {
           </div>
           <div>
             {subCategories[category._id] &&
-            subCategories[category._id].length > 0 ? (
+              subCategories[category._id].length > 0 ? (
               subCategories[category._id].map((subCategory) => (
                 <div
                   key={subCategory._id}
@@ -250,7 +263,7 @@ function Categories() {
             {editCategory.id === category._id && (
               <div className='mt-2'>
                 <input
-                  type='text'
+                  type="text"
                   value={editCategory.name}
                   onChange={(e) =>
                     setEditCategory({
@@ -258,7 +271,7 @@ function Categories() {
                       name: e.target.value,
                     })
                   }
-                  placeholder='New Category Name'
+                  placeholder="New Category Name"
                 />
 
                 <button
@@ -280,24 +293,22 @@ function Categories() {
               Add Subcategory
             </button>
             {selectedCategory === category._id && (
-              <form className={styles.form}>
+              <form className={styles.form} onSubmit={handleAddSubCategory}>
                 <h2 className={styles.formTitle}>New Subcategory</h2>
                 <div className={styles.formRow}>
                   <div className={styles.formRowInner}>
                     <input
-                      type='text'
+                      type="text"
                       className={styles.input}
                       value={newSubCategoryName}
                       onChange={(e) => setNewSubCategoryName(e.target.value)}
+                      required
                     />
                     <label className={styles.label}>Subcategory Name</label>
                   </div>
                 </div>
 
-                <button
-                  className={styles.button}
-                  onClick={handleAddSubCategory}
-                >
+                <button className={styles.button} type="submit">
                   Add
                 </button>
               </form>

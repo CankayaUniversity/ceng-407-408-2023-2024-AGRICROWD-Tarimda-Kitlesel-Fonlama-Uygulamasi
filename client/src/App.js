@@ -87,7 +87,7 @@ const App = () => {
               <Navbar isAuthenticated={authToken} onLogout={logout} />
               <Routes>
                 <Route path="*" element={<NotFound />} />
-                <Route path="/" element={<Home />} />
+                <Route path="/" exact element={<Home />} />
                 <Route
                   path="/user/*"
                   element={
@@ -127,7 +127,8 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
-                <Route path="/projects" element={<Projects />} />
+                <Route path="/projects" exact element={<Projects />} />
+                <Route path="/projects/:categoryNameandId" element={<Projects />} />
                 <Route
                   path="/project/:projectNameandId"
                   element={<ProjectDetail />}
