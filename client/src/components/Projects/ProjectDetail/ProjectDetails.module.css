@@ -94,3 +94,32 @@
   display: flex;
   justify-content: space-between;
 }
+
+.breadcrumb {
+  margin: 20px 0;
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  color: #333; 
+  transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+  color: #007bff; 
+}
+
+.breadcrumb span {
+  color: #666; 
+}
+
+.breadcrumb a::after {
+  content: "›";
+  margin: 0 5px; 
+  color: #999; 
+}
+
+.breadcrumb a:last-child::after {
+  content: none; 
+}

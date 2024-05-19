@@ -33,7 +33,7 @@ app.use('/api/register', registerRoutes);
 const loginRoutes = require('./routes/login');
 app.use('/api/login', loginRoutes);
 
-const categoriesRoutes = require('./routes/categories');
+const categoriesRoutes = require('./routes/CategoryRoutes');
 app.use('/api/categories', categoriesRoutes);
 
 const adminRoutes = require('./routes/admin');

@@ -36,7 +36,7 @@ const ProjectCard = ({ project }) => (
                   index === project.basicInfo.coverImage && (
                     <img
                       key={index}
-                      src={`http://localhost:3001/api/photos/${photo._id}`}
+                      src={`http://localhost:3001/api/photos/${photo}`}
                       alt={`Project ${index}`}
                       className={styles.projectImage}
                     />
@@ -66,6 +66,7 @@ const Projects = () => {
   const [sortBy, setSortBy] = useState('');
   const [categories, setCategories] = useState([]);
   const [targetAmountFilter, setTargetAmountFilter] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchApprovedProjects = async () => {
@@ -84,19 +85,22 @@ const Projects = () => {
   }, []);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchAllCategories = async () => {
       try {
-        const response = await axios.get(
-          'http://localhost:3001/api/categories'
-        );
-        setCategories(response.data.map((category) => category.categoryName));
+        const response = await axios.get('http://localhost:3001/api/categories/fetch-both');
+        if (response.data.success) {
+          setCategories(response.data.categoriesWithSubCategories);
+        } else {
+          setErrorMessage("No categories found!");
+        }
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
     };
 
-    fetchCategories();
+    fetchAllCategories();
   }, []);
+
 
   const sortProjects = (sortBy) => {
     let sortedProjects = [...approvedProjects];
@@ -124,71 +128,100 @@ const Projects = () => {
     setSortBy(sortBy);
   };
 
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+  };
+
   const handleTargetAmountFilter = (e) => {
     setTargetAmountFilter(e.target.value);
   };
 
   return (
     <div className={styles.pageLayout}>
-      <div className={styles.filters}>
-        <h2 className={styles.title}>Approved Projects</h2>
+      <nav className={styles.breadcrumb}>
         <div>
+          <Link to="/">Home</Link>
+          <Link to="/projects">Projects</Link>
+        </div>
+        <div className={styles.sortContainer}>
+          <select
+            value={sortBy}
+            onChange={(e) => handleSort(e.target.value)}
+            className={styles.sortSelect}
+          >
+            <option value="">Sort By</option>
+            <option value="longest">Longest Campaign</option>
+            <option value="shortest">Shortest Campaign</option>
+            <option value="highestAmount">Highest Target Amount</option>
+            <option value="lowestAmount">Lowest Target Amount</option>
+          </select>
+        </div>
+      </nav>
+      <div className={styles.contentLayout}>
+        <div className={styles.sidebar}>
+          <h2 className={styles.title}>Filters</h2>
           <input
-            type='text'
-            placeholder='Search projects...'
+            type="text"
+            placeholder="Search projects..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className={styles.searchInput}
           />
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className={styles.categorySelect}
-          >
-            <option value=''>All Categories</option>
-            {categories.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
-              </option>
+          <div className={styles.categoryList}>
+            {categories.map((category) => (
+              <div key={category._id}>
+                <div
+                  className={styles.mainCategory}
+                  onClick={() => handleCategoryClick(category._id)}
+                >
+                  {category.categoryName}
+                </div>
+                {category.subCategories &&
+                  category.subCategories.map((subCategory) => (
+                    <div
+                      key={subCategory._id}
+                      className={styles.subCategory}
+                      onClick={() => handleCategoryClick(subCategory._id)}
+                    >
+                      {subCategory.subCategoryName}
+                    </div>
+                  ))}
+              </div>
             ))}
-          </select>
-          <select
-            value={sortBy}
-            onChange={(e) => handleSort(e.target.value)}
-            className={styles.categorySelect}
-          >
-            <option value=''>Sort By</option>
-            <option value='longest'>Longest Campaign</option>
-            <option value='shortest'>Shortest Campaign</option>
-            <option value='highestAmount'>Highest Target Amount</option>
-            <option value='lowestAmount'>Lowest Target Amount</option>
-          </select>
+          </div>
+          <input
+            type="number"
+            placeholder="Minimum Target Amount"
+            value={targetAmountFilter}
+            onChange={handleTargetAmountFilter}
+            className={styles.targetAmountInput}
+          />
+        </div>
+        <div className={styles.gridContainer}>
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            sortProjects(sortBy)
+              .filter(
+                (project) =>
+                  project.basicInfo.projectName
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) &&
+                  (selectedCategory
+                    ? project.category.mainCategory === selectedCategory ||
+                    project.category.subCategory === selectedCategory
+                    : true) &&
+                  (targetAmountFilter
+                    ? project.basicInfo.targetAmount >=
+                    parseInt(targetAmountFilter)
+                    : true)
+              )
+              .map((project) => (
+                <ProjectCard key={project._id} project={project} />
+              ))
+          )}
         </div>
       </div>
-
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <div className={styles.gridContainer}>
-          {sortProjects(sortBy)
-            .filter(
-              (project) =>
-                project.basicInfo.projectName
-                  .toLowerCase()
-                  .includes(searchTerm.toLowerCase()) &&
-                (selectedCategory
-                  ? project.basicInfo.category === selectedCategory
-                  : true) &&
-                (targetAmountFilter
-                  ? project.basicInfo.targetAmount >=
-                  parseInt(targetAmountFilter)
-                  : true)
-            )
-            .map((project) => (
-              <ProjectCard key={project._id} project={project} />
-            ))}
-        </div>
-      )}
     </div>
   );
 };

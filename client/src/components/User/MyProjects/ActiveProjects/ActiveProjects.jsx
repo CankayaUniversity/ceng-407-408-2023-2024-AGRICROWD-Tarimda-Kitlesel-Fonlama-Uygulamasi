@@ -95,7 +95,7 @@ const ActiveProjects = () => {
                             index === project.basicInfo.coverImage && (
                                 <img
                                     key={index}
-                                    src={`http://localhost:3001/api/photos/${photo._id}`}
+                                    src={`http://localhost:3001/api/photos/${photo}`}
                                     alt={`Project ${index}`}
                                     className={styles.coverImage}
                                 />
@@ -106,7 +106,7 @@ const ActiveProjects = () => {
                     <div className={styles.noCover}>No cover photo available</div>
                 )}
                 <p className={styles.info}>
-                    {project.basicInfo.category} -&gt; {project.basicInfo.subCategory}
+                    {project.category.mainCategory} -&gt; {project.category.subCategory}
                 </p>
                 <p className={styles.info}>Country: {project.basicInfo.country}</p>
                 <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>
