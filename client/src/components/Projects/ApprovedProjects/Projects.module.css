@@ -8,25 +8,64 @@
   font-size: 24px;
 }
 
-.filters {
+.breadcrumb {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
+  position: relative;
+}
+
+.sortContainer {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.sortSelect {
+  margin-top: 10px;
+}
+
+.contentLayout {
+  display: flex;
+}
+
+.sidebar {
+  width: 250px;
+  margin-right: 20px;
 }
 
 .searchInput,
-.categorySelect {
-  margin-right: 10px;
+.targetAmountInput {
+  margin-bottom: 10px;
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
+  width: 100%;
+}
+
+.categoryList {
+  margin-bottom: 20px;
+}
+
+.mainCategory {
+  font-weight: bold;
+  cursor: pointer;
+  padding: 5px 0;
+}
+
+.subCategory {
+  padding-left: 20px;
+  cursor: pointer;
+  padding: 3px 0;
 }
 
 .gridContainer {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
+  flex-grow: 1;
 }
 
 .cardLink {
@@ -58,7 +97,7 @@
 }
 
 .projectDetail {
-  margin-bottom: 10px;
+  margin-bottom: 10px
 }
 
 .projectImagesContainer {
@@ -79,4 +118,33 @@
 .noPhotos {
   font-style: italic;
   color: #666;
+}
+
+.breadcrumb {
+  margin: 20px 0;
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+  color: #007bff;
+}
+
+.breadcrumb span {
+  color: #666;
+}
+
+.breadcrumb a::after {
+  content: "›";
+  margin: 0 5px;
+  color: #999;
+}
+
+.breadcrumb a:last-child::after {
+  content: none;
 }

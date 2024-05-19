@@ -87,10 +87,11 @@ router.post('/verify-token', async (req, res) => {
 
 router.post('/projects/add-pending', async (req, res) => {
     try {
-        const { userId, basicInfo } = req.body;
+        const { userId, basicInfo, category} = req.body;
         const newPendingProject = new PendingProject({
             userId,
-            basicInfo
+            basicInfo,
+            category
         });
         await newPendingProject.save();
         res.status(201).json({ success: true, message: 'Project submitted for approval successfully! You are directed to the screen where you can see your own projects...' });

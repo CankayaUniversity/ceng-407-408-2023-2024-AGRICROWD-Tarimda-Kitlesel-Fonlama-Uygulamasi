@@ -1,14 +1,19 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const subCategorySchema = new Schema({
+const SubCategorySchema = new Schema({
     subCategoryName: {
         type: String,
+        required: true
+    },
+    mainCategory: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
         required: true
     }
 });
 
-const categorySchema = new Schema({
+const CategorySchema = new Schema({
     categoryName: {
         type: String,
         required: true
@@ -16,14 +21,10 @@ const categorySchema = new Schema({
     requiresLocation: {
         type: Boolean,
         default: false
-    },
-    isMainCategory: {
-        type: Boolean,
-        default: true
-    },
-    subCategories: [subCategorySchema]
+    }
 });
 
-const Category = mongoose.model('Category', categorySchema);
+const Category = mongoose.model('Category', CategorySchema);
+const SubCategory = mongoose.model('SubCategory', SubCategorySchema);
 
-module.exports = Category;
+module.exports = { Category, SubCategory };
