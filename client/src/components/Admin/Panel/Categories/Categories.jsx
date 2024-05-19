@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import AddCategoryModal from '../../../Modal/Modal';
 import styles from './Categories.module.css';
 
 function CategoriesCrud() {
@@ -126,8 +127,19 @@ function CategoriesCrud() {
     setSelectedCategory(category);
   };
 
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
   return (
     <div className={styles.pageLayout}>
+      <button onClick={openModal}>Modalı Aç</button>
+      <AddCategoryModal isOpen={isModalOpen} onClose={closeModal}>
+        <h2>Modal İçeriği</h2>
+        <p>Buraya istediğiniz içeriği koyabilirsiniz.</p>
+      </AddCategoryModal>
+
       <div className={styles.container}>
         <form className={styles.form}>
           <h2 className={styles.formTitle}>New Category</h2>
@@ -146,13 +158,16 @@ function CategoriesCrud() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignContent: 'center' }}>
-            <input
-              type='checkbox'
-              checked={requiresLocation}
-              onChange={(e) => setRequiresLocation(e.target.checked)}
-            />
-            <label>Requires Location</label>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <label style={{ display: 'flex', alignItems: 'center' }}>
+              <input
+                type='checkbox'
+                checked={requiresLocation}
+                onChange={(e) => setRequiresLocation(e.target.checked)}
+                style={{ marginRight: '8px' }}
+              />
+              Requires Location
+            </label>
           </div>
 
           <button className={styles.button} onClick={handleAddCategory}>
