@@ -8,4 +8,10 @@
 
 .tab {
   border-bottom: 2px solid #333;
+  padding-bottom: 4px;
+}
+
+.disabled {
+  pointer-events: none;
+  color: gray;
 }

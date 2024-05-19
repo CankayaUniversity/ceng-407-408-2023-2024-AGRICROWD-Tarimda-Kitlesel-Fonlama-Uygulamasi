@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import AddCategoryModal from '../../../Modal/Modal';
 import styles from './Categories.module.css';
 
 function Categories() {
@@ -23,10 +24,12 @@ function Categories() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/categories/fetch-main-categories');
+      const response = await axios.get(
+        'http://localhost:3001/api/categories/fetch-main-categories'
+      );
       if (response.data.success) {
         setCategories(response.data.categories);
-        response.data.categories.forEach(category => {
+        response.data.categories.forEach((category) => {
           fetchSubCategories(category._id);
         });
       } else {
@@ -41,28 +44,31 @@ function Categories() {
 
   const fetchSubCategories = async (categoryId) => {
     try {
-      const response = await axios.get(`http://localhost:3001/api/categories/fetch-subcategories`, {
-        params: {
-          categoryId: categoryId
+      const response = await axios.get(
+        `http://localhost:3001/api/categories/fetch-subcategories`,
+        {
+          params: {
+            categoryId: categoryId,
+          },
         }
-      });
+      );
       if (response.data.success) {
-        setSubCategories(prevState => ({
+        setSubCategories((prevState) => ({
           ...prevState,
-          [categoryId]: response.data.subCategories
+          [categoryId]: response.data.subCategories,
         }));
       } else {
         //console.error('No subcategories found:', response.data.message);
-        setSubCategories(prevState => ({
+        setSubCategories((prevState) => ({
           ...prevState,
-          [categoryId]: []
+          [categoryId]: [],
         }));
       }
     } catch (error) {
       console.error('Error fetching subcategories:', error);
-      setSubCategories(prevState => ({
+      setSubCategories((prevState) => ({
         ...prevState,
-        [categoryId]: []
+        [categoryId]: [],
       }));
     }
   };
@@ -73,7 +79,7 @@ function Categories() {
         'http://localhost:3001/api/categories/add-new-main-category',
         {
           categoryName: newCategoryName,
-          requiresLocation: requiresLocation
+          requiresLocation: requiresLocation,
         }
       );
       if (response.data.success) {
@@ -95,7 +101,7 @@ function Categories() {
       const response = await axios.delete(
         `http://localhost:3001/api/categories/delete-main-category/${categoryId}`,
         {
-          categoryId
+          categoryId,
         }
       );
       if (response.data.success) {
@@ -105,7 +111,6 @@ function Categories() {
       } else {
         setErrorMessage(response.data.message);
       }
-
     } catch (error) {
       console.error('Error deleting category:', error);
     }
@@ -133,7 +138,7 @@ function Categories() {
         `http://localhost:3001/api/categories/add-subcategory`,
         {
           mainCategoryId: selectedCategory,
-          subCategoryName: newSubCategoryName
+          subCategoryName: newSubCategoryName,
         }
       );
       if (response.data.success) {
@@ -144,7 +149,6 @@ function Categories() {
       } else {
         setErrorMessage(response.data.message);
       }
-
     } catch (error) {
       console.error('Error adding sub category:', error);
       setErrorMessage('Failed to add sub category. Please try again.');
@@ -152,8 +156,9 @@ function Categories() {
     }
   };
 
-
-
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+  };
 
   return (
     <div className={styles.pageLayout}>
@@ -174,13 +179,16 @@ function Categories() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignContent: 'center' }}>
-            <input
-              type='checkbox'
-              checked={requiresLocation}
-              onChange={(e) => setRequiresLocation(e.target.checked)}
-            />
-            <label>Requires Location</label>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <label style={{ display: 'flex', alignItems: 'center' }}>
+              <input
+                type='checkbox'
+                checked={requiresLocation}
+                onChange={(e) => setRequiresLocation(e.target.checked)}
+                style={{ marginRight: '8px' }}
+              />
+              Requires Location
+            </label>
           </div>
 
           <button className={styles.button} onClick={handleAddCategory}>
@@ -190,9 +198,7 @@ function Categories() {
       </div>
 
       {categories.length === 0 && (
-        <div className={styles.message}>
-          No categories found.
-        </div>
+        <div className={styles.message}>No categories found.</div>
       )}
 
       {categories.map((category) => (
@@ -204,9 +210,13 @@ function Categories() {
             Requires Location: {category.requiresLocation ? 'Yes' : 'No'}
           </div>
           <div>
-            {subCategories[category._id] && subCategories[category._id].length > 0 ? (
-              subCategories[category._id].map(subCategory => (
-                <div key={subCategory._id} className={styles.subCategoryContainer}>
+            {subCategories[category._id] &&
+            subCategories[category._id].length > 0 ? (
+              subCategories[category._id].map((subCategory) => (
+                <div
+                  key={subCategory._id}
+                  className={styles.subCategoryContainer}
+                >
                   {subCategory.subCategoryName}
                 </div>
               ))
@@ -227,7 +237,12 @@ function Categories() {
 
             <button
               className={styles.button}
-              onClick={() => setEditCategory({ id: category._id, name: category.categoryName })}
+              onClick={() =>
+                setEditCategory({
+                  id: category._id,
+                  name: category.categoryName,
+                })
+              }
             >
               Edit
             </button>
@@ -256,7 +271,11 @@ function Categories() {
             )}
             <button
               className={styles.button}
-              onClick={() => setSelectedCategory(prevCategory => prevCategory === category._id ? null : category._id)}
+              onClick={() =>
+                setSelectedCategory((prevCategory) =>
+                  prevCategory === category._id ? null : category._id
+                )
+              }
             >
               Add Subcategory
             </button>
@@ -275,14 +294,15 @@ function Categories() {
                   </div>
                 </div>
 
-                <button className={styles.button} onClick={handleAddSubCategory}>
+                <button
+                  className={styles.button}
+                  onClick={handleAddSubCategory}
+                >
                   Add
                 </button>
               </form>
             )}
-
           </div>
-
         </div>
       ))}
     </div>
