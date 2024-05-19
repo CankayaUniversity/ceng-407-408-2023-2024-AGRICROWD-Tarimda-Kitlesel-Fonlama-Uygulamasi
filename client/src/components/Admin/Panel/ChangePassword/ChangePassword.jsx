@@ -8,13 +8,16 @@ function ChangePassword() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessageforConfirmPassword, setErrorMessageforConfirm] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [passwordStrength, setPasswordStrength] = useState({
     hasLowerCase: false,
     hasUpperCase: false,
     hasSpecialChar: false,
+    hasNumber: false,
     isLengthValid: false,
   });
+
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
 
@@ -65,11 +68,32 @@ function ChangePassword() {
       if (response.data.success) {
         setSuccessMessage('You have successfully changed your password!');
         setErrorMessage('');
+        setOldPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        setPasswordStrength({
+          hasLowerCase: false,
+          hasUpperCase: false,
+          hasSpecialChar: false,
+          hasNumber: false,
+          isLengthValid: false,
+        });
       }
       console.log('Server response: ', response.data);
     } catch (error) {
       console.error('Change password error: ', error);
       setErrorMessage('Failed to change password. Please try again.');
+    }
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    const confirmPassword = e.target.value;
+    setConfirmPassword(confirmPassword);
+
+    if (confirmPassword !== newPassword) {
+      setErrorMessageforConfirm('The passwords you entered do not match.');
+    } else {
+      setErrorMessageforConfirm('');
     }
   };
 
@@ -112,7 +136,7 @@ function ChangePassword() {
               id='newPassword'
               value={newPassword}
               onChange={handlePasswordChange}
-              pattern='^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$'
+              pattern='^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$'
               required
             />
             <label htmlFor='newPassword' className={styles.label}>
@@ -128,13 +152,18 @@ function ChangePassword() {
               className={styles.input}
               id='confirmPassword'
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={handleConfirmPasswordChange}
               required
             />
             <label htmlFor='confirmPassword' className={styles.label}>
               Confirm New Password
             </label>
           </div>
+          {confirmPassword && newPassword !== confirmPassword && (
+            <div className={styles.errorMessage}>
+              The passwords you entered do not match.
+            </div>
+          )}
         </div>
 
         <div className={styles.validationContainer}>
@@ -142,7 +171,6 @@ function ChangePassword() {
 
           <div className={styles.requirements}>
             <div className={styles.requirement}>
-              {' '}
               {passwordStrength.isLengthValid ? (
                 <img src='/images/check.svg' alt='Check Mark' />
               ) : (

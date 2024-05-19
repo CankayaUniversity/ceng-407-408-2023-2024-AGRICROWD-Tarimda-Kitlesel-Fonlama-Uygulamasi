@@ -201,3 +201,26 @@
   transform: scale(1.1);
 }
 
+.tiptapContainer {
+  margin: 20px 0;
+  font-family: Arial, sans-serif;
+}
+
+.tiptapEditor {
+  height: 200px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.tiptapLabel {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+
+
