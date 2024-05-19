@@ -7,7 +7,7 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 const Admin = require('../models/Admin');
-const PendingProject = require('../models/ProjectsSchema');
+const Project = require('../models/ProjectsSchema');
 
 
 router.post('/login', async (req, res) => {
@@ -88,7 +88,7 @@ router.post('/verify-token', async (req, res) => {
 router.post('/projects/add-pending', async (req, res) => {
     try {
         const { userId, basicInfo, category} = req.body;
-        const newPendingProject = new PendingProject({
+        const newPendingProject = new Project({
             userId,
             basicInfo,
             category
@@ -103,8 +103,18 @@ router.post('/projects/add-pending', async (req, res) => {
 
 router.get('/projects/pending', async (req, res) => {
     try {
-        const pendingProjects = await PendingProject.find();
-        res.status(200).json(pendingProjects);
+        const pendingProjects = await Project.find({status: 'pending'})
+        .populate({
+            path: 'category.mainCategory',
+            model: 'Category',
+            select: 'categoryName'
+        })
+        .populate({
+            path: 'category.subCategory',
+            model: 'SubCategory',
+            select: 'subCategoryName'
+        });
+        res.status(200).json({success:true, pendingProjects});
     } catch (error) {
         console.error('Error fetching pending projects:', error);
         res.status(500).json({ message: 'An error occurred while fetching pending projects.' });
@@ -114,13 +124,13 @@ router.get('/projects/pending', async (req, res) => {
 router.put('/projects/approve', async (req, res) => {
     const { projectId } = req.body;
     try {
-        const project = await PendingProject.findById(projectId);
+        const project = await Project.findById(projectId);
         if (!project) {
             return res.status(404).json({ success: false, error: 'Project not found' });
         } else {
             const currentDate = new Date();
             const expiredDate = new Date(currentDate.getTime() + project.basicInfo.campaignDuration * 24 * 60 * 60 * 1000);
-            await PendingProject.findByIdAndUpdate(
+            await Project.findByIdAndUpdate(
                 projectId,
                 { status: 'approved', approvalDate: currentDate, expiredDate },
                 { new: true }
@@ -138,7 +148,7 @@ router.put('/projects/approve', async (req, res) => {
 router.put('/projects/reject', async (req, res) => {
     const { projectId, rejectionReason } = req.body;
     try {
-        const updatedProject = await PendingProject.findByIdAndUpdate(
+        const updatedProject = await Project.findByIdAndUpdate(
             projectId,
             { rejectionReason, status: 'rejected' },
             { new: true }
@@ -161,7 +171,7 @@ router.put('/projects/reject', async (req, res) => {
 router.get('/projects/:projectId/photos', async (req, res) => {
     try {
         const projectId = req.params.projectId;
-        const project = await PendingProject.findById(projectId);
+        const project = await Project.findById(projectId);
         if (!project) {
             return res.status(404).json({ message: 'Project not found' });
         }

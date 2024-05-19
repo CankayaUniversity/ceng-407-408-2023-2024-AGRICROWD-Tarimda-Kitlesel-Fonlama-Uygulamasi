@@ -39,7 +39,7 @@ function InactiveProjects() {
     const fetchProjects = async (userId) => {
       try {
         const projectResponse = await axios.get(
-          `http://localhost:3001/api/user/projects/${userId}`,
+          `http://localhost:3001/api/user/projects/fetch-inactive-projects?userId=${userId}`,
           {
             headers: { Authorization: `Bearer ${authToken}` },
           }
@@ -60,14 +60,15 @@ function InactiveProjects() {
   return (
     <div className={styles.container}>
       <h1>My Inactive Projects</h1>
-      {/* Arama çubuğu */}
-      <input
-        type='text'
-        placeholder='Search...'
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className={styles.searchBar}
-      />
+      {projects.length > 0 && (
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className={styles.searchBar}
+        />
+      )}
       {projects.length > 0 ? (
         projects
           .filter((project) =>
@@ -100,14 +101,14 @@ function projectCardContents(project) {
     <div className={styles.projectCardLayout}>
       <div>
         {project.basicInfo.projectImages &&
-        project.basicInfo.projectImages.length > 0 ? (
+          project.basicInfo.projectImages.length > 0 ? (
           <div className={styles.projectImagesContainer}>
             {project.basicInfo.projectImages.map(
               (photo, index) =>
                 index === project.basicInfo.coverImage && (
                   <img
                     key={index}
-                    src={`http://localhost:3001/api/photos/${photo._id}`}
+                    src={`http://localhost:3001/api/photos/${photo}`}
                     alt={`Project ${index}`}
                     className={styles.coverImage}
                   />
@@ -125,7 +126,7 @@ function projectCardContents(project) {
         <div className={styles.header}>
           <h2 className={styles.title}>{project.basicInfo.projectName}</h2>
           <p className={styles.info}>
-            {project.basicInfo.category} -&gt; {project.basicInfo.subCategory}
+            {project.category.mainCategory.categoryName} -&gt; {project.category.subCategory.subCategoryName}
           </p>
         </div>
         <p className={styles.info}>Country: {project.basicInfo.country}</p>

@@ -257,7 +257,7 @@ const ProjectDetail = () => {
       <nav className={styles.breadcrumb}>
         <Link to="/">Home</Link> 
         <Link to="/projects">Projects</Link> 
-        <Link to={`/project/${project.category.mainCategory.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${project.category.mainCategory._id}`}>
+        <Link to={`/projects/${project.category.mainCategory.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${project.category.mainCategory._id}`}>
           {project.category.mainCategory.categoryName}
         </Link> 
         <Link to={`/projects/${project.category.subCategory.subCategoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${project.category.subCategory._id}`}>

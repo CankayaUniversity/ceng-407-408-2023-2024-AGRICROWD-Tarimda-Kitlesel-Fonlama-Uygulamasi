@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 const axios = require('axios');
 const UserModel = require('../models/User');
-const PendingProject = require('../models/ProjectsSchema');
+const Project = require('../models/ProjectsSchema');
 
 
 router.get('/:userId', async (req, res) => {
@@ -18,25 +18,11 @@ router.get('/:userId', async (req, res) => {
         res.status(500).json({ error: 'Kullanıcı bilgileri alınırken sunucu hatası oluştu', details: error.message });
     }
 });
-router.get('/projects/:userId', async (req, res) => {
-    
-    const userId = req.params.userId;
-    
-    try {
-        const projects = await PendingProject.find({ userId });
-        if (projects.length === 0) {
-            return res.status(404).json({ error: 'Projeler bulunamadı' });
-        }
-        res.status(200).json(projects);
-    } catch (error) {
-        res.status(500).json({ error: 'Projeler yüklenirken bir hata oluştu', details: error.message });
-    }
-});
 router.put('/update-info', async (req, res) => {
     const { updates, userId } = req.body;
 
     if (!updates || !userId) {
-      return res.status(400).json({ error: 'Güncellemeler veya kullanıcı ID eksik.' });
+        return res.status(400).json({ error: 'Güncellemeler veya kullanıcı ID eksik.' });
     }
 
     try {
@@ -47,8 +33,6 @@ router.put('/update-info', async (req, res) => {
         res.status(500).json({ error: 'Kullanıcı güncellenirken bir hata oluştu', details: error.message });
     }
 });
-
-
 
 router.put('/change-password', async (req, res) => {
     const { oldPassword, newPassword } = req.body;
@@ -75,5 +59,55 @@ router.put('/change-password', async (req, res) => {
         res.status(500).json({ errors: ['Bir hata oluştu.'] });
     }
 });
+
+//getprojectforuser
+router.get('/projects/fetch-approved-projects', async (req, res) => {
+    const userId = req.query.userId;
+
+    try {
+        const projects = await Project.find({ userId, status: 'approved' })
+            .populate({
+                path: 'category.mainCategory',
+                model: 'Category',
+                select: 'categoryName'
+            })
+            .populate({
+                path: 'category.subCategory',
+                model: 'SubCategory',
+                select: 'subCategoryName'
+            });
+        if (projects.length === 0) {
+            return res.status(404).json({ error: 'No projects found' });
+        }
+        res.status(200).json(projects);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching projects', details: error.message });
+    }
+});
+
+router.get('/projects/fetch-inactive-projects', async (req, res) => {
+    const userId = req.query.userId;
+
+    try {
+        const projects = await Project.find({ userId, status: { $ne: 'approved' } })
+            .populate({
+                path: 'category.mainCategory',
+                model: 'Category',
+                select: 'categoryName'
+            })
+            .populate({
+                path: 'category.subCategory',
+                model: 'SubCategory',
+                select: 'subCategoryName'
+            });
+        if (projects.length === 0) {
+            return res.status(404).json({ error: 'No projects found' });
+        }
+        res.status(200).json(projects);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching projects', details: error.message });
+    }
+});
+
 module.exports = router;
 

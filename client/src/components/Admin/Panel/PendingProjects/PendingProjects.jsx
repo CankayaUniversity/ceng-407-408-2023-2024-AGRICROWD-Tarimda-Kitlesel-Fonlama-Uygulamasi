@@ -21,7 +21,7 @@ const PendingProjects = () => {
         "http://localhost:3001/api/admin/projects/pending"
       );
       const projectsWithUserDetails = await Promise.all(
-        response.data.map(async (project) => {
+        response.data.pendingProjects.map(async (project) => {
           const userResponse = await axios.post(
             "http://localhost:3001/api/info/user",
             { userId: project.userId }
@@ -36,6 +36,7 @@ const PendingProjects = () => {
       console.error("Error fetching pending projects:", error);
     }
   };
+  
 
   useEffect(() => {
     fetchProjects();
@@ -113,33 +114,33 @@ const PendingProjects = () => {
     return (
       <div>
         <div>
-          <h3 className={styles.projectTitle}>{projectData.projectName}</h3>
+          <h3 className={styles.projectTitle}>{projectData.basicInfo.projectName}</h3>
           <div className={styles.projectContent}>
             <div>
               <h4>Project Description</h4>
-              {projectData.projectDescription}
+              {projectData.basicInfo.projectDescription}
             </div>
             <div>
-              <h4>Category</h4> {projectData.category}
+              <h4>Category</h4> {projectData.category.mainCategory.categoryName}
             </div>
             <div>
-              <h4>Subcategory</h4> {projectData.subCategory}
+              <h4>Subcategory</h4> {projectData.category.subCategory.subCategoryName}
             </div>
             <div>
-              <h4>Country</h4> {projectData.country}
+              <h4>Country</h4> {projectData.basicInfo.country}
             </div>
             <div>
-              <h4>Target Amount</h4> {projectData.targetAmount}
+              <h4>Target Amount</h4> {projectData.basicInfo.targetAmount}
             </div>
             <div>
-              <h4>Campaign Duration</h4> {projectData.campaignDuration} days
+              <h4>Campaign Duration</h4> {projectData.basicInfo.campaignDuration} days
             </div>
           </div>
-          {projectData.projectImages && projectData.projectImages.length > 0 ? (
+          {projectData.basicInfo.projectImages && projectData.basicInfo.projectImages.length > 0 ? (
             <div className={styles.projectImagesContainer}>
               <h4>Project Photos</h4>
               <div>
-                {projectData.projectImages.map((photo, index) => (
+                {projectData.basicInfo.projectImages.map((photo, index) => (
                   <img
                     key={index}
                     src={`http://localhost:3001/api/photos/${photo}`}
@@ -188,12 +189,11 @@ const PendingProjects = () => {
       ) : (
         <div className={styles.gridContainer}>
           {projects
-            .filter((project) => project.status === "pending")
             .map((project) => (
               <div key={project._id} className={styles.cardContainer}>
                 <div className="card">
                   <div className="card-body">
-                    {renderProjectData(project.basicInfo)}
+                    {renderProjectData(project)}
 
                     <div>
                       {renderUserDetails(project.userDetails)}

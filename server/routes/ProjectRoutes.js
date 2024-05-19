@@ -69,7 +69,7 @@ router.post('/fetch-single-project', async (req, res) => {
             return res.status(404).json({ success: false, message: "Project not found" });
         }
 
-        if (project.userId !== userId) {
+        if (project.userId.toString() !== userId) {
             return res.status(403).json({ success: false, message: "User does not have permission to access this project" });
         }
 

@@ -16,6 +16,12 @@ router.get('/fetch-main-categories', async (req, res) => {
 router.post('/add-new-main-category', async (req, res) => {
     try {
         const { categoryName, requiresLocation } = req.body;
+        
+        const existingCategory = await Category.findOne({ categoryName });
+        if (existingCategory) {
+            return res.status(400).json({ success: false, message: 'Category with the same name already exists' });
+        }
+
         const newCategory = new Category({
             categoryName,
             requiresLocation,
@@ -56,6 +62,11 @@ router.post('/add-subcategory', async (req, res) => {
     try {
         const { mainCategoryId, subCategoryName } = req.body;
         console.log(mainCategoryId, subCategoryName);
+
+        const existingSubCategory = await SubCategory.findOne({ subCategoryName, mainCategory: mainCategoryId });
+        if (existingSubCategory) {
+            return res.status(400).json({ success: false, message: 'Sub category with the same name already exists in this main category' });
+        }
 
         const category = await Category.findById(mainCategoryId);
         if (!category) {

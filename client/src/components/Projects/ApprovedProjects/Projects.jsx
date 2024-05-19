@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import styles from './Projects.module.css';
 
@@ -11,7 +11,7 @@ const ProjectCard = ({ project }) => (
     <div className={styles.cardContainer}>
       <div className={styles.card}>
         <div className={styles.cardBody}>
-          <h3 className={styles.projectTitle}>{project.projectName}</h3>
+          <h3 className={styles.projectTitle}>{project.basicInfo.projectName}</h3>
           <div className={styles.projectContent}>
             <div className={styles.projectDetail}>
               <h4>Project Name</h4>
@@ -59,14 +59,17 @@ const ProjectCard = ({ project }) => (
 );
 
 const Projects = () => {
+  const { categoryNameandId } = useParams();
   const [approvedProjects, setApprovedProjects] = useState([]);
+  const [categoryName, categoryId] = categoryNameandId ? categoryNameandId.split('-cid-') : ['', ''];
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [categories, setCategories] = useState([]);
   const [targetAmountFilter, setTargetAmountFilter] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [breadcrumb, setBreadcrumb] = useState([]);
 
   useEffect(() => {
     const fetchApprovedProjects = async () => {
@@ -101,9 +104,56 @@ const Projects = () => {
     fetchAllCategories();
   }, []);
 
+  useEffect(() => {
+    if (categoryNameandId && categories.length > 0) {
+      const category = categories.find(cat => cat._id === categoryId) ||
+                       categories.find(cat => cat.subCategories.some(subCat => subCat._id === categoryId));
+      if (category) {
+        const isSubCategory = category.subCategories && category.subCategories.length > 0;
+        const targetCategoryId = isSubCategory ? categoryId : category.mainCategory;
+        const filtered = approvedProjects.filter(
+          (project) =>
+            project.category.mainCategory === targetCategoryId ||
+            (isSubCategory && project.category.subCategory === targetCategoryId)
+        );
+        setFilteredProjects(filtered);
+  
+        let breadcrumbItems = [
+          { name: "Home", link: "/" },
+          { name: "Projects", link: "/projects" }
+        ];
+        
+        if (category._id === categoryId) {
+          breadcrumbItems.push({ name: category.categoryName, link: `/projects/${category.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}` });
+        }
+        else if(isSubCategory) {
+          const subCategory = category.subCategories.find(subCat => subCat._id === categoryId);
+          if (subCategory) {
+            const parentCategory = categories.find(cat => cat._id === subCategory.mainCategory);
+            breadcrumbItems.push({ name: parentCategory?.categoryName, link: `/projects/${parentCategory?.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${parentCategory?._id}` });
+            breadcrumbItems.push({ name: subCategory.subCategoryName, link: `/projects/${subCategory.subCategoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}` });
+          }
+        } 
+  
+        setBreadcrumb(breadcrumbItems);
+      }
+    } else {
+      setFilteredProjects(approvedProjects);
+      setBreadcrumb([
+        { name: "Home", link: "/" },
+        { name: "Projects", link: "/projects" }
+      ]);
+    }
+  }, [categoryNameandId, approvedProjects, categories]);
+  
+  
 
-  const sortProjects = (sortBy) => {
-    let sortedProjects = [...approvedProjects];
+
+
+
+
+  const sortProjects = (projects, sortBy) => {
+    let sortedProjects = [...projects];
     if (sortBy === 'longest') {
       sortedProjects.sort(
         (a, b) => b.basicInfo.campaignDuration - a.basicInfo.campaignDuration
@@ -128,21 +178,34 @@ const Projects = () => {
     setSortBy(sortBy);
   };
 
-  const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
+  const handleCategoryClick = (categoryId, categoryName) => {
+    window.location.href = `/projects/${categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}`;
   };
 
   const handleTargetAmountFilter = (e) => {
     setTargetAmountFilter(e.target.value);
   };
 
+  const filteredAndSortedProjects = sortProjects(filteredProjects, sortBy)
+    .filter(
+      (project) =>
+        project.basicInfo.projectName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (targetAmountFilter ? project.basicInfo.targetAmount >= parseInt(targetAmountFilter) : true)
+    );
+
   return (
     <div className={styles.pageLayout}>
+      <h2>Thanks to you, projects that can touch our lives</h2>
       <nav className={styles.breadcrumb}>
         <div>
-          <Link to="/">Home</Link>
-          <Link to="/projects">Projects</Link>
+          {breadcrumb.map((item, index) => (
+            <span key={index}>
+              <Link to={item.link}>{item.name}</Link>
+              {index !== breadcrumb.length - 1 && ' > '}
+            </span>
+          ))}
         </div>
+
         <div className={styles.sortContainer}>
           <select
             value={sortBy}
@@ -172,7 +235,7 @@ const Projects = () => {
               <div key={category._id}>
                 <div
                   className={styles.mainCategory}
-                  onClick={() => handleCategoryClick(category._id)}
+                  onClick={() => handleCategoryClick(category._id, category.categoryName)}
                 >
                   {category.categoryName}
                 </div>
@@ -181,7 +244,7 @@ const Projects = () => {
                     <div
                       key={subCategory._id}
                       className={styles.subCategory}
-                      onClick={() => handleCategoryClick(subCategory._id)}
+                      onClick={() => handleCategoryClick(subCategory._id, subCategory.subCategoryName)}
                     >
                       {subCategory.subCategoryName}
                     </div>
@@ -201,24 +264,9 @@ const Projects = () => {
           {loading ? (
             <div>Loading...</div>
           ) : (
-            sortProjects(sortBy)
-              .filter(
-                (project) =>
-                  project.basicInfo.projectName
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) &&
-                  (selectedCategory
-                    ? project.category.mainCategory === selectedCategory ||
-                    project.category.subCategory === selectedCategory
-                    : true) &&
-                  (targetAmountFilter
-                    ? project.basicInfo.targetAmount >=
-                    parseInt(targetAmountFilter)
-                    : true)
-              )
-              .map((project) => (
-                <ProjectCard key={project._id} project={project} />
-              ))
+            filteredAndSortedProjects.map((project) => (
+              <ProjectCard key={project._id} project={project} />
+            ))
           )}
         </div>
       </div>
