@@ -52,7 +52,7 @@ const RandomProjects = () => {
                 <div className={styles.projectImageContainer}>
                   {randomProjects[currentIndex].basicInfo.projectImages && randomProjects[currentIndex].basicInfo.projectImages.length > 0 ? (
                     <img
-                      src={`http://localhost:3001/api/photos/${randomProjects[currentIndex].basicInfo.projectImages[randomProjects[currentIndex].basicInfo.coverImage]._id}`}
+                      src={`http://localhost:3001/api/photos/${randomProjects[currentIndex].basicInfo.projectImages[randomProjects[currentIndex].basicInfo.coverImage]}`}
                       alt={`Project ${randomProjects[currentIndex]._id}`}
                       className={styles.projectImage}
                     />
@@ -63,7 +63,7 @@ const RandomProjects = () => {
                 <div className={styles.projectContent}>
                   <h3>{randomProjects[currentIndex].basicInfo.projectName}</h3>
                   <p><strong>Target Amount:</strong> {randomProjects[currentIndex].basicInfo.targetAmount} ETH</p>
-                  <p><strong>Listed Date:</strong> {new Date(randomProjects[currentIndex].approvalDate).toLocaleDateString()}</p>
+                  <p><strong>Listing Date:</strong> {new Date(randomProjects[currentIndex].approvalDate).toLocaleDateString()}</p>
                 </div>
               </div>
             </Link>

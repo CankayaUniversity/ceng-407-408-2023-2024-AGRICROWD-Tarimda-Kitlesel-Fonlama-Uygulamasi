@@ -41,7 +41,7 @@ const ActiveProjects = () => {
         const fetchProjects = async (userId) => {
             try {
                 const projectResponse = await axios.get(
-                    `http://localhost:3001/api/user/projects/${userId}`
+                    `http://localhost:3001/api/user/projects/fetch-approved-projects?userId=${userId}`
                 );
                 if (projectResponse.data.length > 0) {
                     setProjects(projectResponse.data);
@@ -106,7 +106,7 @@ const ActiveProjects = () => {
                     <div className={styles.noCover}>No cover photo available</div>
                 )}
                 <p className={styles.info}>
-                    {project.category.mainCategory} -&gt; {project.category.subCategory}
+                    {project.category.mainCategory.categoryName} -&gt; {project.category.subCategory.subCategoryName}
                 </p>
                 <p className={styles.info}>Country: {project.basicInfo.country}</p>
                 <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>
@@ -149,14 +149,15 @@ const ActiveProjects = () => {
     return (
         <div className={styles.container}>
             <h1>My Approved Projects</h1>
-            {/* Arama çubuğu */}
-            <input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={styles.searchBar}
-            />
+            {projects.length > 0 && (
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className={styles.searchBar}
+                />
+            )}
             {projects.length > 0 ? (
                 projects
                     .filter((project) =>

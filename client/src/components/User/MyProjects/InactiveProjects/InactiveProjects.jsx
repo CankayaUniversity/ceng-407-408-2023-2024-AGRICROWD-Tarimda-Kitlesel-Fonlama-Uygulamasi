@@ -39,10 +39,7 @@ function InactiveProjects() {
         const fetchProjects = async (userId) => {
             try {
                 const projectResponse = await axios.get(
-                    `http://localhost:3001/api/user/projects/${userId}`,
-                    {
-                        headers: { Authorization: `Bearer ${authToken}` }
-                    }
+                    `http://localhost:3001/api/user/projects/fetch-inactive-projects?userId=${userId}`
                 );
                 if (projectResponse.data.length > 0) {
                     setProjects(projectResponse.data);
@@ -60,21 +57,22 @@ function InactiveProjects() {
     return (
         <div className={styles.container}>
             <h1>My Inactive Projects</h1>
-            {/* Arama çubuğu */}
-            <input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={styles.searchBar}
-            />
+            {projects.length > 0 && (
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className={styles.searchBar}
+                />
+            )}
             {projects.length > 0 ? (
                 projects
                     .filter((project) =>
                         project.basicInfo.projectName.toLowerCase().includes(searchQuery.toLowerCase())
                     )
                     .map((project, index) => (
-                        (project.status === 'pending' || project.status === 'rejected' || project.status === 'expired') && (
+                        (project.status !== 'approved') && (
                             <div className={styles.projectCard}>
                                 {projectCardContents(project)}
                             </div>
@@ -108,7 +106,7 @@ function projectCardContents(project) {
                 <div className={styles.noPhotos}>No photos available for this project!</div>
             )}
             <p className={styles.info}>
-                {project.category.mainCategory} -&gt; {project.category.subCategory}
+                {project.category.mainCategory.categoryName} -&gt; {project.category.subCategory.subCategoryName}
             </p>
             <p className={styles.info}>Country: {project.basicInfo.country}</p>
             <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>
