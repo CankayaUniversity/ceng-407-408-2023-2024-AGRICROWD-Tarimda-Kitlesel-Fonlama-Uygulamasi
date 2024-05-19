@@ -76,18 +76,23 @@ const SubmitForm = () => {
     try {
       if (isInformCompleted && isBasicsCompleted && isRewardCompleted) {
         const basicInfo = JSON.parse(localStorage.getItem(userId));
+        const { category, subCategory, ...rest } = basicInfo;
         const response = await axios.post(
           "http://localhost:3001/api/admin/projects/add-pending",
           {
             userId,
-            basicInfo,
+            basicInfo: rest,
+            category: {
+              mainCategory: basicInfo.category,
+              subCategory: basicInfo.subCategory
+            }
           }
         );
         setSubmitMessage(response.data.message);
         setIsCheckboxChecked(false);
         setTimeout(() => {
           setSubmitMessage("");
-          navigate("/user/my-projects");
+          navigate("/user/my-projects/inactive");
         }, 5000);
         localStorage.removeItem(userId);
         localStorage.removeItem("isInformCompleted");

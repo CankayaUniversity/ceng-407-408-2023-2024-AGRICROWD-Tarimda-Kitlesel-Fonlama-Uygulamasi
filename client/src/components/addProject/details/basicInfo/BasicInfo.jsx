@@ -18,7 +18,7 @@ const BasicInfoForm = () => {
   const [campaignDuration, setCampaignDuration] = useState('');
   const [requiresLocation, setRequiresLocation] = useState(false); // Konum bilgisi istenmesi flag'i
   const [categories, setCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState({});
   const [coverImageIndex, setCoverImageIndex] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
   const MAX_IMAGES = 10;
@@ -28,10 +28,12 @@ const BasicInfoForm = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(
-          'http://localhost:3001/api/categories'
-        );
-        setCategories(response.data);
+        const response = await axios.get('http://localhost:3001/api/categories/fetch-main-categories');
+        if (response.data.success) {
+          setCategories(response.data.categories);
+        } else {
+          setErrorMessage("No categories found!");
+        }
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -39,6 +41,31 @@ const BasicInfoForm = () => {
 
     fetchCategories();
   }, []);
+
+  const fetchSubCategories = async (categoryId) => {
+    try {
+      const response = await axios.get(`http://localhost:3001/api/categories/fetch-subcategories`, {
+        params: { categoryId }
+      });
+      if (response.data.success) {
+        setSubCategories(prevState => ({
+          ...prevState,
+          [categoryId]: response.data.subCategories
+        }));
+      } else {
+        setSubCategories(prevState => ({
+          ...prevState,
+          [categoryId]: []
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+      setSubCategories(prevState => ({
+        ...prevState,
+        [categoryId]: []
+      }));
+    }
+  };
 
   useEffect(() => {
     const authTokenFromCookie = Cookies.get('authToken');
@@ -70,13 +97,9 @@ const BasicInfoForm = () => {
 
   useEffect(() => {
     if (category && categories.length > 0) {
-      const selectedCategory = categories.find(
-        (cat) => cat.categoryName === category
-      );
+      const selectedCategory = categories.find(cat => cat._id === category);
       if (selectedCategory) {
-        setSubCategories(
-          selectedCategory.subCategories.map((subCat) => subCat.subCategoryName)
-        );
+        fetchSubCategories(selectedCategory._id);
         setRequiresLocation(selectedCategory.requiresLocation);
       }
     }
@@ -138,6 +161,7 @@ const BasicInfoForm = () => {
       );
       return;
     }
+
     try {
       const formData = new FormData();
       Array.from(projectImages).forEach((image) => {
@@ -148,9 +172,7 @@ const BasicInfoForm = () => {
         'http://localhost:3001/api/photos/upload',
         formData,
         {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+          headers: { 'Content-Type': 'multipart/form-data' },
         }
       );
 
@@ -219,7 +241,7 @@ const BasicInfoForm = () => {
             >
               <option value=''>Select Category</option>
               {categories.map((cat) => (
-                <option key={cat._id} value={cat.categoryName}>
+                <option key={cat._id} value={cat._id}>
                   {cat.categoryName}
                 </option>
               ))}
@@ -228,7 +250,7 @@ const BasicInfoForm = () => {
           </div>
         </div>
 
-        {category && (
+        {category && subCategories[category] && (
           <div className={styles.formRow}>
             <div className={styles.formRowInner}>
               <select
@@ -238,9 +260,9 @@ const BasicInfoForm = () => {
                 required
               >
                 <option value=''>Select Sub-Category</option>
-                {subCategories.map((subCat) => (
-                  <option key={subCat._id} value={subCat}>
-                    {subCat}
+                {subCategories[category].map((subCat) => (
+                  <option key={subCat._id} value={subCat._id}>
+                    {subCat.subCategoryName}
                   </option>
                 ))}
               </select>

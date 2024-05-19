@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useCallback  } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { ethers } from "../../Contracts/ethers-5.7.esm.min.js";
 import {
@@ -82,15 +82,9 @@ const ProjectDetail = () => {
     setLoginTime(new Date()); // Kullanıcının giriş zamanını al
   }, []);
 
-  useEffect(() => {
-    if (project) {
-      const interval = setInterval(updateRemainingTime, 60000);
-      updateRemainingTime();
-      return () => clearInterval(interval);
-    }
-  }, [project]);
+  
 
-  const updateRemainingTime = () => {
+  const updateRemainingTime = useCallback(() => {
     if (!loginTime) return; // Giriş zamanı henüz ayarlanmadıysa fonksiyondan çık
 
     const campaignDuration = project.basicInfo.campaignDuration;
@@ -112,19 +106,29 @@ const ProjectDetail = () => {
     const minutes = Math.floor((remainingTimeAdjusted % (60 * 60)) / 60);
 
     setRemainingTime({ days, hours, minutes });
-  };
-
-  const handleInvalidUrl = () => {
-    const projectNameInUrl = project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase();
-    const correctedUrl = `/project/${projectNameInUrl}-pid-${project._id}`;
-    navigate(correctedUrl);
-  };
+  }, [loginTime, project]);
 
   useEffect(() => {
-    if (project && project.basicInfo.projectName != encodedProjectName) {
+    if (project) {
+      const interval = setInterval(updateRemainingTime, 60000);
+      updateRemainingTime();
+      return () => clearInterval(interval);
+    }
+  }, [project, updateRemainingTime]);
+
+  const handleInvalidUrl = useCallback(() => {
+    if (project && project.basicInfo) {
+      const projectNameInUrl = project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase();
+      const correctedUrl = `/project/${projectNameInUrl}-pid-${project._id}`;
+      navigate(correctedUrl);
+    }
+  }, [project, navigate]);
+
+  useEffect(() => {
+    if (project && project.basicInfo.projectName !== encodedProjectName) {
       handleInvalidUrl();
     }
-  }, [project]);
+  }, [project, encodedProjectName, handleInvalidUrl]);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -250,6 +254,16 @@ const ProjectDetail = () => {
 
   return (
     <div className={styles.projectDetailContainer}>
+      <nav className={styles.breadcrumb}>
+        <Link to="/">Home</Link> 
+        <Link to="/projects">Projects</Link> 
+        <Link to={`/project/${project.category.mainCategory.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${project.category.mainCategory._id}`}>
+          {project.category.mainCategory.categoryName}
+        </Link> 
+        <Link to={`/projects/${project.category.subCategory.subCategoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${project.category.subCategory._id}`}>
+        {project.category.subCategory.subCategoryName}
+        </Link>
+      </nav>
       <div className={styles.sliderContainer}>
         <div className={styles.slider}>
           {project.basicInfo.projectImages &&
@@ -257,7 +271,7 @@ const ProjectDetail = () => {
             <div className={styles.mainImageContainer}>
               <img
                 className={styles.mainImage}
-                src={`http://localhost:3001/api/photos/${project.basicInfo.projectImages[currentImageIndex]._id}`}
+                src={`http://localhost:3001/api/photos/${project.basicInfo.projectImages[currentImageIndex]}`}
                 alt={`Project ${currentImageIndex}`}
               />
               <button className={styles.prevButton} onClick={prevImage}>
@@ -280,11 +294,11 @@ const ProjectDetail = () => {
           <div style={{ display: "flex", gap: ".5rem" }}>
             <div className={styles.mainTag}>
               <span>🏷️</span>
-              {project.basicInfo.category}
+              {project.category.mainCategory.categoryName}
             </div>
             <div className={styles.subTag}>
               <span>🏷️</span>
-              {project.basicInfo.subCategory}
+              {project.category.subCategory.subCategoryName}
             </div>
           </div>
           <div className={styles.tag}>

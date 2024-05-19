@@ -97,7 +97,7 @@ function projectCardContents(project) {
                         index === project.basicInfo.coverImage && (
                             <img
                                 key={index}
-                                src={`http://localhost:3001/api/photos/${photo._id}`}
+                                src={`http://localhost:3001/api/photos/${photo}`}
                                 alt={`Project ${index}`}
                                 className={styles.coverImage}
                             />
@@ -108,7 +108,7 @@ function projectCardContents(project) {
                 <div className={styles.noPhotos}>No photos available for this project!</div>
             )}
             <p className={styles.info}>
-                {project.basicInfo.category} -&gt; {project.basicInfo.subCategory}
+                {project.category.mainCategory} -&gt; {project.category.subCategory}
             </p>
             <p className={styles.info}>Country: {project.basicInfo.country}</p>
             <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>

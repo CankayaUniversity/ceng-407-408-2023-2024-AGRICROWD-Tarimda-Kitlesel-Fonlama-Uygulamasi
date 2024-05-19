@@ -122,3 +122,18 @@
   justify-content: center;
   text-decoration: none;
 }
+
+.subCategoryContainer {
+  margin-left: 20px;
+  padding: 10px;
+  border: 1px solid #eee;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.noSubCategoryMessage {
+  margin-left: 20px;
+  padding: 10px;
+  color: #666;
+  font-style: italic;
+}

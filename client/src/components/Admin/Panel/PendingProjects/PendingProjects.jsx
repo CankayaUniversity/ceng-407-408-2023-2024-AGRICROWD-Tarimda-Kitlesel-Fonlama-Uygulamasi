@@ -142,7 +142,7 @@ const PendingProjects = () => {
                 {projectData.projectImages.map((photo, index) => (
                   <img
                     key={index}
-                    src={`http://localhost:3001/api/photos/${photo._id}`}
+                    src={`http://localhost:3001/api/photos/${photo}`}
                     alt={`Project ${index}`}
                     className={styles.projectImage}
                   />
