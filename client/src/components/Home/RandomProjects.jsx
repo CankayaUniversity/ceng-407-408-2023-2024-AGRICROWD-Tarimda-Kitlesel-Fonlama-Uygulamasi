@@ -40,12 +40,12 @@ const RandomProjects = () => {
 
   return (
     <section className={styles.randomProjects}>
-        <div class="grid-container">
-            <h2>Discover Random Projects</h2>
-        </div>
       <div className={styles.projectList}>
         {randomProjects.length > 0 && (
           <div className={styles.projectContainer} key={randomProjects[currentIndex]._id}>
+            <div class="grid-container">
+              <h2>Discover Random Projects</h2>
+            </div>
             <button className={styles.prevButton} onClick={handlePrevClick}>◀◀</button>
             <Link to={`/project/${randomProjects[currentIndex].basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${randomProjects[currentIndex]._id}`} className={styles.projectLink}>
               <div className={styles.projectCard}>

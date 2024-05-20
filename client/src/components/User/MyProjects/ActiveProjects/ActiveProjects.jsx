@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import styles from './ActiveProjects.module.css';
@@ -171,7 +171,12 @@ const ActiveProjects = () => {
                         )
                     ))
             ) : (
-                <p>You do not have any approved projects.</p>
+                <div>
+                    <p>You do not have any approved projects.</p>
+                    <Link to="/add-project/inform" className={styles.addButton}>
+                        If you have an idea...
+                    </Link>
+                </div>
             )}
         </div>
     );
