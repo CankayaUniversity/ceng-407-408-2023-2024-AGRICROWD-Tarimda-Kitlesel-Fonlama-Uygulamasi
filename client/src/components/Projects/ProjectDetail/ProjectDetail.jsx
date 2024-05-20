@@ -289,7 +289,7 @@ const ProjectDetail = () => {
 
       <div className={styles.projectInfo}>
         <h3>{project.basicInfo.projectName}</h3>
-        <p>{project.basicInfo.projectDescription}</p>
+        <div dangerouslySetInnerHTML={{ __html: project.basicInfo.projectDescription }} />
         <div className={styles.tagsContainer}>
           <div style={{ display: "flex", gap: ".5rem" }}>
             <div className={styles.mainTag}>

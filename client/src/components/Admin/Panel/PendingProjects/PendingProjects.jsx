@@ -118,7 +118,7 @@ const PendingProjects = () => {
           <div className={styles.projectContent}>
             <div>
               <h4>Project Description</h4>
-              {projectData.basicInfo.projectDescription}
+              <div dangerouslySetInnerHTML={{ __html: projectData.basicInfo.projectDescription }} />
             </div>
             <div>
               <h4>Category</h4> {projectData.category.mainCategory.categoryName}

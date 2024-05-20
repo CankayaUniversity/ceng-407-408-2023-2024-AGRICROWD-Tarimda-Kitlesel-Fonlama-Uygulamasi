@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { Editor } from '@tinymce/tinymce-react';
 import styles from './BasicInfo.module.css';
 import MapContainer from './Mapping/MapContainer';
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
@@ -119,6 +120,10 @@ const BasicInfoForm = () => {
     }
   }, [userId]);
 
+  const handleEditorChange = (content, editor) => {
+    setProjectDescription(content);
+  };
+
   const handleImageChange = (e) => {
     const files = e.target.files;
     if (files.length + projectImages.length <= MAX_IMAGES) {
@@ -221,13 +226,25 @@ const BasicInfoForm = () => {
 
         <div className={styles.formRow}>
           <div className={styles.formRowInner}>
-            <textarea
-              className={styles.input}
-              value={projectDescription}
-              onChange={(e) => setProjectDescription(e.target.value)}
-              required
-            />
             <label className={styles.label}>Description of your project</label>
+            <Editor
+              apiKey="g2l3y67ijywjhidyr1mh56zqb0h1my2motorho4r1psyzxd8"
+              initialValue="Please enter description of your project"
+              init={{
+                height: 500,
+                menubar: false,
+                plugins: [
+                  'advlist autolink lists link image charmap print preview anchor',
+                  'searchreplace visualblocks code fullscreen',
+                  'insertdatetime media table paste code help wordcount'
+                ],
+                toolbar:
+                  'undo redo | blocks fontsize | bold italic underline backcolor \
+                  align lineheight | checklist numlist bullist indent outdent\
+                  emoticons charmap | removeformat | help'
+              }}
+              onEditorChange={handleEditorChange}
+            />
           </div>
         </div>
 
