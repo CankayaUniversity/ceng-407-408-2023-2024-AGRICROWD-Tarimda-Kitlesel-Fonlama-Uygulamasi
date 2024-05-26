@@ -21,9 +21,9 @@ const BasicInfoForm = () => {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState({});
   const [coverImageIndex, setCoverImageIndex] = useState(0);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
+  const [location, setLocation] = useState(null); // Konum bilgisini tutan state
   const MAX_IMAGES = 10;
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -122,6 +122,7 @@ const BasicInfoForm = () => {
       setProjectImages(savedData.projectImages);
       setTargetAmount(savedData.targetAmount);
       setCampaignDuration(savedData.campaignDuration);
+      setLocation(savedData.location); // Kaydedilmiş konumu yükle
     }
   }, [userId]);
 
@@ -198,6 +199,7 @@ const BasicInfoForm = () => {
         coverImage: coverImageIndex,
         targetAmount: Number(targetAmount),
         campaignDuration: Number(campaignDuration),
+        location // Konum bilgisini ekleyin
       };
 
       localStorage.setItem(userId, JSON.stringify(basicInfo));
@@ -209,6 +211,9 @@ const BasicInfoForm = () => {
       console.error("Error submitting basic info:", error);
       alert("Bir hata oluştu. Lütfen tekrar deneyin.");
     }
+  };
+  const handleLocationSelect = (selectedLocation) => {
+    setLocation(selectedLocation);
   };
 
   return (
@@ -403,10 +408,11 @@ const BasicInfoForm = () => {
           Submit
         </button>
 
-        <div className="map-section">
+     
+        <div className={'map-section'}>
           {requiresLocation && (
-            <div className="mb-3">
-              <MapContainer></MapContainer>
+            <div className={'mb-3'}>
+              <MapContainer onLocationSelect={handleLocationSelect} />
             </div>
           )}
         </div>

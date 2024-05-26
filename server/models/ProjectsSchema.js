@@ -37,7 +37,15 @@ const ProjectSchema = new mongoose.Schema({
       campaignDuration: {
         type: Number,
         required: true
-      }
+      },
+      location: {
+        lat: {
+          type: Number,
+        },
+        lng: {
+          type: Number,   
+        }
+      },
     },
     required: true
   },

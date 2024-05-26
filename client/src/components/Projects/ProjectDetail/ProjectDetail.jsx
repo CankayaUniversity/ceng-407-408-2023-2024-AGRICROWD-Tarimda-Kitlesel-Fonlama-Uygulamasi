@@ -304,6 +304,11 @@ const ProjectDetail = () => {
           <div className={styles.tag}>
             <span>📍</span> Country: {project.basicInfo.country}
           </div>
+          {project.basicInfo.location && (
+            <div className={styles.tag}>
+              <span>🌐</span> Location: Lat: {project.basicInfo.location.lat}, Lng: {project.basicInfo.location.lng}
+            </div>
+          )}
         </div>
         <div className={styles.infoContainer}>
           <p>
