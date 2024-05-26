@@ -3,46 +3,53 @@ import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 
 class MapContainer extends Component {
   state = {
-    markers: [] // Tıklanan yerlerin koordinatlarını saklayacağımız dizi
+    marker: null
   };
 
+  componentDidMount() {
+    const savedMarker = JSON.parse(localStorage.getItem('mapMarker'));
+    if (savedMarker) {
+      this.setState({ marker: savedMarker });
+    }
+  }
+
   onMapClick = (mapProps, map, clickEvent) => {
-    const { latLng } = clickEvent; // Tıklanan yerin koordinatları
+    const { latLng } = clickEvent;
     const newMarker = {
       lat: latLng.lat(),
       lng: latLng.lng()
     };
 
-    this.setState(prevState => ({
-      markers: [...prevState.markers, newMarker] // Yeni işaretin eklenmesi
-    }));
+    this.setState({ marker: newMarker });
+
+    // Harita tıklama olayında parent callback fonksiyonunu çağır
+    if (this.props.onLocationSelect) {
+      this.props.onLocationSelect(newMarker);
+    }
   };
 
   render() {
     const mapStyles = {
-      
       width: '60%',
       height: '50%',
-    
     };
 
     return (
       <Map
         google={this.props.google}
-        zoom={6} // Türkiye'nin tamamını göstermek için uygun bir yakınlaştırma seviyesi
+        zoom={6}
         style={mapStyles}
-        initialCenter={{ lat: 39.92077, lng: 32.85411 }} // Türkiye'nin merkez koordinatları
-        onClick={this.onMapClick} // Haritaya tıklama olayını dinlemek için
+        initialCenter={{ lat: 39.92077, lng: 32.85411 }}
+        onClick={this.onMapClick}
       >
-        {/* Tıklanan her yer için bir Marker oluşturulması */}
-        {this.state.markers.map((marker, index) => (
-          <Marker key={index} position={{ lat: marker.lat, lng: marker.lng }} />
-        ))}
+        {this.state.marker && (
+          <Marker position={{ lat: this.state.marker.lat, lng: this.state.marker.lng }} />
+        )}
       </Map>
     );
   }
 }
 
 export default GoogleApiWrapper({
-  apiKey: 'AIzaSyCeX1Ik2xsXyCZISMyquhfmYyzRl2rlT_g' // API anahtarınızı buraya ekleyin
+  apiKey: 'AIzaSyCeX1Ik2xsXyCZISMyquhfmYyzRl2rlT_g'
 })(MapContainer);
