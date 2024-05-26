@@ -36,7 +36,6 @@ const PendingProjects = () => {
       console.error("Error fetching pending projects:", error);
     }
   };
-  
 
   useEffect(() => {
     fetchProjects();
@@ -51,19 +50,19 @@ const PendingProjects = () => {
 
   const handleApproveProject = async (projectId, fundingGoalETH) => {
     try {
-      // Connect to Ethereum blockchain and interact with the smart contract
-      //const provider = new ethers.providers.Web3Provider(window.ethereum);
-      //const signer = provider.getSigner();
-      //const contract = new ethers.Contract(contractAddress, abi, signer);
+      //Connect to Ethereum blockchain and interact with the smart contract
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, abi, signer);
 
-      // Call createProject function in the smart contract
-      //const transactionResponse = await contract.createProject(
-        //projectId, // MongoDB ObjectId as a parameter
-        //ethers.utils.parseEther(fundingGoalETH.toString())
-      //);
-      
+      //Call createProject function in the smart contract
+      const transactionResponse = await contract.createProject(
+        projectId, // MongoDB ObjectId as a parameter
+        ethers.utils.parseEther(fundingGoalETH.toString())
+      );
+
       // Wait for the transaction to be mined
-      //await transactionResponse.wait();
+      await transactionResponse.wait();
 
       // Once the transaction is successful, proceed with backend approval
       const response = await axios.put(
@@ -114,17 +113,24 @@ const PendingProjects = () => {
     return (
       <div>
         <div>
-          <h3 className={styles.projectTitle}>{projectData.basicInfo.projectName}</h3>
+          <h3 className={styles.projectTitle}>
+            {projectData.basicInfo.projectName}
+          </h3>
           <div className={styles.projectContent}>
             <div>
               <h4>Project Description</h4>
-              <div dangerouslySetInnerHTML={{ __html: projectData.basicInfo.projectDescription }} />
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: projectData.basicInfo.projectDescription,
+                }}
+              />
             </div>
             <div>
               <h4>Category</h4> {projectData.category.mainCategory.categoryName}
             </div>
             <div>
-              <h4>Subcategory</h4> {projectData.category.subCategory.subCategoryName}
+              <h4>Subcategory</h4>{" "}
+              {projectData.category.subCategory.subCategoryName}
             </div>
             <div>
               <h4>Country</h4> {projectData.basicInfo.country}
@@ -133,10 +139,12 @@ const PendingProjects = () => {
               <h4>Target Amount</h4> {projectData.basicInfo.targetAmount}
             </div>
             <div>
-              <h4>Campaign Duration</h4> {projectData.basicInfo.campaignDuration} days
+              <h4>Campaign Duration</h4>{" "}
+              {projectData.basicInfo.campaignDuration} days
             </div>
           </div>
-          {projectData.basicInfo.projectImages && projectData.basicInfo.projectImages.length > 0 ? (
+          {projectData.basicInfo.projectImages &&
+          projectData.basicInfo.projectImages.length > 0 ? (
             <div className={styles.projectImagesContainer}>
               <h4>Project Photos</h4>
               <div>
@@ -169,7 +177,8 @@ const PendingProjects = () => {
             <h5 className={styles.subHeading}>Name:</h5> {userDetails.data.name}
           </div>
           <div>
-            <h5 className={styles.subHeading}>Email:</h5> {userDetails.data.email}
+            <h5 className={styles.subHeading}>Email:</h5>{" "}
+            {userDetails.data.email}
           </div>
         </div>
       </div>
@@ -188,66 +197,65 @@ const PendingProjects = () => {
         <div>Loading...</div>
       ) : (
         <div className={styles.gridContainer}>
-          {projects
-            .map((project) => (
-              <div key={project._id} className={styles.cardContainer}>
-                <div className="card">
-                  <div className="card-body">
-                    {renderProjectData(project)}
+          {projects.map((project) => (
+            <div key={project._id} className={styles.cardContainer}>
+              <div className="card">
+                <div className="card-body">
+                  {renderProjectData(project)}
 
-                    <div>
-                      {renderUserDetails(project.userDetails)}
-                      {selectedProjectId !== project._id && (
-                        <div className={styles.btnsContainer}>
-                          <button
-                            className={styles.button}
-                            onClick={() =>
-                              handleApproveProject(
-                                project._id,
-                                project.basicInfo.targetAmount
-                              )
-                            }
-                          >
-                            Approve
-                          </button>
+                  <div>
+                    {renderUserDetails(project.userDetails)}
+                    {selectedProjectId !== project._id && (
+                      <div className={styles.btnsContainer}>
+                        <button
+                          className={styles.button}
+                          onClick={() =>
+                            handleApproveProject(
+                              project._id,
+                              project.basicInfo.targetAmount
+                            )
+                          }
+                        >
+                          Approve
+                        </button>
 
-                          <button
-                            className={styles.button}
-                            onClick={() => setSelectedProjectId(project._id)}
-                          >
-                            Reject
-                          </button>
-                        </div>
-                      )}
-                      {selectedProjectId === project._id && (
-                        <div className={styles.btnsContainer}>
-                          <input
-                            type="text"
-                            className={styles.input}
-                            placeholder="Rejection Reason"
-                            value={rejectionReason}
-                            onChange={(e) => setRejectionReason(e.target.value)}
-                          />
+                        <button
+                          className={styles.button}
+                          onClick={() => setSelectedProjectId(project._id)}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    )}
+                    {selectedProjectId === project._id && (
+                      <div className={styles.btnsContainer}>
+                        <input
+                          type="text"
+                          className={styles.input}
+                          placeholder="Rejection Reason"
+                          value={rejectionReason}
+                          onChange={(e) => setRejectionReason(e.target.value)}
+                        />
 
-                          <button
-                            className={styles.button}
-                            onClick={() => setSelectedProjectId(null)}
-                          >
-                            Back
-                          </button>
-                          <button
-                            className={styles.button}
-                            onClick={handleRejectProject}
-                          >
-                            Send
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                        <button
+                          className={styles.button}
+                          onClick={() => setSelectedProjectId(null)}
+                        >
+                          Back
+                        </button>
+                        <button
+                          className={styles.button}
+                          onClick={handleRejectProject}
+                        >
+                          Send
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
       )}
     </div>

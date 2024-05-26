@@ -23,9 +23,8 @@ import UserHome from "./components/User/Home/UserHome";
 import ChangePassword from "./components/User/AccountSettings/ChangePassword/ChangePassword";
 import ActiveProjects from "./components/User/MyProjects/ActiveProjects/ActiveProjects";
 import InactiveProjects from "./components/User/MyProjects/InactiveProjects/InactiveProjects";
-import DashboardforActiveProject from './components/User/MyProjects/ActiveProjects/DashboardforActiveProject/DashboardforActiveProject';
+import DashboardforActiveProject from "./components/User/MyProjects/ActiveProjects/DashboardforActiveProject/DashboardforActiveProject";
 import MyInvestments from "./components/User/MyInvestments/MyInvestments";
-
 
 //ProjectAddition
 import AddProjectNav from "./components/addProject/ProgressBar/ProgressBar";
@@ -33,7 +32,7 @@ import AddProjects from "./components/addProject/AddProject";
 import ProjectInform from "./components/addProject/details/inform/Inform";
 import ProjectBasics from "./components/addProject/details/basicInfo/BasicInfo";
 import ProjectReward from "./components/addProject/details/reward/Reward";
-import ProjectSubmitForApproval from "./components/addProject/details/Submit/SubmitForApproval";
+import ProjectSubmitForApproval from "./components/addProject/details/submit/SubmitForApproval";
 
 import AdminLogin from "./components/Admin/Login/AdminLogin";
 import AdminHome from "./components/Admin/Panel/AdminHome/AdminHome";
@@ -45,7 +44,6 @@ import AdminPendingProjects from "./components/Admin/Panel/PendingProjects/Pendi
 //Projects
 import Projects from "./components/Projects/ApprovedProjects/Projects";
 import ProjectDetail from "./components/Projects/ProjectDetail/ProjectDetail";
-
 
 import styles from "./App.module.css";
 const App = () => {
@@ -97,7 +95,10 @@ const App = () => {
                         <diV className={styles.userContainerRightContainer}>
                           <Routes>
                             <Route path="*" element={<NotFound />} />
-                            <Route path="account-settings" element={<UserSettings />} />
+                            <Route
+                              path="account-settings"
+                              element={<UserSettings />}
+                            />
                             <Route path="home" element={<UserHome />} />
                             <Route
                               path="change-password"
@@ -112,8 +113,14 @@ const App = () => {
                               element={
                                 <Routes>
                                   <Route path="*" element={<NotFound />} />
-                                  <Route path="inactive" element={<InactiveProjects />} />
-                                  <Route path=":projectNameandID/dashboard" element={<DashboardforActiveProject />} />
+                                  <Route
+                                    path="inactive"
+                                    element={<InactiveProjects />}
+                                  />
+                                  <Route
+                                    path=":projectNameandID/dashboard"
+                                    element={<DashboardforActiveProject />}
+                                  />
                                 </Routes>
                               }
                             />
@@ -128,7 +135,10 @@ const App = () => {
                   }
                 />
                 <Route path="/projects" exact element={<Projects />} />
-                <Route path="/projects/:categoryNameandId" element={<Projects />} />
+                <Route
+                  path="/projects/:categoryNameandId"
+                  element={<Projects />}
+                />
                 <Route
                   path="/project/:projectNameandId"
                   element={<ProjectDetail />}
