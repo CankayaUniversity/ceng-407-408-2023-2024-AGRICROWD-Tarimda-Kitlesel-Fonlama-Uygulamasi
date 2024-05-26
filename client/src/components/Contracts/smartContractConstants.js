@@ -93,6 +93,25 @@ export const abi = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "funder",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "reward",
+        type: "uint256",
+      },
+    ],
+    name: "RewardSent",
+    type: "event",
+  },
+  {
     inputs: [],
     name: "PLATFORM_COMMISSION_PERCENT",
     outputs: [
@@ -165,6 +184,30 @@ export const abi = [
   {
     inputs: [
       {
+        internalType: "string",
+        name: "mongoDbObjectId",
+        type: "string",
+      },
+    ],
+    name: "getFundersAndFunds",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
+      },
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "investee",
         type: "address",
@@ -219,38 +262,48 @@ export const abi = [
     outputs: [
       {
         internalType: "address",
-        name: "",
+        name: "investee",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "",
+        name: "fundingGoalUSD",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "",
+        name: "amountFundedUSD",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "",
+        name: "fundingGoalETH",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "",
+        name: "amountFundedETH",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "",
+        name: "amountDonatedUSD",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "",
+        name: "amountDonatedETH",
         type: "uint256",
+      },
+      {
+        internalType: "address[]",
+        name: "funders",
+        type: "address[]",
+      },
+      {
+        internalType: "address[]",
+        name: "donors",
+        type: "address[]",
       },
     ],
     stateMutability: "view",
@@ -375,8 +428,40 @@ export const abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "string",
+        name: "mongoDbObjectId",
+        type: "string",
+      },
+    ],
+    name: "sendReward",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "totalCommission",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "totalRewards",
     outputs: [
       {
         internalType: "uint256",
