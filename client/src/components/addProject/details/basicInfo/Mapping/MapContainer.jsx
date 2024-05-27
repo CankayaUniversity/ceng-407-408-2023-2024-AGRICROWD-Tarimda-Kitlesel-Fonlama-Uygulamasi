@@ -3,7 +3,7 @@ import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 
 class MapContainer extends Component {
   state = {
-    marker: null
+    marker: null,
   };
 
   componentDidMount() {
@@ -17,7 +17,7 @@ class MapContainer extends Component {
     const { latLng } = clickEvent;
     const newMarker = {
       lat: latLng.lat(),
-      lng: latLng.lng()
+      lng: latLng.lng(),
     };
 
     this.setState({ marker: newMarker });
@@ -30,8 +30,9 @@ class MapContainer extends Component {
 
   render() {
     const mapStyles = {
-      width: '60%',
+      width: '49%',
       height: '50%',
+      zIndex: '0',
     };
 
     return (
@@ -43,7 +44,12 @@ class MapContainer extends Component {
         onClick={this.onMapClick}
       >
         {this.state.marker && (
-          <Marker position={{ lat: this.state.marker.lat, lng: this.state.marker.lng }} />
+          <Marker
+            position={{
+              lat: this.state.marker.lat,
+              lng: this.state.marker.lng,
+            }}
+          />
         )}
       </Map>
     );
@@ -51,5 +57,5 @@ class MapContainer extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: 'AIzaSyCeX1Ik2xsXyCZISMyquhfmYyzRl2rlT_g'
+  apiKey: 'AIzaSyCeX1Ik2xsXyCZISMyquhfmYyzRl2rlT_g',
 })(MapContainer);

@@ -1,7 +1,6 @@
 .pageLayout {
   display: grid;
-  grid-template-row: 1fr 1fr;
-  gap: 2rem;
+  gap: 1rem;
   width: 42rem;
   margin: 8rem auto;
 }
@@ -88,7 +87,6 @@
   border-radius: 1.5rem;
   padding: 1rem;
   border: 1px solid #e9ecef;
-  margin-bottom: 0.825rem;
 }
 
 .categoryInfo {

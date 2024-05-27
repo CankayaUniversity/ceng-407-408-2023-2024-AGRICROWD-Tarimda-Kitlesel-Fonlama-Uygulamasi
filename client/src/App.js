@@ -8,7 +8,6 @@ import {
 import Cookies from 'js-cookie';
 import { HelmetProvider } from 'react-helmet-async';
 
-
 import ProtectedRoute from './components/routes/protectedRoute';
 import ProtectedAdminRoute from './components/routes/protectedAdminRoute';
 import NotFound from './components/NotFound/NotFound';
@@ -34,7 +33,7 @@ import AddProjects from './components/addProject/AddProject';
 import ProjectInform from './components/addProject/details/inform/Inform';
 import ProjectBasics from './components/addProject/details/basicInfo/BasicInfo';
 import ProjectReward from './components/addProject/details/reward/Reward';
-import ProjectSubmitForApproval from './components/addProject/details/Submit/SubmitForApproval';
+import ProjectSubmitForApproval from './components/addProject/details/submit/SubmitForApproval';
 
 import AdminLogin from './components/Admin/Login/AdminLogin';
 import AdminHome from './components/Admin/Panel/AdminHome/AdminHome';
@@ -162,7 +161,10 @@ const App = () => {
                     <Route path='inform' element={<ProjectInform />} />
                     <Route path='basics' element={<ProjectBasics />} />
                     <Route path='reward' element={<ProjectReward />} />
-                    <Route path='submit' element={<ProjectSubmitForApproval />} />
+                    <Route
+                      path='submit'
+                      element={<ProjectSubmitForApproval />}
+                    />
                   </Routes>
                 </ProtectedRoute>
               </AddProjects>

@@ -1,10 +1,16 @@
 .projectDetailContainer {
   margin: 120px auto;
+  padding: 0 12.5rem;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 1.5rem;
-  align-items: start;
+  align-items: center;
   justify-content: center;
+}
+
+.infoContainer {
+  display: flex;
+  gap: 2rem;
 }
 
 .sliderContainer {
@@ -56,6 +62,7 @@
   padding: 20px;
   border-radius: 10px;
   width: 360px;
+  height: fit-content;
   gap: 1.5rem;
 }
 
@@ -90,36 +97,88 @@
   );
 }
 
+.remainingTime {
+  display: flex;
+  flex-direction: column; /* Alt satıra kaydırmak için flex-direction column */
+  font-size: 1rem;
+  color: #333;
+  margin-top: 1rem;
+}
+
 .infoContainer {
   display: flex;
   justify-content: space-between;
 }
 
 .breadcrumb {
-  margin: 20px 0;
-  font-size: 14px;
+  align-self: flex-start;
+  margin: 10px 0;
+  font-size: 1rem;
 }
 
 .breadcrumb a {
   text-decoration: none;
-  color: #333; 
+  color: #333;
   transition: color 0.3s ease;
 }
 
 .breadcrumb a:hover {
-  color: #007bff; 
+  color: #007bff;
 }
 
 .breadcrumb span {
-  color: #666; 
+  color: #666;
 }
 
 .breadcrumb a::after {
-  content: "›";
-  margin: 0 5px; 
-  color: #999; 
+  content: '›';
+  margin: 0 5px;
+  color: #999;
 }
 
 .breadcrumb a:last-child::after {
-  content: none; 
+  content: none;
 }
+
+.projectSubInfo {
+  background-color: #fff;
+  width: 100%;
+  margin-top: 2rem;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.button {
+  color: #fff;
+  border-radius: 100px;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  height: 3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  width: 9.375rem;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* button:nth-of-type(1):hover {
+  background-color: #b2f2bb;
+  transform: scale(1.05);
+}
+
+button:nth-of-type(2):hover {
+  background-color: #ccc;
+  transform: scale(1.05);
+} */
+
+/* button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  background-color: initial;
+  transform: none;
+} */
