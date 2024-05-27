@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { Helmet } from 'react-helmet-async';
 
 import styles from './SignUp.module.css';
 import Logo from '../Logo/Logo';
@@ -83,6 +84,11 @@ function Signup() {
 
   return (
     <div className={styles.layoutContainer}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>User Register - AGRICROWD</title>
+        <link rel="canonical" href="http://localhost:3000/register" />
+      </Helmet>
       <div className={styles.leftContainer}>
         <Link to='/'>
           <Logo heading={false} />

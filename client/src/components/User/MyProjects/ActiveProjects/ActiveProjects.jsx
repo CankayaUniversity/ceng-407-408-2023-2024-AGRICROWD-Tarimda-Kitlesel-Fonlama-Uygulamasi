@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { Helmet } from 'react-helmet-async';
+
 import styles from './ActiveProjects.module.css';
 
 const ActiveProjects = () => {
@@ -148,6 +150,11 @@ const ActiveProjects = () => {
 
     return (
         <div className={styles.container}>
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>Active Projects - AGRICROWD</title>
+                <link rel="canonical" href="http://localhost:3000/user/my-projects" />
+            </Helmet>
             <h1>My Approved Projects</h1>
             {projects.length > 0 && (
                 <input

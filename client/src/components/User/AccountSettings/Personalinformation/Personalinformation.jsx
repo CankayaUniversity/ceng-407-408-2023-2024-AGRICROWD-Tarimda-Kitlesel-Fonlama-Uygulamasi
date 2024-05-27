@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Helmet } from 'react-helmet-async';
+
 import styles from "./Personalinformation.module.css";
 
 const cities = [
@@ -199,6 +201,11 @@ function Personalinformation() {
 
   return (
     <div className={styles.container}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Personal Information - AGRICROWD</title>
+        <link rel="canonical" href="http://localhost:3000/user/account-settings" />
+      </Helmet>
       <form onSubmit={handleSubmit} className={styles.form}>
         <h1 className={styles.heading}>Personal Information</h1>
         {/* E-posta */}

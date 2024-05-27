@@ -5,6 +5,7 @@ import {
   abi,
   contractAddress,
 } from "../../../Contracts/smartContractConstants.js"; // Import the smart contract ABI and address
+import { Helmet } from 'react-helmet-async';
 
 import styles from "./PendingProjects.module.css";
 
@@ -51,18 +52,18 @@ const PendingProjects = () => {
   const handleApproveProject = async (projectId, fundingGoalETH) => {
     try {
       //Connect to Ethereum blockchain and interact with the smart contract
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, abi, signer);
+      //const provider = new ethers.providers.Web3Provider(window.ethereum);
+      //const signer = provider.getSigner();
+      //const contract = new ethers.Contract(contractAddress, abi, signer);
 
       //Call createProject function in the smart contract
-      const transactionResponse = await contract.createProject(
-        projectId, // MongoDB ObjectId as a parameter
-        ethers.utils.parseEther(fundingGoalETH.toString())
-      );
+      //const transactionResponse = await contract.createProject(
+      //  projectId, // MongoDB ObjectId as a parameter
+      //  ethers.utils.parseEther(fundingGoalETH.toString())
+      //);
 
       // Wait for the transaction to be mined
-      await transactionResponse.wait();
+      //await transactionResponse.wait();
 
       // Once the transaction is successful, proceed with backend approval
       const response = await axios.put(
@@ -144,7 +145,7 @@ const PendingProjects = () => {
             </div>
           </div>
           {projectData.basicInfo.projectImages &&
-          projectData.basicInfo.projectImages.length > 0 ? (
+            projectData.basicInfo.projectImages.length > 0 ? (
             <div className={styles.projectImagesContainer}>
               <h4>Project Photos</h4>
               <div>
@@ -187,12 +188,15 @@ const PendingProjects = () => {
 
   return (
     <div className={styles.pageLayout}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Pending Projects - AGRICROWD</title>
+        <link rel="canonical" href="http://localhost:3000/admin/pending-projects" />
+      </Helmet>
       <h2 className={styles.title}>*manage pending projects</h2>
-
       {feedbackMessage && (
         <div className={styles.message}>{feedbackMessage}</div>
       )}
-
       {loading ? (
         <div>Loading...</div>
       ) : (

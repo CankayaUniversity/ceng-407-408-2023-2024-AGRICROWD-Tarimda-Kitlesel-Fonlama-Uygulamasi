@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Cookies from 'js-cookie';
+import { Helmet } from 'react-helmet-async';
+
 
 import styles from './AdminLogin.module.css';
 import Logo from '../../Logo/Logo';
@@ -43,7 +45,7 @@ function AdminLogin() {
           console.error('Token verification error:', err);
         });
     }
-  }, []);
+  }, [navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -85,6 +87,11 @@ function AdminLogin() {
   };
   return (
     <div className={styles.layoutContainer}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Admin Login - AGRICROWD</title>
+        <link rel="canonical" href="http://localhost:3000/admin/login" />
+      </Helmet>
       <div className={styles.leftContainer}>
         <Link to='/'>
           <Logo heading={false} />
