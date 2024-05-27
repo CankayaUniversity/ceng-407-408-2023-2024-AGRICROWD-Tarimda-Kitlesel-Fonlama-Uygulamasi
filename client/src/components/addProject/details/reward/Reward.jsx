@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+
 import styles from './Reward.module.css';
 
 const Reward = () => {
@@ -33,6 +35,11 @@ const Reward = () => {
 
   return (
     <div className={styles.container}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Reward Mechanisim of Your Project - AGRICROWD</title>
+        <link rel="canonical" href="http://localhost:3000/add-project/reward" />
+      </Helmet>
       <h2 className={styles.formTitle}>Reward</h2>
       <p className={styles.content}>
         Please be informed that all future investments made through our platform

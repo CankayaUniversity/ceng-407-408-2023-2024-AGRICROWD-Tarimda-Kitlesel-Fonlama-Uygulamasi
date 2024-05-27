@@ -26,7 +26,7 @@ function UserNavBar() {
           <div className={`${styles.dropdown} ${dropdownStates.accountSettings ? styles.dropdownOpen : ''}`}>
             <div className={styles.dropdownButton} onClick={() => toggleDropdown('accountSettings')}>
               <span className={styles.navLink}>
-                Account settings
+                Account Settings
                 <svg className={`${styles.arrowIcon} ${dropdownStates.accountSettings ? styles.rotate180 : ''}`} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M0 3L8 13L16 3H0Z" fill="#339af0" />
                 </svg>
@@ -52,7 +52,7 @@ function UserNavBar() {
           <div className={`${styles.dropdown} ${dropdownStates.myProjects ? styles.dropdownOpen : ''}`}>
             <div className={styles.dropdownButton} onClick={() => toggleDropdown('myProjects')}>
               <span className={styles.navLink}>
-                My  projects
+                My Projects
                 <svg className={`${styles.arrowIcon} ${dropdownStates.myProjects ? styles.rotate180 : ''}`} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M0 3L8 13L16 3H0Z" fill="#339af0" />
                 </svg>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { Helmet } from 'react-helmet-async';
+
 import styles from './Projects.module.css';
 
 const ProjectCard = ({ project }) => (
@@ -70,6 +72,8 @@ const Projects = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [breadcrumb, setBreadcrumb] = useState([]);
+  const [helmetTitle, setHelmetTitle] = useState('Projects That Will Touch Our Lives - AGRICROWD');
+  const [helmetLink, setHelmetLink] = useState('http://localhost:3000/projects');
 
   useEffect(() => {
     const fetchApprovedProjects = async () => {
@@ -125,6 +129,8 @@ const Projects = () => {
         
         if (category._id === categoryId) {
           breadcrumbItems.push({ name: category.categoryName, link: `/projects/${category.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}` });
+          setHelmetTitle(`${category.categoryName} Projects - AGRICROWD`);
+          setHelmetLink(`http://localhost:3000/projects/${category.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}`);
         }
         else if(isSubCategory) {
           const subCategory = category.subCategories.find(subCat => subCat._id === categoryId);
@@ -132,7 +138,12 @@ const Projects = () => {
             const parentCategory = categories.find(cat => cat._id === subCategory.mainCategory);
             breadcrumbItems.push({ name: parentCategory?.categoryName, link: `/projects/${parentCategory?.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${parentCategory?._id}` });
             breadcrumbItems.push({ name: subCategory.subCategoryName, link: `/projects/${subCategory.subCategoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}` });
+            setHelmetTitle(`${subCategory.subCategoryName} Projects - AGRICROWD`);
+            setHelmetLink(`http://localhost:3000/projects/${subCategory.subCategoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}`);
           }
+        } else {
+          setHelmetTitle('Projects That Will Touch Our Lives - AGRICROWD');
+          setHelmetLink('http://localhost:3000/projects');
         } 
   
         setBreadcrumb(breadcrumbItems);
@@ -143,14 +154,11 @@ const Projects = () => {
         { name: "Home", link: "/" },
         { name: "Projects", link: "/projects" }
       ]);
+      setHelmetTitle('Projects That Will Touch Our Lives - AGRICROWD');
+      setHelmetLink('http://localhost:3000/projects');
     }
   }, [categoryNameandId, approvedProjects, categories]);
   
-  
-
-
-
-
 
   const sortProjects = (projects, sortBy) => {
     let sortedProjects = [...projects];
@@ -195,6 +203,11 @@ const Projects = () => {
 
   return (
     <div className={styles.pageLayout}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{helmetTitle}</title>
+        <link rel="canonical" href={helmetLink} />
+      </Helmet>
       <h2>Thanks to you, projects that can touch our lives</h2>
       <nav className={styles.breadcrumb}>
         <div>

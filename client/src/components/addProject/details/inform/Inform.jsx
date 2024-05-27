@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Button, Card } from 'react-bootstrap';
+import { Form, Card } from 'react-bootstrap';
+import { Helmet } from 'react-helmet-async';
+
 import styles from './Inform.module.css';
 
 const Inform = () => {
@@ -63,6 +65,11 @@ const Inform = () => {
 
   return (
     <div className={styles.container}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Adding a Project - What You Need to Know - AGRICROWD</title>
+        <link rel="canonical" href="http://localhost:3000/add-project/inform" />
+      </Helmet>
       <div className={styles.informCard}>
         <Card.Body className={isAgreed ? 'agreed-content' : ''}>
           {isAgreed ? (

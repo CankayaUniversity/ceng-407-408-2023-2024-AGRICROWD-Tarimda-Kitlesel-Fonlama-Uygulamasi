@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Helmet } from 'react-helmet-async';
+
 import styles from "./SubmitForm.module.css";
 
 const SubmitForm = () => {
@@ -120,6 +122,11 @@ const SubmitForm = () => {
 
   return (
     <div className={styles.container}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Submit Your Project for Approval - AGRICROWD</title>
+        <link rel="canonical" href="http://localhost:3000/add-project/submit" />
+      </Helmet>
       <header className={styles.formHeader}>
         <h2 className={styles.sidebarTitle}>
           {areAllRequirementsCompleted

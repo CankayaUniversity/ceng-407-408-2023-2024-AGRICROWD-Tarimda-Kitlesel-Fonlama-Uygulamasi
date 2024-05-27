@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { Helmet } from 'react-helmet-async';
 import styles from './Categories.module.css';
 
 function Categories() {
@@ -178,6 +179,11 @@ function Categories() {
 
   return (
     <div className={styles.pageLayout}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Categories - AGRICROWD</title>
+        <link rel="canonical" href="http://localhost:3000/admin/categories" />
+      </Helmet>
       {successMessage && (
         <div className={styles.successMessage}>{successMessage}</div>
       )}

@@ -61,8 +61,6 @@ router.delete('/delete-main-category/:categoryId', async (req, res) => {
 router.post('/add-subcategory', async (req, res) => {
     try {
         const { mainCategoryId, subCategoryName } = req.body;
-        console.log(mainCategoryId, subCategoryName);
-
         const existingSubCategory = await SubCategory.findOne({ subCategoryName, mainCategory: mainCategoryId });
         if (existingSubCategory) {
             return res.status(400).json({ success: false, message: 'Sub category with the same name already exists in this main category' });

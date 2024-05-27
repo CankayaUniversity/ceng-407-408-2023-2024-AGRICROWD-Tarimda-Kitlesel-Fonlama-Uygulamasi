@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback  } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { Helmet } from 'react-helmet-async';
 import { ethers } from "../../Contracts/ethers-5.7.esm.min.js";
 import {
   abi,
@@ -21,6 +22,7 @@ const ProjectDetail = () => {
   const [isFunding, setIsFunding] = useState(false);
   const [isDonating, setIsDonating] = useState(false);
   const [projectOwner, setProjectOwner] = useState(null);
+  const [canonicalUrl, setCanonicalUrl] = useState("");
 
 
   const navigate = useNavigate();
@@ -80,6 +82,10 @@ const ProjectDetail = () => {
 
   useEffect(() => {
     setLoginTime(new Date()); // Kullanıcının giriş zamanını al
+  }, []);
+
+  useEffect(() => {
+    setCanonicalUrl(window.location.href);
   }, []);
 
   
@@ -254,6 +260,11 @@ const ProjectDetail = () => {
 
   return (
     <div className={styles.projectDetailContainer}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{project.basicInfo.projectName} - AGRICROWD</title>
+        <link rel="canonical" href={canonicalUrl} />
+      </Helmet>
       <nav className={styles.breadcrumb}>
         <Link to="/">Home</Link> 
         <Link to="/projects">Projects</Link> 

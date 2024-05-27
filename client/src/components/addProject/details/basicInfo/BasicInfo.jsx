@@ -5,7 +5,8 @@ import Cookies from "js-cookie";
 import { Editor } from "@tinymce/tinymce-react";
 import styles from "./BasicInfo.module.css";
 import MapContainer from "./Mapping/MapContainer";
-import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
+import { Helmet } from 'react-helmet-async';
+
 
 const BasicInfoForm = () => {
   const [userId, setUserID] = useState("");
@@ -218,6 +219,11 @@ const BasicInfoForm = () => {
 
   return (
     <div className={styles.formContainer}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Basics of Your Project - AGRICROWD</title>
+        <link rel="canonical" href="http://localhost:3000/add-project/basics" />
+      </Helmet>
       <h2 className={styles.sidebarTitle}>Let's start with the basics!</h2>
       {errorMessage && (
         <div className={styles.errorMessage}>{errorMessage}</div>
@@ -243,7 +249,6 @@ const BasicInfoForm = () => {
             <label className={styles.label}>Description of your project</label>
             <Editor
               apiKey="g2l3y67ijywjhidyr1mh56zqb0h1my2motorho4r1psyzxd8"
-              initialValue="Please enter description of your project"
               init={{
                 height: 500,
                 menubar: false,

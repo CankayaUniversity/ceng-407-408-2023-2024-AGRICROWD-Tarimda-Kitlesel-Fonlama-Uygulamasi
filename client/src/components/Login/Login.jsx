@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Cookies from 'js-cookie';
+import { Helmet } from 'react-helmet-async';
 
 import styles from './Login.module.css';
 import Logo from '../Logo/Logo';
@@ -76,6 +77,11 @@ function Login() {
   };
   return (
     <div className={styles.layoutContainer}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>User Login - AGRICROWD</title>
+        <link rel="canonical" href="http://localhost:3000/login" />
+      </Helmet>
       <div className={styles.leftContainer}>
         <Link to='/'>
           <Logo heading={false} />

@@ -1,11 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+
 import RandomProjects from './RandomProjects'; // Doğru yolu sağlayın
 import styles from './Home.module.css';
 import Footer from '../Footer/Footer';
 
 const Home = () => (
   <>
+    <Helmet>
+      <meta charSet="utf-8" />
+      <title>AGRICROWD - Your hub for agricultural projects</title>
+      <link rel="canonical" href="http://localhost:3000/" />
+    </Helmet>
     <section
       className={styles.container}
       style={{

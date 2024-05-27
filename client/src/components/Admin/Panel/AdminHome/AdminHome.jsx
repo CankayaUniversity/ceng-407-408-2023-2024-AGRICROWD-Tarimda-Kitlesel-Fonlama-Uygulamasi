@@ -5,6 +5,7 @@ import {
   abi,
   contractAddress,
 } from "../../../Contracts/smartContractConstants.js"; // Import ABI and contract address
+import { Helmet } from 'react-helmet-async';
 
 function AdminHome() {
   // Define a state variable to store the total commission amount
@@ -42,6 +43,11 @@ function AdminHome() {
 
   return (
     <div className={styles.container}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Admin Home - AGRICROWD</title>
+        <link rel="canonical" href="http://localhost:3000/admin/home" />
+      </Helmet>
       <h1>Welcome to Admin Panel!</h1>
       <div>
         <p>

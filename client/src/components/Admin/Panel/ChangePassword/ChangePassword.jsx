@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { Helmet } from 'react-helmet-async';
 import styles from './ChangePassword.module.css';
 
 function ChangePassword() {
@@ -99,6 +100,11 @@ function ChangePassword() {
 
   return (
     <div className={styles.container}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Change Password - Admin - AGRICROWD</title>
+        <link rel="canonical" href="http://localhost:3000/admin/change-password" />
+      </Helmet>
       <h2 className={styles.formTitle}>Change Password</h2>
       {errorMessage && (
         <div className='alert alert-danger' role='alert'>
