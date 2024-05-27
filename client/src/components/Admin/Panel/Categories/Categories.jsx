@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import AddCategoryModal from '../../../Modal/Modal';
 import styles from './Categories.module.css';
 
 function Categories() {
@@ -10,10 +9,6 @@ function Categories() {
   const [editCategory, setEditCategory] = useState({ id: null, name: '' });
   const [newSubCategoryName, setNewSubCategoryName] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [editSubCategory, setEditSubCategory] = useState({
-    id: null,
-    name: '',
-  });
   const [requiresLocation, setRequiresLocation] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -54,7 +49,6 @@ function Categories() {
           [categoryId]: response.data.subCategories,
         }));
       } else {
-        //console.error('No subcategories found:', response.data.message);
         setSubCategories((prevState) => ({
           ...prevState,
           [categoryId]: [],
@@ -132,10 +126,19 @@ function Categories() {
           categoryName: editCategory.name,
         }
       );
-      fetchCategories();
-      setEditCategory({ id: null, name: '' });
+      if (response.data.success) {
+        setSuccessMessage(response.data.message);
+        setTimeout(() => setSuccessMessage(''), 10000);
+        fetchCategories();
+        setEditCategory({ id: null, name: '' });
+      } else {
+        setErrorMessage(response.data.message);
+        setTimeout(() => setErrorMessage(''), 10000);
+      }
     } catch (error) {
       console.error('Error editing category:', error);
+      setErrorMessage('Failed to edit category. Please try again.');
+      setTimeout(() => setErrorMessage(''), 10000);
     }
   };
 
@@ -170,19 +173,24 @@ function Categories() {
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
+    setEditCategory({ id: null, name: '' });
   };
 
   return (
     <div className={styles.pageLayout}>
-      {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
-      {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
+      {successMessage && (
+        <div className={styles.successMessage}>{successMessage}</div>
+      )}
+      {errorMessage && (
+        <div className={styles.errorMessage}>{errorMessage}</div>
+      )}
       <div className={styles.container}>
         <form className={styles.form} onSubmit={handleAddCategory}>
           <h2 className={styles.formTitle}>New Category</h2>
           <div className={styles.formRow}>
             <div className={styles.formRowInner}>
               <input
-                type="text"
+                type='text'
                 className={styles.input}
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
@@ -195,7 +203,7 @@ function Categories() {
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <label style={{ display: 'flex', alignItems: 'center' }}>
               <input
-                type="checkbox"
+                type='checkbox'
                 checked={requiresLocation}
                 onChange={(e) => setRequiresLocation(e.target.checked)}
                 style={{ marginRight: '8px' }}
@@ -204,7 +212,7 @@ function Categories() {
             </label>
           </div>
 
-          <button className={styles.button} type="submit">
+          <button className={styles.button} type='submit'>
             Add
           </button>
         </form>
@@ -216,54 +224,11 @@ function Categories() {
 
       {categories.map((category) => (
         <div key={category._id} className={styles.categoryContainer}>
-          <div>
-            {category.categoryName} (ID: {category._id})
-          </div>
-          <div>
-            Requires Location: {category.requiresLocation ? 'Yes' : 'No'}
-          </div>
-          <div>
-            {subCategories[category._id] &&
-              subCategories[category._id].length > 0 ? (
-              subCategories[category._id].map((subCategory) => (
-                <div
-                  key={subCategory._id}
-                  className={styles.subCategoryContainer}
-                >
-                  {subCategory.subCategoryName}
-                </div>
-              ))
-            ) : (
-              <div className={styles.noSubCategoryMessage}>
-                No subcategories found for this category.
-              </div>
-            )}
-          </div>
-
-          <div className={styles.btnsContainer}>
-            <button
-              className={styles.button}
-              onClick={() => handleDeleteCategory(category._id)}
-            >
-              Delete
-            </button>
-
-            <button
-              className={styles.button}
-              onClick={() =>
-                setEditCategory({
-                  id: category._id,
-                  name: category.categoryName,
-                })
-              }
-            >
-              Edit
-            </button>
-
-            {editCategory.id === category._id && (
-              <div className='mt-2'>
+          <div className={styles.categoryInfo}>
+            {editCategory.id === category._id ? (
+              <div className={styles.editCategoryContainer}>
                 <input
-                  type="text"
+                  type='text'
                   value={editCategory.name}
                   onChange={(e) =>
                     setEditCategory({
@@ -271,45 +236,108 @@ function Categories() {
                       name: e.target.value,
                     })
                   }
-                  placeholder="New Category Name"
+                  placeholder='New Category Name'
                 />
-
-                <button
-                  className={styles.button}
+                <div
+                  className={styles.iconContainer}
                   onClick={() => handleEditCategory(category._id)}
                 >
-                  Save
-                </button>
+                  <img
+                    src='/images/save-outline.svg'
+                    alt='Save Button'
+                    className={styles.icon}
+                  ></img>
+                </div>
+              </div>
+            ) : (
+              <div>
+                {category.categoryName} (ID: {category._id})
               </div>
             )}
-            <button
-              className={styles.button}
+            <div>
+              Requires Location: {category.requiresLocation ? 'Yes' : 'No'}
+            </div>
+            <div>
+              {subCategories[category._id] &&
+              subCategories[category._id].length > 0 ? (
+                subCategories[category._id].map((subCategory) => (
+                  <div
+                    key={subCategory._id}
+                    className={styles.subCategoryContainer}
+                  >
+                    {subCategory.subCategoryName}
+                  </div>
+                ))
+              ) : (
+                <div className={styles.noSubCategoryMessage}>
+                  No subcategories found for this category.
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className={styles.btnsContainer}>
+            <div
+              className={styles.iconContainer}
+              onClick={() => handleDeleteCategory(category._id)}
+            >
+              <img
+                src='/images/trash-outline.svg'
+                alt='Delete Button'
+                className={styles.icon}
+              ></img>
+              <span className={styles.iconLabel}>Delete</span>
+            </div>
+
+            <div
+              className={styles.iconContainer}
+              onClick={() =>
+                setEditCategory((prevEditCategory) =>
+                  prevEditCategory.id === category._id
+                    ? { id: null, name: '' }
+                    : { id: category._id, name: category.categoryName }
+                )
+              }
+            >
+              <img
+                src='/images/settings-outline.svg'
+                alt='Edit Button'
+                className={styles.icon}
+              ></img>{' '}
+              <span className={styles.iconLabel}>Edit</span>
+            </div>
+
+            <div
+              className={styles.iconContainer}
               onClick={() =>
                 setSelectedCategory((prevCategory) =>
                   prevCategory === category._id ? null : category._id
                 )
               }
             >
-              Add Subcategory
-            </button>
+              <img
+                src='/images/add-outline.svg'
+                alt='Add Button'
+                className={styles.icon}
+              ></img>
+              <span className={styles.iconLabel}>Add Subcategory</span>
+            </div>
+
             {selectedCategory === category._id && (
               <form className={styles.form} onSubmit={handleAddSubCategory}>
-                <h2 className={styles.formTitle}>New Subcategory</h2>
-                <div className={styles.formRow}>
-                  <div className={styles.formRowInner}>
-                    <input
-                      type="text"
-                      className={styles.input}
-                      value={newSubCategoryName}
-                      onChange={(e) => setNewSubCategoryName(e.target.value)}
-                      required
-                    />
-                    <label className={styles.label}>Subcategory Name</label>
-                  </div>
-                </div>
-
-                <button className={styles.button} type="submit">
-                  Add
+                <input
+                  type='text'
+                  value={newSubCategoryName}
+                  onChange={(e) => setNewSubCategoryName(e.target.value)}
+                  placeholder='Subcategory Name'
+                  required
+                />
+                <button type='submit'>
+                  <img
+                    src='/images/save-outline.svg'
+                    alt='Save Button'
+                    className={styles.icon}
+                  ></img>
                 </button>
               </form>
             )}

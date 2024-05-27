@@ -13,7 +13,9 @@ const RandomProjects = () => {
         const response = await axios.get(
           'http://localhost:3001/api/projects/fetch-approved-projects'
         );
-        const shuffledProjects = response.data.sort(() => 0.5 - Math.random()).slice(0, 3);
+        const shuffledProjects = response.data
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 3);
         setRandomProjects(shuffledProjects);
       } catch (error) {
         console.error('Error fetching random projects:', error);
@@ -31,7 +33,10 @@ const RandomProjects = () => {
   }, [randomProjects.length]);
 
   const handlePrevClick = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + randomProjects.length) % randomProjects.length);
+    setCurrentIndex(
+      (prevIndex) =>
+        (prevIndex - 1 + randomProjects.length) % randomProjects.length
+    );
   };
 
   const handleNextClick = () => {
@@ -40,19 +45,33 @@ const RandomProjects = () => {
 
   return (
     <section className={styles.randomProjects}>
+      <h2 style={{ margin: '1.5rem 0' }}>Discover Random Projects</h2>
       <div className={styles.projectList}>
         {randomProjects.length > 0 && (
-          <div className={styles.projectContainer} key={randomProjects[currentIndex]._id}>
-            <div class="grid-container">
-              <h2>Discover Random Projects</h2>
-            </div>
-            <button className={styles.prevButton} onClick={handlePrevClick}>◀◀</button>
-            <Link to={`/project/${randomProjects[currentIndex].basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${randomProjects[currentIndex]._id}`} className={styles.projectLink}>
+          <div
+            className={styles.projectContainer}
+            key={randomProjects[currentIndex]._id}
+          >
+            <button className={styles.prevButton} onClick={handlePrevClick}>
+              ◀◀
+            </button>
+            <Link
+              to={`/project/${randomProjects[currentIndex].basicInfo.projectName
+                .replace(/\s+/g, '-')
+                .toLowerCase()}-pid-${randomProjects[currentIndex]._id}`}
+              className={styles.projectLink}
+            >
               <div className={styles.projectCard}>
                 <div className={styles.projectImageContainer}>
-                  {randomProjects[currentIndex].basicInfo.projectImages && randomProjects[currentIndex].basicInfo.projectImages.length > 0 ? (
+                  {randomProjects[currentIndex].basicInfo.projectImages &&
+                  randomProjects[currentIndex].basicInfo.projectImages.length >
+                    0 ? (
                     <img
-                      src={`http://localhost:3001/api/photos/${randomProjects[currentIndex].basicInfo.projectImages[randomProjects[currentIndex].basicInfo.coverImage]}`}
+                      src={`http://localhost:3001/api/photos/${
+                        randomProjects[currentIndex].basicInfo.projectImages[
+                          randomProjects[currentIndex].basicInfo.coverImage
+                        ]
+                      }`}
                       alt={`Project ${randomProjects[currentIndex]._id}`}
                       className={styles.projectImage}
                     />
@@ -62,12 +81,22 @@ const RandomProjects = () => {
                 </div>
                 <div className={styles.projectContent}>
                   <h3>{randomProjects[currentIndex].basicInfo.projectName}</h3>
-                  <p><strong>Target Amount:</strong> {randomProjects[currentIndex].basicInfo.targetAmount} ETH</p>
-                  <p><strong>Listing Date:</strong> {new Date(randomProjects[currentIndex].approvalDate).toLocaleDateString()}</p>
+                  <p>
+                    <strong>Target Amount:</strong>{' '}
+                    {randomProjects[currentIndex].basicInfo.targetAmount} ETH
+                  </p>
+                  <p>
+                    <strong>Listing Date:</strong>{' '}
+                    {new Date(
+                      randomProjects[currentIndex].approvalDate
+                    ).toLocaleDateString()}
+                  </p>
                 </div>
               </div>
             </Link>
-            <button className={styles.nextButton} onClick={handleNextClick}>▶▶</button>
+            <button className={styles.nextButton} onClick={handleNextClick}>
+              ▶▶
+            </button>
           </div>
         )}
       </div>

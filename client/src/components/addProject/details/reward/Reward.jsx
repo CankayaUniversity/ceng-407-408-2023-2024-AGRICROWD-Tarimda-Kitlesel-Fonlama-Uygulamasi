@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "./Reward.module.css";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from './Reward.module.css';
 
 const Reward = () => {
-  const [percentage, setPercentage] = useState("");
+  const [percentage, setPercentage] = useState('');
   const [isRewardCompleted, setIsRewardCompleted] = useState(
-    localStorage.getItem("isRewardCompleted") === "true"
+    localStorage.getItem('isRewardCompleted') === 'true'
   );
   const navigate = useNavigate();
 
@@ -15,15 +15,15 @@ const Reward = () => {
     // Validate that the percentage is a positive number
     if (percentage && parseFloat(percentage) > 0) {
       // Save the percentage value to local storage
-      localStorage.setItem("percentage", percentage);
+      localStorage.setItem('percentage', percentage);
 
       // Set isRewardCompleted to true and save it to local storage
       setIsRewardCompleted(true);
-      localStorage.setItem("isRewardCompleted", "true");
-      navigate("/add-project/submit");
-      console.log("Reward info submitted successfully!");
+      localStorage.setItem('isRewardCompleted', 'true');
+      navigate('/add-project/submit');
+      console.log('Reward info submitted successfully!');
     } else {
-      alert("Please enter a valid percentage.");
+      alert('Please enter a valid percentage.');
     }
   };
 
@@ -32,30 +32,36 @@ const Reward = () => {
   };
 
   return (
-    <div>
-      <h2>Reward</h2>
-      <p>
+    <div className={styles.container}>
+      <h2 className={styles.formTitle}>Reward</h2>
+      <p className={styles.content}>
         Please be informed that all future investments made through our platform
         will incur a 5% commission fee. This fee is automatically applied to
         each investment and is deducted from the total amount invested. Thank
         you for your understanding and continued support.
       </p>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="percentage">
-          How much percentage does the investee want to take?
-        </label>
-        <input
-          type="number"
-          id="percentage"
-          name="percentage"
-          min="0"
-          value={percentage}
-          onChange={handlePercentageChange}
-          placeholder="Enter percentage"
-          required
-        />
-        <br />
-        <button type="submit">Submit</button>
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: 'flex', flexDirection: 'column' }}
+      >
+        <div>
+          <label htmlFor='percentage' style={{ marginRight: '1.5rem' }}>
+            How much percentage does the investee want to take?
+          </label>
+          <input
+            type='number'
+            id='percentage'
+            name='percentage'
+            min='0'
+            value={percentage}
+            onChange={handlePercentageChange}
+            placeholder='Enter percentage'
+            required
+          />
+        </div>
+        <button className={styles.button} type='submit'>
+          Submit
+        </button>
       </form>
     </div>
   );

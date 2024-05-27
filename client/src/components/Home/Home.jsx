@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import RandomProjects from './RandomProjects'; // Doğru yolu sağlayın
 import styles from './Home.module.css';
+import Footer from '../Footer/Footer';
 
 const Home = () => (
   <>
@@ -21,6 +22,7 @@ const Home = () => (
       </Link>
     </section>
     <RandomProjects />
+    <Footer />
   </>
 );
 
