@@ -5,7 +5,6 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import Cookies from 'js-cookie';
 import { Helmet } from 'react-helmet-async';
 
-
 import styles from './AdminLogin.module.css';
 import Logo from '../../Logo/Logo';
 
@@ -63,7 +62,7 @@ function AdminLogin() {
         .then((response) => {
           console.log('Server response is: ', response);
           if (response.status) {
-            window.alert('Basariyla giris yaptiniz!');
+            window.alert('You have successfully logged in!');
             Cookies.set('admToken', response.data.authToken, {
               expires: 1 / 24,
             });
@@ -88,9 +87,9 @@ function AdminLogin() {
   return (
     <div className={styles.layoutContainer}>
       <Helmet>
-        <meta charSet="utf-8" />
+        <meta charSet='utf-8' />
         <title>Admin Login - AGRICROWD</title>
-        <link rel="canonical" href="http://localhost:3000/admin/login" />
+        <link rel='canonical' href='http://localhost:3000/admin/login' />
       </Helmet>
       <div className={styles.leftContainer}>
         <Link to='/'>

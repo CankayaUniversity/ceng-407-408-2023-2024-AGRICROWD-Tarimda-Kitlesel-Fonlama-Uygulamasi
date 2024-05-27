@@ -45,7 +45,9 @@ const RandomProjects = () => {
 
   return (
     <section className={styles.randomProjects}>
-      <h2 style={{ margin: '1.5rem 0' }}>Discover Random Projects</h2>
+      <h2 style={{ margin: '1.5rem 0', textAlign: 'center' }}>
+        Discover Random Projects
+      </h2>
       <div className={styles.projectList}>
         {randomProjects.length > 0 && (
           <div

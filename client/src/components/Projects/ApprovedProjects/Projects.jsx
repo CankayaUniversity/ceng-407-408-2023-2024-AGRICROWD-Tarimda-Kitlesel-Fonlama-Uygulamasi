@@ -7,34 +7,23 @@ import styles from './Projects.module.css';
 
 const ProjectCard = ({ project }) => (
   <Link
-    to={`/project/${project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${project._id}`}
+    to={`/project/${project.basicInfo.projectName
+      .replace(/\s+/g, '-')
+      .toLowerCase()}-pid-${project._id}`}
     className={styles.cardLink}
   >
     <div className={styles.cardContainer}>
       <div className={styles.card}>
         <div className={styles.cardBody}>
-          <h3 className={styles.projectTitle}>{project.basicInfo.projectName}</h3>
-          <div className={styles.projectContent}>
-            <div className={styles.projectDetail}>
-              <h4>Project Name</h4>
-              {project.basicInfo.projectName}
-            </div>
-            <div className={styles.projectDetail}>
-              <h4>Country</h4> {project.basicInfo.country}
-            </div>
-            <div className={styles.projectDetail}>
-              <h4>Target Amount</h4> {project.basicInfo.targetAmount}
-            </div>
-            <div className={styles.projectDetail}>
-              <h4>Campaign Duration</h4> {project.basicInfo.campaignDuration}{' '}
-              days
-            </div>
-          </div>
+          <h3 className={styles.projectTitle}>
+            {project.basicInfo.projectName}
+          </h3>
+
           {project.basicInfo.projectImages &&
-            project.basicInfo.projectImages.length > 0 ? (
+          project.basicInfo.projectImages.length > 0 ? (
             <div className={styles.projectImagesContainer}>
-              <div>
-                {project.basicInfo.projectImages.map((photo, index) => (
+              {project.basicInfo.projectImages.map(
+                (photo, index) =>
                   index === project.basicInfo.coverImage && (
                     <img
                       key={index}
@@ -43,17 +32,46 @@ const ProjectCard = ({ project }) => (
                       className={styles.projectImage}
                     />
                   )
-                ))}
-              </div>
+              )}
             </div>
           ) : (
             <div className={styles.noPhotos}>
               No photos available for this project!
             </div>
           )}
+
+          <div className={styles.projectContent}>
+            <div className={styles.projectDetail}>
+              <div>
+                <span>📍</span>
+                <span style={{ fontWeight: '600' }}>Country</span>
+              </div>
+              {project.basicInfo.country}
+            </div>
+            <div className={styles.projectDetail}>
+              <div>
+                <span>🎯</span>
+                <span style={{ fontWeight: '600' }}>Target Amount</span>
+              </div>
+              {project.basicInfo.targetAmount} ETH
+            </div>
+            <div className={styles.projectDetail}>
+              <div>
+                <span>⏱</span>
+                <span style={{ fontWeight: '600' }}>Duration</span>
+              </div>
+              {project.basicInfo.campaignDuration} days
+            </div>
+          </div>
         </div>
-        <div className={styles.projectDetail}>
-          <h4>Listing Date</h4> {new Date(project.approvalDate).toLocaleDateString()}
+        <div
+          style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem' }}
+        >
+          <p>
+            <span style={{ marginRight: '.25rem' }}>📅</span>
+            <span style={{ fontWeight: '600' }}>Listing Date: </span>
+            <span>{new Date(project.approvalDate).toLocaleDateString()}</span>
+          </p>
         </div>
       </div>
     </div>
@@ -63,7 +81,9 @@ const ProjectCard = ({ project }) => (
 const Projects = () => {
   const { categoryNameandId } = useParams();
   const [approvedProjects, setApprovedProjects] = useState([]);
-  const [categoryName, categoryId] = categoryNameandId ? categoryNameandId.split('-cid-') : ['', ''];
+  const [categoryName, categoryId] = categoryNameandId
+    ? categoryNameandId.split('-cid-')
+    : ['', ''];
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('');
@@ -72,8 +92,12 @@ const Projects = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [breadcrumb, setBreadcrumb] = useState([]);
-  const [helmetTitle, setHelmetTitle] = useState('Projects That Will Touch Our Lives - AGRICROWD');
-  const [helmetLink, setHelmetLink] = useState('http://localhost:3000/projects');
+  const [helmetTitle, setHelmetTitle] = useState(
+    'Projects That Will Touch Our Lives - AGRICROWD'
+  );
+  const [helmetLink, setHelmetLink] = useState(
+    'http://localhost:3000/projects'
+  );
 
   useEffect(() => {
     const fetchApprovedProjects = async () => {
@@ -94,11 +118,13 @@ const Projects = () => {
   useEffect(() => {
     const fetchAllCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/categories/fetch-both');
+        const response = await axios.get(
+          'http://localhost:3001/api/categories/fetch-both'
+        );
         if (response.data.success) {
           setCategories(response.data.categoriesWithSubCategories);
         } else {
-          setErrorMessage("No categories found!");
+          setErrorMessage('No categories found!');
         }
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -110,55 +136,88 @@ const Projects = () => {
 
   useEffect(() => {
     if (categoryNameandId && categories.length > 0) {
-      const category = categories.find(cat => cat._id === categoryId) ||
-                       categories.find(cat => cat.subCategories.some(subCat => subCat._id === categoryId));
+      const category =
+        categories.find((cat) => cat._id === categoryId) ||
+        categories.find((cat) =>
+          cat.subCategories.some((subCat) => subCat._id === categoryId)
+        );
       if (category) {
-        const isSubCategory = category.subCategories && category.subCategories.length > 0;
-        const targetCategoryId = isSubCategory ? categoryId : category.mainCategory;
+        const isSubCategory =
+          category.subCategories && category.subCategories.length > 0;
+        const targetCategoryId = isSubCategory
+          ? categoryId
+          : category.mainCategory;
         const filtered = approvedProjects.filter(
           (project) =>
             project.category.mainCategory === targetCategoryId ||
             (isSubCategory && project.category.subCategory === targetCategoryId)
         );
         setFilteredProjects(filtered);
-  
+
         let breadcrumbItems = [
-          { name: "Home", link: "/" },
-          { name: "Projects", link: "/projects" }
+          { name: 'Home', link: '/' },
+          { name: 'Projects', link: '/projects' },
         ];
-        
+
         if (category._id === categoryId) {
-          breadcrumbItems.push({ name: category.categoryName, link: `/projects/${category.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}` });
+          breadcrumbItems.push({
+            name: category.categoryName,
+            link: `/projects/${category.categoryName
+              .replace(/\s+/g, '-')
+              .toLowerCase()}-cid-${categoryId}`,
+          });
           setHelmetTitle(`${category.categoryName} Projects - AGRICROWD`);
-          setHelmetLink(`http://localhost:3000/projects/${category.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}`);
-        }
-        else if(isSubCategory) {
-          const subCategory = category.subCategories.find(subCat => subCat._id === categoryId);
+          setHelmetLink(
+            `http://localhost:3000/projects/${category.categoryName
+              .replace(/\s+/g, '-')
+              .toLowerCase()}-cid-${categoryId}`
+          );
+        } else if (isSubCategory) {
+          const subCategory = category.subCategories.find(
+            (subCat) => subCat._id === categoryId
+          );
           if (subCategory) {
-            const parentCategory = categories.find(cat => cat._id === subCategory.mainCategory);
-            breadcrumbItems.push({ name: parentCategory?.categoryName, link: `/projects/${parentCategory?.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${parentCategory?._id}` });
-            breadcrumbItems.push({ name: subCategory.subCategoryName, link: `/projects/${subCategory.subCategoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}` });
-            setHelmetTitle(`${subCategory.subCategoryName} Projects - AGRICROWD`);
-            setHelmetLink(`http://localhost:3000/projects/${subCategory.subCategoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}`);
+            const parentCategory = categories.find(
+              (cat) => cat._id === subCategory.mainCategory
+            );
+            breadcrumbItems.push({
+              name: parentCategory?.categoryName,
+              link: `/projects/${parentCategory?.categoryName
+                .replace(/\s+/g, '-')
+                .toLowerCase()}-cid-${parentCategory?._id}`,
+            });
+            breadcrumbItems.push({
+              name: subCategory.subCategoryName,
+              link: `/projects/${subCategory.subCategoryName
+                .replace(/\s+/g, '-')
+                .toLowerCase()}-cid-${categoryId}`,
+            });
+            setHelmetTitle(
+              `${subCategory.subCategoryName} Projects - AGRICROWD`
+            );
+            setHelmetLink(
+              `http://localhost:3000/projects/${subCategory.subCategoryName
+                .replace(/\s+/g, '-')
+                .toLowerCase()}-cid-${categoryId}`
+            );
           }
         } else {
           setHelmetTitle('Projects That Will Touch Our Lives - AGRICROWD');
           setHelmetLink('http://localhost:3000/projects');
-        } 
-  
+        }
+
         setBreadcrumb(breadcrumbItems);
       }
     } else {
       setFilteredProjects(approvedProjects);
       setBreadcrumb([
-        { name: "Home", link: "/" },
-        { name: "Projects", link: "/projects" }
+        { name: 'Home', link: '/' },
+        { name: 'Projects', link: '/projects' },
       ]);
       setHelmetTitle('Projects That Will Touch Our Lives - AGRICROWD');
       setHelmetLink('http://localhost:3000/projects');
     }
   }, [categoryNameandId, approvedProjects, categories]);
-  
 
   const sortProjects = (projects, sortBy) => {
     let sortedProjects = [...projects];
@@ -187,28 +246,38 @@ const Projects = () => {
   };
 
   const handleCategoryClick = (categoryId, categoryName) => {
-    window.location.href = `/projects/${categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}`;
+    window.location.href = `/projects/${categoryName
+      .replace(/\s+/g, '-')
+      .toLowerCase()}-cid-${categoryId}`;
   };
 
   const handleTargetAmountFilter = (e) => {
     setTargetAmountFilter(e.target.value);
   };
 
-  const filteredAndSortedProjects = sortProjects(filteredProjects, sortBy)
-    .filter(
-      (project) =>
-        project.basicInfo.projectName.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (targetAmountFilter ? project.basicInfo.targetAmount >= parseInt(targetAmountFilter) : true)
-    );
+  const filteredAndSortedProjects = sortProjects(
+    filteredProjects,
+    sortBy
+  ).filter(
+    (project) =>
+      project.basicInfo.projectName
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) &&
+      (targetAmountFilter
+        ? project.basicInfo.targetAmount >= parseInt(targetAmountFilter)
+        : true)
+  );
 
   return (
     <div className={styles.pageLayout}>
       <Helmet>
-        <meta charSet="utf-8" />
+        <meta charSet='utf-8' />
         <title>{helmetTitle}</title>
-        <link rel="canonical" href={helmetLink} />
+        <link rel='canonical' href={helmetLink} />
       </Helmet>
-      <h2>Thanks to you, projects that can touch our lives</h2>
+      <h2 style={{ textAlign: 'center', fontWeight: '300' }}>
+        Thanks to you, projects that can touch our lives
+      </h2>
       <nav className={styles.breadcrumb}>
         <div>
           {breadcrumb.map((item, index) => (
@@ -225,11 +294,11 @@ const Projects = () => {
             onChange={(e) => handleSort(e.target.value)}
             className={styles.sortSelect}
           >
-            <option value="">Sort By</option>
-            <option value="longest">Longest Campaign</option>
-            <option value="shortest">Shortest Campaign</option>
-            <option value="highestAmount">Highest Target Amount</option>
-            <option value="lowestAmount">Lowest Target Amount</option>
+            <option value=''>Sort By</option>
+            <option value='longest'>Longest Campaign</option>
+            <option value='shortest'>Shortest Campaign</option>
+            <option value='highestAmount'>Highest Target Amount</option>
+            <option value='lowestAmount'>Lowest Target Amount</option>
           </select>
         </div>
       </nav>
@@ -237,8 +306,8 @@ const Projects = () => {
         <div className={styles.sidebar}>
           <h2 className={styles.title}>Filters</h2>
           <input
-            type="text"
-            placeholder="Search projects..."
+            type='text'
+            placeholder='Search projects...'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className={styles.searchInput}
@@ -248,7 +317,9 @@ const Projects = () => {
               <div key={category._id}>
                 <div
                   className={styles.mainCategory}
-                  onClick={() => handleCategoryClick(category._id, category.categoryName)}
+                  onClick={() =>
+                    handleCategoryClick(category._id, category.categoryName)
+                  }
                 >
                   {category.categoryName}
                 </div>
@@ -257,7 +328,12 @@ const Projects = () => {
                     <div
                       key={subCategory._id}
                       className={styles.subCategory}
-                      onClick={() => handleCategoryClick(subCategory._id, subCategory.subCategoryName)}
+                      onClick={() =>
+                        handleCategoryClick(
+                          subCategory._id,
+                          subCategory.subCategoryName
+                        )
+                      }
                     >
                       {subCategory.subCategoryName}
                     </div>
@@ -266,8 +342,8 @@ const Projects = () => {
             ))}
           </div>
           <input
-            type="number"
-            placeholder="Minimum Target Amount"
+            type='number'
+            placeholder='Minimum Target Amount'
             value={targetAmountFilter}
             onChange={handleTargetAmountFilter}
             className={styles.targetAmountInput}

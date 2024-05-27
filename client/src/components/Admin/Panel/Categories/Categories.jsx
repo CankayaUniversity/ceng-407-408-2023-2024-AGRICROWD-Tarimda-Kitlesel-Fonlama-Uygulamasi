@@ -180,9 +180,9 @@ function Categories() {
   return (
     <div className={styles.pageLayout}>
       <Helmet>
-        <meta charSet="utf-8" />
+        <meta charSet='utf-8' />
         <title>Categories - AGRICROWD</title>
-        <link rel="canonical" href="http://localhost:3000/admin/categories" />
+        <link rel='canonical' href='http://localhost:3000/admin/categories' />
       </Helmet>
       {successMessage && (
         <div className={styles.successMessage}>{successMessage}</div>
@@ -190,7 +190,7 @@ function Categories() {
       {errorMessage && (
         <div className={styles.errorMessage}>{errorMessage}</div>
       )}
-      <div className={styles.container}>
+      <div className={styles.container} style={{ marginBottom: '1.5rem' }}>
         <form className={styles.form} onSubmit={handleAddCategory}>
           <h2 className={styles.formTitle}>New Category</h2>
           <div className={styles.formRow}>
