@@ -15,12 +15,12 @@
   align-items: center;
   font-size: 32px;
   color: #18412d;
-  text-align: center; 
+  text-align: center;
 }
 
 .subText {
   font-size: 16px;
-  text-align: center; 
+  text-align: center;
 }
 
 .button {
@@ -34,9 +34,8 @@
   cursor: pointer;
 }
 
-
 .randomProjects {
-  margin-top: 2rem; /* Rastgele projeler bileşeninden ana bileşene boşluk ekle */
+  margin: 2rem 0 3rem 0; /* Rastgele projeler bileşeninden ana bileşene boşluk ekle */
 }
 
 .projectList {
@@ -58,14 +57,14 @@
 }
 
 .projectImageContainer {
-  height: 200px; 
-  overflow: hidden; 
+  height: 200px;
+  overflow: hidden;
 }
 
 .projectImage {
   width: 100%;
   height: auto;
-  object-fit: cover; 
+  object-fit: cover;
 }
 
 .noImage {
@@ -82,7 +81,8 @@
   transition: transform 0.5s ease;
 }
 
-.prevButton, .nextButton {
+.prevButton,
+.nextButton {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
@@ -94,8 +94,6 @@
 .prevButton {
   left: 48rem;
 }
-
-
 
 h2 {
   margin: 0;
