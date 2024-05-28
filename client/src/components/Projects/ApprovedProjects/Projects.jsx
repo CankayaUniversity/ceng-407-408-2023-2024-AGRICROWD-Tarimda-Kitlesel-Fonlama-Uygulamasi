@@ -29,7 +29,7 @@ const ProjectCard = ({ project }) => {
             </h3>
 
             {project.basicInfo.projectImages &&
-              project.basicInfo.projectImages.length > 0 ? (
+            project.basicInfo.projectImages.length > 0 ? (
               <div className={styles.projectImagesContainer}>
                 {project.basicInfo.projectImages.map(
                   (photo, index) =>
@@ -74,7 +74,11 @@ const ProjectCard = ({ project }) => {
             </div>
           </div>
           <div
-            style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem' }}
+            style={{
+              textAlign: 'center',
+              marginTop: '1rem',
+              fontSize: '0.8rem',
+            }}
           >
             <p>
               <span style={{ marginRight: '.25rem' }}>📅</span>
@@ -294,7 +298,9 @@ const Projects = () => {
     const matchesTargetAmountMax = targetAmountMax
       ? project.basicInfo.targetAmount <= parseInt(targetAmountMax)
       : true;
-    return matchesSearchTerm && matchesTargetAmountMin && matchesTargetAmountMax;
+    return (
+      matchesSearchTerm && matchesTargetAmountMin && matchesTargetAmountMax
+    );
   });
 
   // Paging işlemi için proje dilimleme
@@ -305,7 +311,9 @@ const Projects = () => {
     indexOfLastProject
   );
 
-  const totalPages = Math.ceil(filteredAndSortedProjects.length / projectsPerPage);
+  const totalPages = Math.ceil(
+    filteredAndSortedProjects.length / projectsPerPage
+  );
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -332,7 +340,7 @@ const Projects = () => {
       <nav className={styles.breadcrumb}>
         <div>
           {breadcrumb.map((item, index) => (
-            <span key={index}>
+            <span key={index} style={{ fontWeight: '500', fontSize: '1rem' }}>
               <Link to={item.link}>{item.name}</Link>
               {index !== breadcrumb.length - 1 && ' > '}
             </span>
@@ -355,57 +363,59 @@ const Projects = () => {
       </nav>
       <div className={styles.contentLayout}>
         <div className={styles.sidebar}>
-          <h2 className={styles.title}>Filters</h2>
-          <input
-            type='text'
-            placeholder='Search projects...'
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={styles.searchInput}
-          />
-          <div className={styles.categoryList}>
-            {categories.map((category) => (
-              <div key={category._id}>
-                <div
-                  className={styles.mainCategory}
-                  onClick={() =>
-                    handleCategoryClick(category._id, category.categoryName)
-                  }
-                >
-                  {category.categoryName}
+          <div>
+            <h2 className={styles.title}>Filters</h2>
+            <input
+              type='text'
+              placeholder='Search projects...'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchInput}
+            />
+            <div className={styles.categoryList}>
+              {categories.map((category) => (
+                <div key={category._id}>
+                  <div
+                    className={styles.mainCategory}
+                    onClick={() =>
+                      handleCategoryClick(category._id, category.categoryName)
+                    }
+                  >
+                    {category.categoryName}
+                  </div>
+                  {category.subCategories &&
+                    category.subCategories.map((subCategory) => (
+                      <div
+                        key={subCategory._id}
+                        className={styles.subCategory}
+                        onClick={() =>
+                          handleCategoryClick(
+                            subCategory._id,
+                            subCategory.subCategoryName
+                          )
+                        }
+                      >
+                        {subCategory.subCategoryName}
+                      </div>
+                    ))}
                 </div>
-                {category.subCategories &&
-                  category.subCategories.map((subCategory) => (
-                    <div
-                      key={subCategory._id}
-                      className={styles.subCategory}
-                      onClick={() =>
-                        handleCategoryClick(
-                          subCategory._id,
-                          subCategory.subCategoryName
-                        )
-                      }
-                    >
-                      {subCategory.subCategoryName}
-                    </div>
-                  ))}
-              </div>
-            ))}
+              ))}
+            </div>
+            <input
+              type='number'
+              placeholder='Minimum Target Amount'
+              value={targetAmountMin}
+              onChange={handleTargetAmountMin}
+              className={styles.targetAmountInput}
+            />
+            <input
+              type='number'
+              placeholder='Maximum Target Amount'
+              value={targetAmountMax}
+              onChange={handleTargetAmountMax}
+              className={styles.targetAmountInput}
+            />
           </div>
-          <input
-            type='number'
-            placeholder='Minimum Target Amount'
-            value={targetAmountMin}
-            onChange={handleTargetAmountMin}
-            className={styles.targetAmountInput}
-          />
-          <input
-            type='number'
-            placeholder='Maximum Target Amount'
-            value={targetAmountMax}
-            onChange={handleTargetAmountMax}
-            className={styles.targetAmountInput}
-          />
         </div>
         <div className={styles.gridContainer}>
           {loading ? (

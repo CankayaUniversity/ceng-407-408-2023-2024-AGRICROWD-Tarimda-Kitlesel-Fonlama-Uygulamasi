@@ -22,6 +22,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  margin-top: 1rem;
 }
 
 .formRow {
@@ -58,6 +59,25 @@
   width: 100%;
 }
 
+.subInput {
+  border-radius: 8px;
+  padding: 5px 10px;
+  border: none;
+  text-align: center;
+}
+
+.subInput::placeholder {
+  text-align: center;
+}
+
+.subInput:focus {
+  outline: none;
+}
+
+.subInput:focus::placeholder {
+  opacity: 0;
+}
+
 .label {
   color: #767676;
   cursor: text;
@@ -82,11 +102,24 @@
 
 .categoryContainer {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   background-color: #fff;
   border-radius: 1.5rem;
   padding: 1rem;
   border: 1px solid #e9ecef;
+}
+
+.categoryNameDeleteContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.categoryNameEditContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .categoryInfo {
@@ -94,9 +127,27 @@
   flex-direction: column;
 }
 
+.requireLocationAddSubCategoryContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.subCategoriesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 .operations {
   align-self: flex-end;
   justify-self: end;
+}
+
+.editCategoryContainer {
+  display: flex;
+  align-items: center;
 }
 
 .btnsContainer {
@@ -110,12 +161,11 @@
 .iconContainer {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
   cursor: pointer;
 }
 
 .icon {
-  width: 1.5rem;
+  width: 1.25rem;
 }
 
 .iconLabel {
@@ -144,13 +194,17 @@
 
 .subCategoryContainer {
   padding: 10px;
-  border: 1px solid #eee;
-  background-color: #f9f9f9;
-  border-radius: 5px;
+  border: 1px solid #0d5f07;
+  background-color: #ebfbee;
+  color: #0d5f07;
+  border-radius: 100px;
+  width: fit-content;
+  font-weight: 600;
+  font-size: 0.8rem;
 }
 
 .noSubCategoryMessage {
-  padding: 20px 0;
+  padding: 20px 0 0 0;
   color: #666;
   font-style: italic;
 }
@@ -165,4 +219,10 @@
 
 .message {
   text-align: center;
+}
+
+.divider {
+  border-bottom: 1px solid #666;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
 }

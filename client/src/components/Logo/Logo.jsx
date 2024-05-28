@@ -1,6 +1,6 @@
 import styles from './Logo.module.css';
 
-function Logo({ image = true, heading = true, headingText = 'agricrowd' }) {
+function Logo({ image = true, heading = true, headingText = 'Agricrowd' }) {
   return (
     <div className={styles.logo}>
       {image && (

@@ -59,6 +59,8 @@ function AdminHome() {
           Total Commission Amount: {totalCommission} ETH
         </h2>
       </div>
+
+      <img src='/images/flowers.svg' className={styles.background}></img>
     </div>
   );
 }

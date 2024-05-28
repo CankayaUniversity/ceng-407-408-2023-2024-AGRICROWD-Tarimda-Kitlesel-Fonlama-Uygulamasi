@@ -1,8 +1,13 @@
 .container {
-  height: 30rem;
+  margin-top: 8rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 1.5rem;
+}
+
+.background {
+  margin-top: 3rem;
+  width: 40rem;
 }
