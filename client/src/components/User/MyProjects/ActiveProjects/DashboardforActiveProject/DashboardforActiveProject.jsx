@@ -33,7 +33,8 @@ function DashboardforActiveProject() {
     if (project && project.basicInfo.projectName !== encodedProjectName) {
       handleInvalidUrl();
     }
-  }, [project, encodedProjectName, handleInvalidUrl]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const authToken = Cookies.get("authToken");
