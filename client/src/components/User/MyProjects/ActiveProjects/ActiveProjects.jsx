@@ -140,7 +140,6 @@ const ActiveProjects = () => {
                     {isDropdownOpen && (
                         <div className={styles.dropdownContent}>
                             <button className={styles.dropdownItem} onClick={() => redirectToDashboard(project._id)}>Dashboard</button>
-                            <button className={styles.dropdownItem}>Deactive</button>
                         </div>
                     )}
                 </div>
