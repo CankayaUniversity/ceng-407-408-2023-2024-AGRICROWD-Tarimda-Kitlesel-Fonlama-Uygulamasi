@@ -134,7 +134,8 @@ const ProjectDetail = () => {
     if (project && project.basicInfo.projectName !== encodedProjectName) {
       handleInvalidUrl();
     }
-  }, [project, encodedProjectName, handleInvalidUrl]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -290,7 +291,7 @@ const ProjectDetail = () => {
         <div className={styles.sliderContainer}>
           <div className={styles.slider}>
             {project.basicInfo.projectImages &&
-            project.basicInfo.projectImages.length > 0 ? (
+              project.basicInfo.projectImages.length > 0 ? (
               <div className={styles.mainImageContainer}>
                 <img
                   className={styles.mainImage}
@@ -355,10 +356,6 @@ const ProjectDetail = () => {
                 <span style={{ fontWeight: '500' }}>Target Amount:</span>{' '}
                 {project.basicInfo.targetAmount} ETH (1 ETH = $5000)
               </p>
-              {/* <p>
-            <span>⏳</span> Campaign Duration:{' '}
-            {project.basicInfo.campaignDuration} days
-          </p> */}
             </div>
             <p className={styles.remainingTime}>
               <div>
