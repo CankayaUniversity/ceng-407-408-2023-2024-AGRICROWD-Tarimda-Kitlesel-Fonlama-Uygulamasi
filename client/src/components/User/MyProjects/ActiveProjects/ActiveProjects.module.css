@@ -5,8 +5,15 @@
     padding: 20px;
 }
 
+.projectCardWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .projectCard {
     display: flex;
+    align-items: flex-start;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     margin: 10px 0;
@@ -26,7 +33,7 @@
 .projectDetails {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     margin-left: 20px; 
 }
 
@@ -48,6 +55,7 @@
 
 .info {
     font-weight: bold;
+    margin: 5px 0;
 }
 
 .rejectionReason {
@@ -59,6 +67,7 @@
     .projectCard {
         width: 100%;
         flex-direction: column;
+        align-items: center;
     }
 
     .projectDetails {
@@ -129,3 +138,77 @@
 .addButton:hover {
     background-color: #0056b3;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pageItem {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    margin: 0 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.pageItem:hover {
+    background-color: #0056b3;
+}
+
+.pageItem.active {
+    background-color: #0056b3;
+    cursor: default;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    align-self: flex-start;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+}
+
+.cover {
+    margin-right: 20px; /* İhtiyaca göre ayarlayabilirsiniz */
+}
+
+.details {
+    flex: 1;
+}
+
+.approvalInfo {
+    display: flex - start;
+    flex-direction: column;
+    margin-left: 25px; /* İhtiyaca göre ayarlayabilirsiniz */
+}
+
+.approved {
+    color: green;
+}
+
+.searchBar {
+    margin: 20px 0px 20px 0px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    width: 300px; /* İhtiyaca göre ayarlayabilirsiniz */
+}
+
+.searchBar:focus {
+    border-color: dodgerblue;
+    box-shadow: 0 0 5px dodgerblue;
+}
+
+
