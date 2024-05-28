@@ -23,7 +23,7 @@ function UserNavBar() {
           <Link to='/user/home' className={styles.navLink}>
             Home
           </Link>
-          <div className={`${styles.dropdown} ${dropdownStates.accountSettings ? styles.dropdownOpen : ''}`}>
+          <div>
             <div className={styles.dropdownButton} onClick={() => toggleDropdown('accountSettings')}>
               <span className={styles.navLink}>
                 Account Settings
@@ -49,7 +49,7 @@ function UserNavBar() {
               </div>
             )}
           </div>
-          <div className={`${styles.dropdown} ${dropdownStates.myProjects ? styles.dropdownOpen : ''}`}>
+          <div>
             <div className={styles.dropdownButton} onClick={() => toggleDropdown('myProjects')}>
               <span className={styles.navLink}>
                 My Projects

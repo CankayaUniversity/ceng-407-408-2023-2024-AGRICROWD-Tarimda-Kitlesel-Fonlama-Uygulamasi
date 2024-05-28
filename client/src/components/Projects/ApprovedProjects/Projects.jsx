@@ -5,78 +5,88 @@ import { Helmet } from 'react-helmet-async';
 
 import styles from './Projects.module.css';
 
-const ProjectCard = ({ project }) => (
-  <Link
-    to={`/project/${project.basicInfo.projectName
-      .replace(/\s+/g, '-')
-      .toLowerCase()}-pid-${project._id}`}
-    className={styles.cardLink}
-  >
-    <div className={styles.cardContainer}>
-      <div className={styles.card}>
-        <div className={styles.cardBody}>
-          <h3 className={styles.projectTitle}>
-            {project.basicInfo.projectName}
-          </h3>
+const ProjectCard = ({ project }) => {
+  const calculateDaysLeft = (expiryDate) => {
+    const currentDate = new Date();
+    const expiry = new Date(expiryDate);
+    const diffTime = expiry - currentDate;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays <= 1 ? '1 day left' : `${diffDays} days left`;
+  };
 
-          {project.basicInfo.projectImages &&
-          project.basicInfo.projectImages.length > 0 ? (
-            <div className={styles.projectImagesContainer}>
-              {project.basicInfo.projectImages.map(
-                (photo, index) =>
-                  index === project.basicInfo.coverImage && (
-                    <img
-                      key={index}
-                      src={`http://localhost:3001/api/photos/${photo}`}
-                      alt={`Project ${index}`}
-                      className={styles.projectImage}
-                    />
-                  )
-              )}
-            </div>
-          ) : (
-            <div className={styles.noPhotos}>
-              No photos available for this project!
-            </div>
-          )}
+  return (
+    <Link
+      to={`/project/${project.basicInfo.projectName
+        .replace(/\s+/g, '-')
+        .toLowerCase()}-pid-${project._id}`}
+      className={styles.cardLink}
+    >
+      <div className={styles.cardContainer}>
+        <div className={styles.card}>
+          <div className={styles.cardBody}>
+            <h3 className={styles.projectTitle}>
+              {project.basicInfo.projectName}
+            </h3>
 
-          <div className={styles.projectContent}>
-            <div className={styles.projectDetail}>
-              <div>
-                <span>📍</span>
-                <span style={{ fontWeight: '600' }}>Country</span>
+            {project.basicInfo.projectImages &&
+              project.basicInfo.projectImages.length > 0 ? (
+              <div className={styles.projectImagesContainer}>
+                {project.basicInfo.projectImages.map(
+                  (photo, index) =>
+                    index === project.basicInfo.coverImage && (
+                      <img
+                        key={index}
+                        src={`http://localhost:3001/api/photos/${photo}`}
+                        alt={`Project ${index}`}
+                        className={styles.projectImage}
+                      />
+                    )
+                )}
               </div>
-              {project.basicInfo.country}
-            </div>
-            <div className={styles.projectDetail}>
-              <div>
-                <span>🎯</span>
-                <span style={{ fontWeight: '600' }}>Target Amount</span>
+            ) : (
+              <div className={styles.noPhotos}>
+                No photos available for this project!
               </div>
-              {project.basicInfo.targetAmount} ETH
-            </div>
-            <div className={styles.projectDetail}>
-              <div>
-                <span>⏱</span>
-                <span style={{ fontWeight: '600' }}>Duration</span>
+            )}
+
+            <div className={styles.projectContent}>
+              <div className={styles.projectDetail}>
+                <div>
+                  <span>📍</span>
+                  <span style={{ fontWeight: '600' }}>Country</span>
+                </div>
+                {project.basicInfo.country}
               </div>
-              {project.basicInfo.campaignDuration} days
+              <div className={styles.projectDetail}>
+                <div>
+                  <span>🎯</span>
+                  <span style={{ fontWeight: '600' }}>Target Amount</span>
+                </div>
+                {project.basicInfo.targetAmount} ETH
+              </div>
+              <div className={styles.projectDetail}>
+                <div>
+                  <span>⏱</span>
+                  <span style={{ fontWeight: '600' }}>Duration</span>
+                </div>
+                {calculateDaysLeft(project.expiredDate)}
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem' }}
-        >
-          <p>
-            <span style={{ marginRight: '.25rem' }}>📅</span>
-            <span style={{ fontWeight: '600' }}>Listing Date: </span>
-            <span>{new Date(project.approvalDate).toLocaleDateString()}</span>
-          </p>
+          <div
+            style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem' }}
+          >
+            <p>
+              <span style={{ marginRight: '.25rem' }}>📅</span>
+              <span style={{ fontWeight: '600' }}>Listing Date: </span>
+              <span>{new Date(project.approvalDate).toLocaleDateString()}</span>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </Link>
-);
+    </Link>
+  );
+};
 
 const Projects = () => {
   const { categoryNameandId } = useParams();
@@ -88,7 +98,8 @@ const Projects = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [categories, setCategories] = useState([]);
-  const [targetAmountFilter, setTargetAmountFilter] = useState('');
+  const [targetAmountMin, setTargetAmountMin] = useState('');
+  const [targetAmountMax, setTargetAmountMax] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [breadcrumb, setBreadcrumb] = useState([]);
@@ -98,6 +109,8 @@ const Projects = () => {
   const [helmetLink, setHelmetLink] = useState(
     'http://localhost:3000/projects'
   );
+  const [currentPage, setCurrentPage] = useState(1);
+  const projectsPerPage = 4; // Sayfa başına gösterilecek proje sayısı
 
   useEffect(() => {
     const fetchApprovedProjects = async () => {
@@ -241,32 +254,70 @@ const Projects = () => {
     return sortedProjects;
   };
 
+  const handleCategoryClick = (categoryId, categoryName) => {
+    setSearchTerm('');
+    setTargetAmountMin('');
+    setTargetAmountMax('');
+    if (categoryId) {
+      setCurrentPage(1);
+      window.location.href = `/projects/${categoryName
+        .replace(/\s+/g, '-')
+        .toLowerCase()}-cid-${categoryId}`;
+    } else {
+      setFilteredProjects(approvedProjects);
+    }
+  };
+
   const handleSort = (sortBy) => {
     setSortBy(sortBy);
+    setCurrentPage(1);
   };
 
-  const handleCategoryClick = (categoryId, categoryName) => {
-    window.location.href = `/projects/${categoryName
-      .replace(/\s+/g, '-')
-      .toLowerCase()}-cid-${categoryId}`;
+  const handleTargetAmountMin = (e) => {
+    setTargetAmountMin(e.target.value);
   };
 
-  const handleTargetAmountFilter = (e) => {
-    setTargetAmountFilter(e.target.value);
+  const handleTargetAmountMax = (e) => {
+    setTargetAmountMax(e.target.value);
   };
 
   const filteredAndSortedProjects = sortProjects(
     filteredProjects,
     sortBy
-  ).filter(
-    (project) =>
-      project.basicInfo.projectName
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) &&
-      (targetAmountFilter
-        ? project.basicInfo.targetAmount >= parseInt(targetAmountFilter)
-        : true)
+  ).filter((project) => {
+    const matchesSearchTerm = project.basicInfo.projectName
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesTargetAmountMin = targetAmountMin
+      ? project.basicInfo.targetAmount >= parseInt(targetAmountMin)
+      : true;
+    const matchesTargetAmountMax = targetAmountMax
+      ? project.basicInfo.targetAmount <= parseInt(targetAmountMax)
+      : true;
+    return matchesSearchTerm && matchesTargetAmountMin && matchesTargetAmountMax;
+  });
+
+  // Paging işlemi için proje dilimleme
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const currentProjects = filteredAndSortedProjects.slice(
+    indexOfFirstProject,
+    indexOfLastProject
   );
+
+  const totalPages = Math.ceil(filteredAndSortedProjects.length / projectsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   return (
     <div className={styles.pageLayout}>
@@ -344,8 +395,15 @@ const Projects = () => {
           <input
             type='number'
             placeholder='Minimum Target Amount'
-            value={targetAmountFilter}
-            onChange={handleTargetAmountFilter}
+            value={targetAmountMin}
+            onChange={handleTargetAmountMin}
+            className={styles.targetAmountInput}
+          />
+          <input
+            type='number'
+            placeholder='Maximum Target Amount'
+            value={targetAmountMax}
+            onChange={handleTargetAmountMax}
             className={styles.targetAmountInput}
           />
         </div>
@@ -353,11 +411,30 @@ const Projects = () => {
           {loading ? (
             <div>Loading...</div>
           ) : (
-            filteredAndSortedProjects.map((project) => (
+            currentProjects.map((project) => (
               <ProjectCard key={project._id} project={project} />
             ))
           )}
         </div>
+      </div>
+      <div className={styles.pagination}>
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className={styles.pageButton}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={styles.pageButton}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
