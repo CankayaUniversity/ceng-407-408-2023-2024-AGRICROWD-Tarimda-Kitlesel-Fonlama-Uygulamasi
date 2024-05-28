@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
 
@@ -93,6 +93,7 @@ const ProjectCard = ({ project }) => {
 };
 
 const Projects = () => {
+  const navigate = useNavigate();
   const { categoryNameandId } = useParams();
   const [approvedProjects, setApprovedProjects] = useState([]);
   const [categoryName, categoryId] = categoryNameandId
@@ -114,7 +115,7 @@ const Projects = () => {
     'http://localhost:3000/projects'
   );
   const [currentPage, setCurrentPage] = useState(1);
-  const projectsPerPage = 4; // Sayfa başına gösterilecek proje sayısı
+  const projectsPerPage = 4; 
 
   useEffect(() => {
     const fetchApprovedProjects = async () => {
@@ -234,7 +235,7 @@ const Projects = () => {
       setHelmetTitle('Projects That Will Touch Our Lives - AGRICROWD');
       setHelmetLink('http://localhost:3000/projects');
     }
-  }, [categoryNameandId, approvedProjects, categories]);
+  }, [categoryId, categoryNameandId, approvedProjects, categories]);
 
   const sortProjects = (projects, sortBy) => {
     let sortedProjects = [...projects];
@@ -318,12 +319,18 @@ const Projects = () => {
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+      navigate(`/projects?page=${currentPage + 1}`);
     }
   };
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+      if(currentPage - 1 === 1){
+        navigate(`/projects`);
+      } else {
+        navigate(`/projects?page=${currentPage - 1}`);
+      }
     }
   };
 

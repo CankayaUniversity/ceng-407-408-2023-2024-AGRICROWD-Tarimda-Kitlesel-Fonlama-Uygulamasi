@@ -27,10 +27,6 @@ function Login() {
     setRecaptchaValue(null);
   };
 
-  const handleAdminLogin = () => {
-    navigate('/admin/login');
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!recaptchaValue) {
@@ -45,15 +41,13 @@ function Login() {
           { withCredentials: true }
         )
         .then((response) => {
-          console.log('Server response is: ', response);
           if (response.status) {
-            window.alert('You have successfully logged in!');
             Cookies.set('authToken', response.data.authToken, {
               expires: 1 / 24,
             });
             setTimeout(() => {
               console.log(returnUrl);
-              if(returnUrl){
+              if (returnUrl) {
                 navigate(returnUrl);
               } else {
                 navigate(`/user/home`);
@@ -87,7 +81,7 @@ function Login() {
           <Logo heading={false} />
         </Link>
         <p className={styles.sidebarText}>Welcome back</p>
-        <p className={styles.sidebarTitle}>Sign in to AgriCrowd</p>
+        <p className={styles.sidebarTitle}>Sign in to AGRICROWD</p>
       </div>
 
       <div className={styles.rightContainer}>
@@ -153,10 +147,7 @@ function Login() {
             </div>
 
             <span>
-              <a className={styles.formSubLink}>Forgot your password?</a>
-            </span>
-            <span>
-              <a className={styles.formSubLink} onClick={handleAdminLogin}>
+              <a href="/admin/login" className={styles.formSubLink}>
                 Admin login 🔏
               </a>
             </span>
