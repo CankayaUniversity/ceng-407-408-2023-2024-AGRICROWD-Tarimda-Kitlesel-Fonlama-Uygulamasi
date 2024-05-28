@@ -96,11 +96,16 @@ function AdminLogin() {
           <Logo heading={false} />
         </Link>
         <p className={styles.sidebarText}>Welcome back</p>
-        <p className={styles.sidebarTitle}>Sign in to AGRICROWD Admin Panel</p>
+        <p className={styles.sidebarTitle}>Sign in to AGRICROWD</p>
+        <p
+          className={styles.sidebarTitle}
+          style={{ marginTop: '3rem', fontSize: '1.5rem' }}
+        >
+          Admin Panel
+        </p>
       </div>
 
       <div className={styles.rightContainer}>
-      
         <div className={styles.formContainer}>
           <h2 className={styles.formTitle}>
             <span>🔏</span> <span>Admin Login</span>

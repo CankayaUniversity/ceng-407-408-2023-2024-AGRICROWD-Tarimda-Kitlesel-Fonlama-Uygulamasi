@@ -192,7 +192,7 @@ function Categories() {
       )}
       <div className={styles.container} style={{ marginBottom: '1.5rem' }}>
         <form className={styles.form} onSubmit={handleAddCategory}>
-          <h2 className={styles.formTitle}>New Category</h2>
+          <h2 className={styles.formTitle}>Add New Category</h2>
           <div className={styles.formRow}>
             <div className={styles.formRowInner}>
               <input
@@ -206,7 +206,13 @@ function Categories() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginTop: '.5rem',
+            }}
+          >
             <label style={{ display: 'flex', alignItems: 'center' }}>
               <input
                 type='checkbox'
@@ -219,7 +225,7 @@ function Categories() {
           </div>
 
           <button className={styles.button} type='submit'>
-            Add
+            <span>Add</span>
           </button>
         </form>
       </div>
@@ -230,7 +236,7 @@ function Categories() {
 
       {categories.map((category) => (
         <div key={category._id} className={styles.categoryContainer}>
-          <div className={styles.categoryInfo}>
+          <div className={styles.categoryNameDeleteContainer}>
             {editCategory.id === category._id ? (
               <div className={styles.editCategoryContainer}>
                 <input
@@ -246,24 +252,85 @@ function Categories() {
                 />
                 <div
                   className={styles.iconContainer}
-                  onClick={() => handleEditCategory(category._id)}
+                  onClick={() => {
+                    handleEditCategory(category._id);
+                    window.location.reload();
+                  }}
                 >
                   <img
-                    src='/images/save-outline.svg'
+                    src='/images/checkmark-outline.svg'
                     alt='Save Button'
                     className={styles.icon}
-                  ></img>
+                    style={{ marginLeft: '0.25rem' }}
+                  />
                 </div>
               </div>
             ) : (
-              <div>
-                {category.categoryName} (ID: {category._id})
-              </div>
+              <>
+                <div className={styles.categoryNameEditContainer}>
+                  <span>🏷️</span>
+                  {category.categoryName} (ID: {category._id})
+                  <div
+                    className={styles.iconContainer}
+                    onClick={() =>
+                      setEditCategory((prevEditCategory) =>
+                        prevEditCategory.id === category._id
+                          ? { id: null, name: '' }
+                          : { id: category._id, name: category.categoryName }
+                      )
+                    }
+                  >
+                    <img
+                      src='/images/settings-outline.svg'
+                      alt='Edit Button'
+                      className={styles.icon}
+                    />
+                  </div>
+                </div>
+                <div
+                  className={styles.iconContainer}
+                  onClick={() => handleDeleteCategory(category._id)}
+                >
+                  <span style={{ fontSize: '1.5rem' }}>✖</span>
+                </div>
+              </>
             )}
-            <div>
-              Requires Location: {category.requiresLocation ? 'Yes' : 'No'}
+          </div>
+          <div className={styles.divider}></div>
+          <div className={styles.categoryInfo}>
+            <div className={styles.requireLocationAddSubCategoryContainer}>
+              <div
+                style={{
+                  backgroundColor: category.requiresLocation
+                    ? '#40c057'
+                    : '#fa5252',
+                  width: 'fit-content',
+                  borderRadius: '100px',
+                  padding: '4px 8px',
+                  color: '#fff',
+                }}
+              >
+                <span style={{ marginRight: '.25rem' }}>📍</span>
+                <span>Requires Location </span>
+                {category.requiresLocation ? '✔' : '✖'}
+              </div>
+              <div
+                className={styles.iconContainer}
+                onClick={() =>
+                  setSelectedCategory((prevCategory) =>
+                    prevCategory === category._id ? null : category._id
+                  )
+                }
+              >
+                <img
+                  src='/images/add-outline.svg'
+                  alt='Add Button'
+                  className={styles.icon}
+                />
+                <span className={styles.iconLabel}>Add Subcategory</span>
+              </div>
             </div>
-            <div>
+            <div className={styles.subCategoriesContainer}>
               {subCategories[category._id] &&
               subCategories[category._id].length > 0 ? (
                 subCategories[category._id].map((subCategory) => (
@@ -282,72 +349,32 @@ function Categories() {
             </div>
           </div>
 
-          <div className={styles.btnsContainer}>
-            <div
-              className={styles.iconContainer}
-              onClick={() => handleDeleteCategory(category._id)}
-            >
-              <img
-                src='/images/trash-outline.svg'
-                alt='Delete Button'
-                className={styles.icon}
-              ></img>
-              <span className={styles.iconLabel}>Delete</span>
-            </div>
-
-            <div
-              className={styles.iconContainer}
-              onClick={() =>
-                setEditCategory((prevEditCategory) =>
-                  prevEditCategory.id === category._id
-                    ? { id: null, name: '' }
-                    : { id: category._id, name: category.categoryName }
-                )
-              }
-            >
-              <img
-                src='/images/settings-outline.svg'
-                alt='Edit Button'
-                className={styles.icon}
-              ></img>{' '}
-              <span className={styles.iconLabel}>Edit</span>
-            </div>
-
-            <div
-              className={styles.iconContainer}
-              onClick={() =>
-                setSelectedCategory((prevCategory) =>
-                  prevCategory === category._id ? null : category._id
-                )
-              }
-            >
-              <img
-                src='/images/add-outline.svg'
-                alt='Add Button'
-                className={styles.icon}
-              ></img>
-              <span className={styles.iconLabel}>Add Subcategory</span>
-            </div>
-
-            {selectedCategory === category._id && (
-              <form className={styles.form} onSubmit={handleAddSubCategory}>
-                <input
-                  type='text'
-                  value={newSubCategoryName}
-                  onChange={(e) => setNewSubCategoryName(e.target.value)}
-                  placeholder='Subcategory Name'
-                  required
-                />
-                <button type='submit'>
-                  <img
-                    src='/images/save-outline.svg'
-                    alt='Save Button'
-                    className={styles.icon}
-                  ></img>
-                </button>
-              </form>
-            )}
-          </div>
+          {selectedCategory === category._id && (
+            <form className={styles.form} onSubmit={handleAddSubCategory}>
+              <input
+                type='text'
+                value={newSubCategoryName}
+                onChange={(e) => setNewSubCategoryName(e.target.value)}
+                placeholder='Subcategory Name'
+                className={styles.subInput}
+                required
+              />
+              <button
+                type='submit'
+                style={{
+                  border: 'none',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontWeight: '600',
+                  padding: '5px 10px',
+                }}
+              >
+                Add Subcategory
+              </button>
+            </form>
+          )}
         </div>
       ))}
     </div>

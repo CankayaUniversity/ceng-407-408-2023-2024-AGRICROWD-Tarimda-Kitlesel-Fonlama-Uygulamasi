@@ -13,13 +13,17 @@ const RenderProjectData = ({ projectData }) => {
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === projectData.basicInfo.projectImages.length - 1 ? 0 : prevIndex + 1
+      prevIndex === projectData.basicInfo.projectImages.length - 1
+        ? 0
+        : prevIndex + 1
     );
   };
 
   const prevImage = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? projectData.basicInfo.projectImages.length - 1 : prevIndex - 1
+      prevIndex === 0
+        ? projectData.basicInfo.projectImages.length - 1
+        : prevIndex - 1
     );
   };
 
@@ -42,7 +46,8 @@ const RenderProjectData = ({ projectData }) => {
             <h4>Category</h4> {projectData.category.mainCategory.categoryName}
           </div>
           <div>
-            <h4>Subcategory</h4> {projectData.category.subCategory.subCategoryName}
+            <h4>Subcategory</h4>{' '}
+            {projectData.category.subCategory.subCategoryName}
           </div>
           <div>
             <h4>Country</h4> {projectData.basicInfo.country}
@@ -51,11 +56,12 @@ const RenderProjectData = ({ projectData }) => {
             <h4>Target Amount</h4> {projectData.basicInfo.targetAmount}
           </div>
           <div>
-            <h4>Campaign Duration</h4> {projectData.basicInfo.campaignDuration} days
+            <h4>Campaign Duration</h4> {projectData.basicInfo.campaignDuration}{' '}
+            days
           </div>
         </div>
         {projectData.basicInfo.projectImages &&
-          projectData.basicInfo.projectImages.length > 0 ? (
+        projectData.basicInfo.projectImages.length > 0 ? (
           <div className={styles.projectImagesContainer}>
             <h4>Project Photos</h4>
             <div>
@@ -65,8 +71,12 @@ const RenderProjectData = ({ projectData }) => {
                 alt={`Project ${currentImageIndex}`}
               />
               <div className={styles.sliderControls}>
-                <button className={styles.sliderButton} onClick={prevImage}>‹</button>
-                <button className={styles.sliderButton} onClick={nextImage}>›</button>
+                <button className={styles.sliderButton} onClick={prevImage}>
+                  ‹
+                </button>
+                <button className={styles.sliderButton} onClick={nextImage}>
+                  ›
+                </button>
               </div>
             </div>
           </div>
@@ -208,7 +218,7 @@ const PendingProjects = () => {
           href='http://localhost:3000/admin/pending-projects'
         />
       </Helmet>
-      <h2 className={styles.title}>Manage pending projects</h2>
+      <h2 className={styles.title}>Manage Pending Projects</h2>
       {feedbackMessage && (
         <div className={styles.message}>{feedbackMessage}</div>
       )}
@@ -216,7 +226,7 @@ const PendingProjects = () => {
         <div>Loading...</div>
       ) : projects.length === 0 ? (
         <div className={styles.noProjectsMessage}>
-          There are currently no projects awaiting approval.
+          There are currently no projects awaiting approval ❌
         </div>
       ) : (
         <div className={styles.gridContainer}>
@@ -263,6 +273,7 @@ const PendingProjects = () => {
                         <button
                           className={styles.button}
                           onClick={() => setSelectedProjectId(null)}
+                          style={{ marginRight: '0.4rem' }}
                         >
                           Back
                         </button>
