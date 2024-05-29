@@ -16,10 +16,6 @@
   transition: transform 0.3s ease-in-out;
 }
 
-/* .projectCard:hover {
-    transform: translateY(-5px);
-  } */
-
 .projectCardLayout {
   display: flex;
   flex-direction: row;
@@ -52,7 +48,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 20px; /* Fotoğraf ile bilgiler arasında boşluk bırakmak için */
+  margin-left: 20px;
 }
 
 .title {
@@ -88,13 +84,53 @@
   }
 
   .projectDetails {
-    margin-left: 0; /* Mobil görünümde fotoğraf ile bilgiler arasında boşluk bırakmak için */
-    margin-top: 10px; /* Mobil görünümde fotoğraf ile bilgiler arasında biraz boşluk bırakmak için */
+    margin-left: 0;
+    margin-top: 10px;
   }
 
   .coverImage {
     width: 100%;
     height: auto;
-    margin-bottom: 10px; /* Mobil görünümde fotoğrafın altında biraz boşluk bırakmak için */
+    margin-bottom: 10px;
   }
+}
+
+.searchBar {
+  margin: 20px 0;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  outline: none;
+  width: 300px;
+}
+
+.searchBar:focus {
+  border-color: dodgerblue;
+  box-shadow: 0 0 5px dodgerblue;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pageItem {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  margin: 0 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.pageItem:hover {
+  background-color: #0056b3;
+}
+
+.pageItem.active {
+  background-color: #0056b3;
+  cursor: default;
 }
