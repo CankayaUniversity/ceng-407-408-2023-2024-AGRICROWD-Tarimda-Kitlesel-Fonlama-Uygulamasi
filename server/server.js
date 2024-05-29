@@ -58,7 +58,7 @@ const server = app.listen(PORT, () => {
 
 const projectCron = require('./cronJobs/projectCron.js');
 server.on('listening', () => {
-  cron.schedule('*/15 * * * *', () => { // every 15 min check the projects
+  cron.schedule('*/5 * * * *', () => { // every 15 min check the projects
     projectCron();
   });
 });

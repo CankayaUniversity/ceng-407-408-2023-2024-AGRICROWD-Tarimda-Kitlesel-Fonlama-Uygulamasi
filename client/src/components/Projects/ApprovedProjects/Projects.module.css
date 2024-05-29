@@ -84,6 +84,8 @@
 
 .categoryList {
   margin-bottom: 20px;
+  list-style-type: none;
+  padding: 0;
 }
 
 .mainCategory {
@@ -96,6 +98,11 @@
 
 .mainCategory:hover {
   color: #007bff;
+}
+
+.subCategoryList {
+  list-style-type: none;
+  padding-left: 20px;
 }
 
 .subCategory {
@@ -201,7 +208,6 @@
   background-color: #f0f0f0;
 }
 
-
 .noProjectsMessage {
   padding: 20px 0px 0px 200px;
   text-align: center;
@@ -217,4 +223,68 @@
 
 .noProjectsMessage a:hover {
   text-decoration: underline;
+}
+
+.filter {
+  margin-bottom: 20px;
+}
+
+.filter label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.filter input[type="text"],
+.filter input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+}
+
+.targetAmount {
+  display: flex;
+}
+
+.targetAmount input[type="number"] {
+  flex: 1;
+  margin-right: 5px;
+}
+
+.filter button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.filter button:hover {
+  background-color: #0056b3;
+}
+
+.filter button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.applyButton {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  background-color: #28a745;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+  display: block;
+  width: 100%;
+}
+
+.applyButton:hover {
+  background-color: #218838;
 }

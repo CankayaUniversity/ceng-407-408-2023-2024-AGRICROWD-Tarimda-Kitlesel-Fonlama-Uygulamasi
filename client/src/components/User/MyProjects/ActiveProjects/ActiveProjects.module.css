@@ -37,6 +37,10 @@
   margin-left: 20px;
 }
 
+.title {
+  padding-bottom: 20px;
+}
+
 .titleLink {
   text-decoration: none;
   color: #333;
@@ -196,7 +200,7 @@
 
 .approvalInfo {
   margin-top: 20px;
-  display: flex - start;
+  display: flex;
   flex-direction: column;
   margin-left: 25px;
 }

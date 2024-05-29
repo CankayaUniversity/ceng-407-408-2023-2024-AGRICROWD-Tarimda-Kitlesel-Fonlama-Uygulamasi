@@ -8,7 +8,6 @@ import styles from './ActiveProjects.module.css';
 const ActiveProjects = () => {
   const [projects, setProjects] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 3;
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ const ActiveProjects = () => {
     const search = queryParams.get('search') || "";
 
     setCurrentPage(page);
-    setSearchQuery(search);
+    setSearchInput(search);
   }, [location]);
 
   useEffect(() => {
@@ -184,27 +183,22 @@ const ActiveProjects = () => {
           </div>
         </div>
       </div>
-
-
     );
   };
 
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
-  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
+  const filteredProjects = projects.filter((project) => {
+    const projectName = project.basicInfo.projectName.toLowerCase();
+    const searchLowerCase = searchInput.toLowerCase();
+    return project.status === 'approved' && projectName.includes(searchLowerCase);
+  });
+  const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
 
   const paginate = pageNumber => {
     setCurrentPage(pageNumber);
-    if (pageNumber === 1) {
-      navigate(`/user/my-projects`);
-    } else {
-      if (searchQuery) {
-        navigate(`/user/my-projects?search=${searchQuery}&page=${pageNumber}`);
-      }
-      else {
-        navigate(`/user/my-projects?page=${pageNumber}`);
-      }
-    }
+    const searchParam = searchInput ? `&search=${searchInput}` : '';
+    navigate(`/user/my-projects?page=${pageNumber}${searchParam}`);
   };
 
   return (
@@ -224,7 +218,7 @@ const ActiveProjects = () => {
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               setCurrentPage(1);
-              if(e.target.value !== ""){
+              if (e.target.value !== "") {
                 navigate(`/user/my-projects?&search=${e.target.value}`);
               } else {
                 navigate(`/user/my-projects`);
@@ -235,17 +229,11 @@ const ActiveProjects = () => {
         />
       )}
       {currentProjects.length > 0 ? (
-        currentProjects
-          .filter((project) => {
-            const projectName = project.basicInfo.projectName.toLowerCase();
-            const searchLowerCase = searchQuery.toLowerCase();
-            return project.status === 'approved' && projectName.includes(searchLowerCase);
-          })
-          .map((project, index) => (
-            <div key={index} className={styles.projectCardWrapper}>
-              <ProjectCard project={project} />
-            </div>
-          ))
+        currentProjects.map((project, index) => (
+          <div key={index} className={styles.projectCardWrapper}>
+            <ProjectCard project={project} />
+          </div>
+        ))
       ) : (
         <div>
           <p>You do not have any approved projects.</p>
@@ -255,7 +243,7 @@ const ActiveProjects = () => {
         </div>
       )}
       <div className={styles.pagination}>
-        {[...Array(Math.ceil(projects.length / projectsPerPage)).keys()].map(number => (
+        {[...Array(Math.ceil(filteredProjects.length / projectsPerPage)).keys()].map(number => (
           <button
             key={number + 1}
             onClick={() => paginate(number + 1)}

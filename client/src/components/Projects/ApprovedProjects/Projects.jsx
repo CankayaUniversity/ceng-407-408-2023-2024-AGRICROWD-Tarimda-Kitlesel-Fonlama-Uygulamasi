@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
 
@@ -94,11 +94,10 @@ const ProjectCard = ({ project }) => {
 
 const Projects = () => {
   const navigate = useNavigate();
+  const { search } = useLocation();
   const { categoryNameandId } = useParams();
   const [approvedProjects, setApprovedProjects] = useState([]);
-  const [categoryName, categoryId] = categoryNameandId
-    ? categoryNameandId.split('-cid-')
-    : ['', ''];
+  const [categoryName, categoryId] = categoryNameandId ? categoryNameandId.split('-cid-') : ['', ''];
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('');
@@ -108,21 +107,30 @@ const Projects = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [breadcrumb, setBreadcrumb] = useState([]);
-  const [helmetTitle, setHelmetTitle] = useState(
-    'Projects That Will Touch Our Lives - AGRICROWD'
-  );
-  const [helmetLink, setHelmetLink] = useState(
-    'http://localhost:3000/projects'
-  );
+  const [helmetTitle, setHelmetTitle] = useState('Projects That Will Touch Our Lives - AGRICROWD');
+  const [helmetLink, setHelmetLink] = useState('http://localhost:3000/projects');
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 4;
+
+  const updateURLWithFilters = () => {
+    const params = new URLSearchParams();
+    if (searchTerm) params.append('search', searchTerm);
+    console.log("sortBy", sortBy);
+    if (sortBy) params.append('sort', sortBy);
+    if (targetAmountMin && targetAmountMax) {
+      params.append('amount', `${targetAmountMin}-${targetAmountMax}`);
+    } else if (targetAmountMax) {
+      params.append('amount', `min-${targetAmountMax}`);
+    } else if (targetAmountMin) {
+      params.append('amount', `${targetAmountMin}-max`);
+    }
+    navigate(`?${params.toString()}`);
+  };
 
   useEffect(() => {
     const fetchApprovedProjects = async () => {
       try {
-        const response = await axios.get(
-          'http://localhost:3001/api/projects/fetch-approved-projects'
-        );
+        const response = await axios.get('http://localhost:3001/api/projects/fetch-approved-projects');
         setApprovedProjects(response.data);
         setLoading(false);
       } catch (error) {
@@ -136,9 +144,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchAllCategories = async () => {
       try {
-        const response = await axios.get(
-          'http://localhost:3001/api/categories/fetch-both'
-        );
+        const response = await axios.get('http://localhost:3001/api/categories/fetch-both');
         if (response.data.success) {
           setCategories(response.data.categoriesWithSubCategories);
         } else {
@@ -154,21 +160,12 @@ const Projects = () => {
 
   useEffect(() => {
     if (categoryNameandId && categories.length > 0) {
-      const category =
-        categories.find((cat) => cat._id === categoryId) ||
-        categories.find((cat) =>
-          cat.subCategories.some((subCat) => subCat._id === categoryId)
-        );
+      const category = categories.find((cat) => cat._id === categoryId) || categories.find((cat) => cat.subCategories.some((subCat) => subCat._id === categoryId));
       if (category) {
-        const isSubCategory =
-          category.subCategories && category.subCategories.length > 0;
-        const targetCategoryId = isSubCategory
-          ? categoryId
-          : category.mainCategory;
+        const isSubCategory = category.subCategories && category.subCategories.length > 0;
+        const targetCategoryId = isSubCategory ? categoryId : category.mainCategory;
         const filtered = approvedProjects.filter(
-          (project) =>
-            project.category.mainCategory === targetCategoryId ||
-            (isSubCategory && project.category.subCategory === targetCategoryId)
+          (project) => project.category.mainCategory === targetCategoryId || (isSubCategory && project.category.subCategory === targetCategoryId)
         );
         setFilteredProjects(filtered);
 
@@ -180,44 +177,24 @@ const Projects = () => {
         if (category._id === categoryId) {
           breadcrumbItems.push({
             name: category.categoryName,
-            link: `/projects/${category.categoryName
-              .replace(/\s+/g, '-')
-              .toLowerCase()}-cid-${categoryId}`,
+            link: `/projects/${category.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}`,
           });
           setHelmetTitle(`${category.categoryName} Projects - AGRICROWD`);
-          setHelmetLink(
-            `http://localhost:3000/projects/${category.categoryName
-              .replace(/\s+/g, '-')
-              .toLowerCase()}-cid-${categoryId}`
-          );
+          setHelmetLink(`http://localhost:3000/projects/${category.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}`);
         } else if (isSubCategory) {
-          const subCategory = category.subCategories.find(
-            (subCat) => subCat._id === categoryId
-          );
+          const subCategory = category.subCategories.find((subCat) => subCat._id === categoryId);
           if (subCategory) {
-            const parentCategory = categories.find(
-              (cat) => cat._id === subCategory.mainCategory
-            );
+            const parentCategory = categories.find((cat) => cat._id === subCategory.mainCategory);
             breadcrumbItems.push({
               name: parentCategory?.categoryName,
-              link: `/projects/${parentCategory?.categoryName
-                .replace(/\s+/g, '-')
-                .toLowerCase()}-cid-${parentCategory?._id}`,
+              link: `/projects/${parentCategory?.categoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${parentCategory?._id}`,
             });
             breadcrumbItems.push({
               name: subCategory.subCategoryName,
-              link: `/projects/${subCategory.subCategoryName
-                .replace(/\s+/g, '-')
-                .toLowerCase()}-cid-${categoryId}`,
+              link: `/projects/${subCategory.subCategoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}`,
             });
-            setHelmetTitle(
-              `${subCategory.subCategoryName} Projects - AGRICROWD`
-            );
-            setHelmetLink(
-              `http://localhost:3000/projects/${subCategory.subCategoryName
-                .replace(/\s+/g, '-')
-                .toLowerCase()}-cid-${categoryId}`
-            );
+            setHelmetTitle(`${subCategory.subCategoryName} Projects - AGRICROWD`);
+            setHelmetLink(`http://localhost:3000/projects/${subCategory.subCategoryName.replace(/\s+/g, '-').toLowerCase()}-cid-${categoryId}`);
           }
         } else {
           setHelmetTitle('Projects That Will Touch Our Lives - AGRICROWD');
@@ -237,46 +214,86 @@ const Projects = () => {
     }
   }, [categoryId, categoryNameandId, approvedProjects, categories]);
 
-  const sortProjects = (projects, sortBy) => {
-    let sortedProjects = [...projects];
-    if (sortBy === 'longest') {
-      sortedProjects.sort(
-        (a, b) => b.basicInfo.campaignDuration - a.basicInfo.campaignDuration
-      );
-    } else if (sortBy === 'shortest') {
-      sortedProjects.sort(
-        (a, b) => a.basicInfo.campaignDuration - b.basicInfo.campaignDuration
-      );
-    } else if (sortBy === 'highestAmount') {
-      sortedProjects.sort(
-        (a, b) => b.basicInfo.targetAmount - a.basicInfo.targetAmount
-      );
-    } else if (sortBy === 'lowestAmount') {
-      sortedProjects.sort(
-        (a, b) => a.basicInfo.targetAmount - b.basicInfo.targetAmount
-      );
-    }
-    return sortedProjects;
-  };
-
-  const handleCategoryClick = (categoryId, categoryName) => {
-    setSearchTerm('');
-    setTargetAmountMin('');
-    setTargetAmountMax('');
-    if (categoryId) {
-      setCurrentPage(1);
-      window.location.href = `/projects/${categoryName
-        .replace(/\s+/g, '-')
-        .toLowerCase()}-cid-${categoryId}`;
+  useEffect(() => {
+    const params = new URLSearchParams(search);
+    setSearchTerm(params.get('search') || '');
+    setSortBy(params.get('sort') || '');
+    const amountParam = params.get('amount');
+    if (amountParam) {
+      const [minimum, maximum] = amountParam.split('-');
+      if ((minimum === 'min' || minimum === '0') && maximum) {
+        setTargetAmountMin(0);
+        setTargetAmountMax(maximum);
+      } else if (minimum && maximum === 'max') {
+        setTargetAmountMin(minimum);
+        //setTargetAmountMax(9999);
+      } else {
+        setTargetAmountMin(minimum);
+        setTargetAmountMax(maximum);
+      }
     } else {
-      setFilteredProjects(approvedProjects);
+      setTargetAmountMin('');
+      setTargetAmountMax('');
     }
+
+    // Apply filters and sorting to the filtered projects
+    let projects = [...approvedProjects];
+    if (categoryId) {
+      projects = projects.filter(
+        (project) => project.category.mainCategory === categoryId || project.category.subCategory === categoryId
+      );
+    }
+
+    if (params.get('search')) {
+      projects = projects.filter((project) =>
+        project.basicInfo.projectName.toLowerCase().includes(params.get('search').toLowerCase())
+      );
+    }
+
+    if (sortBy === 'longest') {
+      projects.sort((a, b) => {
+        const durationA = new Date(a.endDate) - new Date(a.startDate);
+        const durationB = new Date(b.endDate) - new Date(b.startDate);
+        return durationB - durationA;
+      });
+    } else if (sortBy === 'shortest') {
+      projects.sort((a, b) => {
+        const durationA = new Date(a.endDate) - new Date(a.startDate);
+        const durationB = new Date(b.endDate) - new Date(b.startDate);
+        return durationA - durationB;
+      });
+    } else if (sortBy === 'highestAmount') {
+      projects.sort((a, b) => b.basicInfo.targetAmount - a.basicInfo.targetAmount);
+    } else if (sortBy === 'lowestAmount') {
+      projects.sort((a, b) => a.basicInfo.targetAmount - b.basicInfo.targetAmount);
+    } else {
+      projects.sort((a, b) => new Date(b.approvalDate) - new Date(a.approvalDate));
+    }
+
+
+    const minAmount = parseFloat(targetAmountMin);
+    const maxAmount = parseFloat(targetAmountMax);
+
+    if (!isNaN(minAmount)) {
+      projects = projects.filter((project) => project.basicInfo.targetAmount >= minAmount);
+    }
+
+    if (!isNaN(maxAmount)) {
+      projects = projects.filter((project) => project.basicInfo.targetAmount <= maxAmount);
+    }
+
+    setFilteredProjects(projects);
+  }, [search, approvedProjects, categoryId]);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
   };
 
-  const handleSort = (sortBy) => {
-    setSortBy(sortBy);
-    setCurrentPage(1);
-  };
+  useEffect(() => {
+    if (sortBy !== '') {
+      updateURLWithFilters();
+    }
+  }, [sortBy]);
 
   const handleTargetAmountMin = (e) => {
     setTargetAmountMin(e.target.value);
@@ -286,34 +303,19 @@ const Projects = () => {
     setTargetAmountMax(e.target.value);
   };
 
-  const filteredAndSortedProjects = sortProjects(
-    filteredProjects,
-    sortBy
-  ).filter((project) => {
-    const matchesSearchTerm = project.basicInfo.projectName
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesTargetAmountMin = targetAmountMin
-      ? project.basicInfo.targetAmount >= parseInt(targetAmountMin)
-      : true;
-    const matchesTargetAmountMax = targetAmountMax
-      ? project.basicInfo.targetAmount <= parseInt(targetAmountMax)
-      : true;
-    return (
-      matchesSearchTerm && matchesTargetAmountMin && matchesTargetAmountMax
-    );
-  });
+  const handleFilterAndSort = () => {
+    updateURLWithFilters();
+  };
 
-  // Paging işlemi için proje dilimleme
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
-  const currentProjects = filteredAndSortedProjects.slice(
+  const currentProjects = filteredProjects.slice(
     indexOfFirstProject,
     indexOfLastProject
   );
 
   const totalPages = Math.ceil(
-    filteredAndSortedProjects.length / projectsPerPage
+    filteredProjects.length / projectsPerPage
   );
 
   const handleNextPage = () => {
@@ -333,6 +335,23 @@ const Projects = () => {
       }
     }
   };
+
+  const handleCategoryClick = (categoryId, categoryName) => {
+    setSearchTerm('');
+    setTargetAmountMin('');
+    setTargetAmountMax('');
+    if (categoryId) {
+      setCurrentPage(1);
+      window.location.href = `/projects/${categoryName
+        .replace(/\s+/g, '-')
+        .toLowerCase()}-cid-${categoryId}`;
+    } else {
+      setFilteredProjects(approvedProjects);
+    }
+  };
+
+  const [isSearchClicked, setIsSearchClicked] = useState(false);
+  const [isTargetAmountClicked, setIsTargetAmountClicked] = useState(false);
 
   return (
     <div className={styles.pageLayout}>
@@ -357,7 +376,7 @@ const Projects = () => {
         <div className={styles.sortContainer}>
           <select
             value={sortBy}
-            onChange={(e) => handleSort(e.target.value)}
+            onChange={(e) => setSortBy(e.target.value)}
             className={styles.sortSelect}
           >
             <option value=''>Sort By</option>
@@ -369,63 +388,94 @@ const Projects = () => {
         </div>
       </nav>
       <div className={styles.contentLayout}>
-        <div className={styles.sidebar}>
-          <div>
-            <h2 className={styles.title}>Filters</h2>
-            <input
-              type='text'
-              placeholder='Search projects...'
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className={styles.searchInput}
-            />
-            <div className={styles.mainCategory}>
-              <a href="/projects">All Projects</a>
-            </div>
-            <div className={styles.categoryList}>
-              {categories.map((category) => (
-                <div key={category._id}>
-                  <div
-                    className={styles.mainCategory}
-                    onClick={() =>
-                      handleCategoryClick(category._id, category.categoryName)
-                    }
-                  >
-                    {category.categoryName}
-                  </div>
-                  {category.subCategories &&
-                    category.subCategories.map((subCategory) => (
-                      <div
-                        key={subCategory._id}
-                        className={styles.subCategory}
-                        onClick={() =>
-                          handleCategoryClick(
-                            subCategory._id,
-                            subCategory.subCategoryName
-                          )
-                        }
-                      >
-                        {subCategory.subCategoryName}
+        <div className={styles.sidebar} style={{ overflowY: 'auto' }}>
+          <div className={styles.filters}>
+            <h3>Categories</h3>
+            <ul className={styles.categoryList}>
+              <li className={styles.mainCategory}>
+                <a href="/projects">All Projects</a>
+                <ul className={styles.subCategoryList}>
+                  {categories.map((category) => (
+                    <li key={category._id} className={styles.mainCategory}>
+                      <div onClick={() => handleCategoryClick(category._id, category.categoryName)}>
+                        {category.categoryName}
                       </div>
-                    ))}
-                </div>
-              ))}
-            </div>
-            <input
-              type='number'
-              placeholder='Minimum Target Amount'
-              value={targetAmountMin}
-              onChange={handleTargetAmountMin}
-              className={styles.targetAmountInput}
-            />
-            <input
-              type='number'
-              placeholder='Maximum Target Amount'
-              value={targetAmountMax}
-              onChange={handleTargetAmountMax}
-              className={styles.targetAmountInput}
-            />
+                      {category.subCategories && (
+                        <ul className={styles.subCategoryList}>
+                          {category.subCategories.map((subCategory) => (
+                            <li key={subCategory._id} className={styles.subCategory}>
+                              <div onClick={() => handleCategoryClick(subCategory._id, subCategory.subCategoryName)}>
+                                {subCategory.subCategoryName}
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            </ul>
           </div>
+          <div>
+            <div className={styles.filter}>
+              <label>Search with words:</label>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder="Enter keywords"
+                onFocus={() => setIsSearchClicked(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleFilterAndSort();
+                  }
+                }}
+              />
+              {isSearchClicked && (searchTerm !== "") && (
+                <button onClick={() => {
+                  handleFilterAndSort();
+                  setIsSearchClicked(false);
+                }}>Apply</button>
+              )}
+            </div>
+            <div className={styles.filter}>
+              <label>Target Amount</label>
+              <div className={styles.targetAmount}>
+                <input
+                  type="number"
+                  value={targetAmountMin}
+                  onChange={handleTargetAmountMin}
+                  placeholder="Min"
+                  onFocus={() => setIsTargetAmountClicked(true)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleFilterAndSort();
+                    }
+                  }}
+                />
+                <input
+                  type="number"
+                  value={targetAmountMax}
+                  onChange={handleTargetAmountMax}
+                  placeholder="Max"
+                  onFocus={() => setIsTargetAmountClicked(true)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleFilterAndSort();
+                    }
+                  }}
+                />
+              </div>
+              {isTargetAmountClicked && ((targetAmountMin !== "") || (targetAmountMax !== "")) && (
+                <button onClick={() => {
+                  handleFilterAndSort();
+                  setIsSearchClicked(false);
+                }}>Apply</button>
+              )}
+            </div>
+          </div>
+          <button className={styles.applyButton} onClick={handleFilterAndSort}>Apply All Filters</button>
         </div>
         <div className={styles.gridContainer}>
           {loading ? (
@@ -436,7 +486,8 @@ const Projects = () => {
             ))
           ) : (
             <div className={styles.noProjectsMessage}>
-              No projects found in this category. Click <a href="/add-project">here</a> to add one.
+              <div className={styles.warningIcon}>⚠️</div>
+              No projects found matching the filters.
             </div>
           )}
         </div>
@@ -460,7 +511,7 @@ const Projects = () => {
           Next
         </button>
       </div>
-    </div>
+    </div >
   );
 };
 

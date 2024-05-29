@@ -2,12 +2,27 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Helmet } from 'react-helmet-async';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import styles from './InactiveProjects.module.css';
 
 function InactiveProjects() {
   const [projects, setProjects] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(''); // Arama sorgusu için state
+  const [searchInput, setSearchInput] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const projectsPerPage = 3;
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const page = queryParams.get('page') ? parseInt(queryParams.get('page')) : 1;
+    const search = queryParams.get('search') || "";
+
+    setCurrentPage(page);
+    setSearchQuery(search);
+  }, [location]);
 
   useEffect(() => {
     const authToken = Cookies.get('authToken');
@@ -59,6 +74,31 @@ function InactiveProjects() {
     fetchUserId();
   }, []);
 
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const filteredProjects = projects.filter((project) =>
+    project.basicInfo.projectName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
+
+  const paginate = pageNumber => {
+    setCurrentPage(pageNumber);
+    const searchParam = searchQuery ? `&search=${searchQuery}` : '';
+    navigate(`/user/my-projects/inactive?page=${pageNumber}${searchParam}`);
+  };
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      setCurrentPage(1);
+      setSearchQuery(searchInput);
+      if (searchInput !== "") {
+        navigate(`/user/my-projects/inactive?search=${searchInput}`);
+      } else {
+        navigate(`/user/my-projects/inactive`);
+      }
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Helmet>
@@ -71,34 +111,34 @@ function InactiveProjects() {
         <input
           type="text"
           placeholder="Search..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={handleSearchKeyDown}
           className={styles.searchBar}
         />
       )}
-      {projects.length > 0 ? (
-        projects
-          .filter((project) =>
-            project.basicInfo.projectName
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase())
-          )
-          .map(
-            (project, index) =>
-              (project.status === 'pending' ||
-                project.status === 'rejected' ||
-                project.status === 'expired') && (
-                <div className={styles.projectCard}>
-                  {projectCardContents(project)}
-                </div>
-              )
-          )
+      {currentProjects.length > 0 ? (
+        currentProjects.map((project, index) => (
+          <div key={index} className={styles.projectCard}>
+            {projectCardContents(project)}
+          </div>
+        ))
       ) : (
         <p>
-          You do not have any projects awaiting approval or with expired
-          deadlines.
+          You do not have any projects awaiting approval or with expired deadlines.
         </p>
       )}
+      <div className={styles.pagination}>
+        {[...Array(Math.ceil(filteredProjects.length / projectsPerPage)).keys()].map(number => (
+          <button
+            key={number + 1}
+            onClick={() => paginate(number + 1)}
+            className={`${styles.pageItem} ${currentPage === number + 1 ? styles.active : ''}`}
+          >
+            {number + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
@@ -107,25 +147,21 @@ function projectCardContents(project) {
   return (
     <div className={styles.projectCardLayout}>
       <div>
-        {project.basicInfo.projectImages &&
-          project.basicInfo.projectImages.length > 0 ? (
+        {project.basicInfo.projectImages && project.basicInfo.projectImages.length > 0 ? (
           <div className={styles.projectImagesContainer}>
-            {project.basicInfo.projectImages.map(
-              (photo, index) =>
-                index === project.basicInfo.coverImage && (
-                  <img
-                    key={index}
-                    src={`http://localhost:3001/api/photos/${photo}`}
-                    alt={`Project ${index}`}
-                    className={styles.coverImage}
-                  />
-                )
+            {project.basicInfo.projectImages.map((photo, index) =>
+              index === project.basicInfo.coverImage && (
+                <img
+                  key={index}
+                  src={`http://localhost:3001/api/photos/${photo}`}
+                  alt={`Project ${index}`}
+                  className={styles.coverImage}
+                />
+              )
             )}
           </div>
         ) : (
-          <div className={styles.noPhotos}>
-            No photos available for this project!
-          </div>
+          <div className={styles.noPhotos}>No photos available for this project!</div>
         )}
       </div>
 
@@ -137,28 +173,20 @@ function projectCardContents(project) {
           </p>
         </div>
         <p className={styles.info}>Country: {project.basicInfo.country}</p>
-        <p className={styles.info}>
-          Campaign Duration: {project.basicInfo.campaignDuration} days
-        </p>
-        <p className={styles.info}>
-          Target Amount: {project.basicInfo.targetAmount}
-        </p>
+        <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>
+        <p className={styles.info}>Target Amount: {project.basicInfo.targetAmount}</p>
       </div>
 
       <div className={styles.statusContainer}>
         <p className={styles.info}>Status: {project.status}</p>
         {project.status === 'expired' && (
-          <p className={styles.info}>Expired: {project.expirationDate}</p>
+          <p className={styles.info}>Expired: {new Date(project.expiredDate).toLocaleString()}</p>
         )}
         {project.status === 'pending' && (
-          <p className={styles.info}>
-            Project is under review by our team. You will be contacted soon.
-          </p>
+          <p className={styles.info}>Project is under review by our team. You will be contacted soon.</p>
         )}
         {project.status === 'rejected' && (
-          <p className={styles.rejectionReason}>
-            Rejection Reason: {project.rejectionReason}
-          </p>
+          <p className={styles.rejectionReason}>Rejection Reason: {project.rejectionReason}</p>
         )}
       </div>
     </div>
