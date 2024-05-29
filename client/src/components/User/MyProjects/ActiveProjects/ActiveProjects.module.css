@@ -5,9 +5,15 @@
   padding: 20px;
 }
 
+.projectCardWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .projectCard {
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin: 10px 0;
@@ -16,16 +22,6 @@
   border-radius: 10px;
   transition: transform 0.3s ease-in-out;
   position: relative;
-}
-
-.coverLink {
-  display: flex;
-  align-items: center;
-}
-
-.infoContainer {
-  display: flex;
-  padding: 1rem;
 }
 
 .coverImage {
@@ -37,7 +33,7 @@
 .projectDetails {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   margin-left: 20px;
 }
 
@@ -52,29 +48,34 @@
   color: #007bff;
 }
 
-/* .description,
+.description,
 .info {
   font-size: 16px;
   color: #666;
 }
 
+.categoryInfo {
+  font-weight: bold;
+  font-size: 16px;
+  padding-bottom: 20px;
+  color: #666;
+}
+
 .info {
   font-weight: bold;
-} */
+  margin: 5px 0;
+}
 
 .rejectionReason {
   color: #ff6b6b;
   font-weight: bold;
 }
 
-.subTitle {
-  font-weight: 500;
-}
-
 @media (max-width: 768px) {
   .projectCard {
     width: 100%;
     flex-direction: column;
+    align-items: center;
   }
 
   .projectDetails {
@@ -90,7 +91,9 @@
 }
 
 .dropdown {
-  text-align: end;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 }
 
 .dropdownBtn {
@@ -108,7 +111,10 @@
 
 .dropdownContent {
   position: absolute;
+  background-color: #f9f9f9;
+  min-width: 120px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 5px 0;
   z-index: 1;
   right: 0;
 }
@@ -139,4 +145,77 @@
 
 .addButton:hover {
   background-color: #0056b3;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pageItem {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  margin: 0 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.pageItem:hover {
+  background-color: #0056b3;
+}
+
+.pageItem.active {
+  background-color: #0056b3;
+  cursor: default;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  align-self: flex-start;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+}
+
+.cover {
+  margin-right: 20px;
+}
+
+.details {
+  flex: 1;
+}
+
+.approvalInfo {
+  margin-top: 20px;
+  display: flex - start;
+  flex-direction: column;
+  margin-left: 25px;
+}
+
+.approved {
+  color: green;
+}
+
+.searchBar {
+  margin: 20px 0px 20px 0px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  outline: none;
+  width: 300px;
+}
+
+.searchBar:focus {
+  border-color: dodgerblue;
+  box-shadow: 0 0 5px dodgerblue;
 }

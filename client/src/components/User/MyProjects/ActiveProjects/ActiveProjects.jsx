@@ -7,8 +7,21 @@ import styles from './ActiveProjects.module.css';
 
 const ActiveProjects = () => {
   const [projects, setProjects] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(''); // Arama sorgusu için state
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const projectsPerPage = 3;
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const page = queryParams.get('page') ? parseInt(queryParams.get('page')) : 1;
+    const search = queryParams.get('search') || "";
+
+    setCurrentPage(page);
+    setSearchQuery(search);
+  }, [location]);
 
   useEffect(() => {
     const authToken = Cookies.get('authToken');
@@ -24,7 +37,7 @@ const ActiveProjects = () => {
                 Authorization: `Bearer ${authToken}`,
                 'Content-Type': 'application/json',
               },
-              withCredentials: true,
+              withCredentials: true
             }
           );
 
@@ -70,11 +83,7 @@ const ActiveProjects = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const redirectToDashboard = (projectId) => {
-      navigate(
-        `/user/my-projects/${project.basicInfo.projectName
-          .replace(/\s+/g, '-')
-          .toLowerCase()}-pid-${projectId}/dashboard`
-      );
+      navigate(`/user/my-projects/${project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${projectId}/dashboard`);
     };
 
     const handleDropdownClick = () => {
@@ -82,91 +91,73 @@ const ActiveProjects = () => {
     };
 
     return (
-      <div style={{ display: 'flex' }}>
-        {project.basicInfo.projectImages &&
-        project.basicInfo.projectImages.length > 0 ? (
-          <a
-            href={`/project/${project.basicInfo.projectName
-              .replace(/\s+/g, '-')
-              .toLowerCase()}-pid-${project._id}`}
-            className={styles.coverLink}
-          >
-            {project.basicInfo.projectImages.map(
-              (photo, index) =>
-                index === project.basicInfo.coverImage && (
-                  <img
-                    key={index}
-                    src={`http://localhost:3001/api/photos/${photo}`}
-                    alt={`Project ${index}`}
-                    className={styles.coverImage}
-                  />
-                )
-            )}
-          </a>
-        ) : (
-          <div className={styles.noCover}>No cover photo available</div>
-        )}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignContent: 'center',
-              padding: '0.5rem',
-            }}
-          >
+      <div className={styles.projectCard}>
+        <div className={styles.wrapper}>
+          <div className={styles.header}>
             <h2 className={styles.title}>
               <a
-                href={`/project/${project.basicInfo.projectName
-                  .replace(/\s+/g, '-')
-                  .toLowerCase()}-pid-${project._id}`}
+                href={`/project/${project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${project._id}`}
                 className={styles.titleLink}
               >
                 {project.basicInfo.projectName}
               </a>
             </h2>
-
-            <p className={styles.info}>
-              {project.category.mainCategory.categoryName} -&gt;{' '}
-              {project.category.subCategory.subCategoryName}
-            </p>
-
-            <p>
-              <span>📍</span> {project.basicInfo.country}
-            </p>
           </div>
-
-          <div className={styles.infoContainer}>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.5rem',
-              }}
-            >
+          <div className={styles.content}>
+            <div className={styles.imageContent}>
+              <div className={styles.cover}>
+                <a
+                  href={`/project/${project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${project._id}`}
+                  className={styles.coverLink}
+                >
+                  {project.basicInfo.projectImages && project.basicInfo.projectImages.length > 0 ? (
+                    <img
+                      src={`http://localhost:3001/api/photos/${project.basicInfo.projectImages[project.basicInfo.coverImage]}`}
+                      alt="Project Cover"
+                      className={styles.coverImage}
+                    />
+                  ) : (
+                    <div className={styles.noCover}>No cover photo available</div>
+                  )}
+                </a>
+              </div>
+            </div>
+            <div className={styles.details}>
+              <p className={styles.categoryInfo}>
+                {project.category.mainCategory.categoryName} -&gt; {project.category.subCategory.subCategoryName}
+              </p>
+              <p className={styles.info}>
+                <span>📍</span> {project.basicInfo.country}
+              </p>
+              <p className={styles.info}>Campaign Duration: {project.basicInfo.campaignDuration} days</p>
               <p className={styles.info}>
                 <span>🎯</span>
                 <span className={styles.subTitle}>Target Amount: </span>{' '}
                 {project.basicInfo.targetAmount} ETH
               </p>
-              <p className={styles.subTitle}>Status: {project.status}</p>
-              <p className={styles.subTitle}>
-                Approval Date:{' '}
-                {new Date(project.approvalDate).toLocaleString(undefined, {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                })}
-              </p>
             </div>
-            {project.status === 'approved' && (
-              <>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.5rem',
-                  }}
-                >
+            <div className={styles.approvalInfo}>
+              <p className={styles.info}>
+                <span>Status: </span>
+                <span className={project.status === 'approved' ? styles.approved : ''}>{project.status}</span>
+              </p>
+              {project.status === 'approved' && (
+                <>
+                  <p className={styles.info}>
+                    Approval Date:{" "}
+                    {new Date(project.approvalDate).toLocaleString(undefined, {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </p>
+                  <p className={styles.info}>
+                    <span>📅</span>
+                    <span className={styles.subTitle}>Expired Date: </span>{' '}
+                    {new Date(project.expiredDate).toLocaleString(undefined, {
+                      dateStyle: 'medium',
+                      timeStyle: 'short',
+                    })}
+                  </p>
                   <p className={styles.info}>
                     <span>⏱</span>
                     <span className={styles.subTitle}>
@@ -177,86 +168,105 @@ const ActiveProjects = () => {
                       project.basicInfo.campaignDuration
                     )}
                   </p>
-                  <p className={styles.subTitle}>
-                    Campaign Duration: {project.basicInfo.campaignDuration} days
-                  </p>
-                  <p className={styles.info}>
-                    <span>📅</span>
-                    <span className={styles.subTitle}>Expired Date: </span>{' '}
-                    {new Date(project.expiredDate).toLocaleString(undefined, {
-                      dateStyle: 'medium',
-                      timeStyle: 'short',
-                    })}
-                  </p>
+                </>
+              )}
+            </div>
+            <div className={styles.dropdown}>
+              <button className={styles.dropdownBtn} onClick={handleDropdownClick}>
+                Operations
+              </button>
+              {isDropdownOpen && (
+                <div className={styles.dropdownContent}>
+                  <button className={styles.dropdownItem} onClick={() => redirectToDashboard(project._id)}>Dashboard</button>
                 </div>
-              </>
-            )}
-          </div>
-          <div className={styles.dropdown}>
-            <button
-              className={styles.dropdownBtn}
-              onClick={handleDropdownClick}
-            >
-              Operations
-            </button>
-            {isDropdownOpen && (
-              <div className={styles.dropdownContent}>
-                <button
-                  className={styles.dropdownItem}
-                  onClick={() => redirectToDashboard(project._id)}
-                >
-                  Dashboard
-                </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+
     );
+  };
+
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
+
+  const paginate = pageNumber => {
+    setCurrentPage(pageNumber);
+    if (pageNumber === 1) {
+      navigate(`/user/my-projects`);
+    } else {
+      if (searchQuery) {
+        navigate(`/user/my-projects?search=${searchQuery}&page=${pageNumber}`);
+      }
+      else {
+        navigate(`/user/my-projects?page=${pageNumber}`);
+      }
+    }
   };
 
   return (
     <div className={styles.container}>
       <Helmet>
-        <meta charSet='utf-8' />
+        <meta charSet="utf-8" />
         <title>Active Projects - AGRICROWD</title>
-        <link rel='canonical' href='http://localhost:3000/user/my-projects' />
+        <link rel="canonical" href="http://localhost:3000/user/my-projects" />
       </Helmet>
       <h1>My Approved Projects</h1>
       {projects.length > 0 && (
         <input
-          type='text'
-          placeholder='Search...'
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          type="text"
+          placeholder="Search..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              setCurrentPage(1);
+              if(e.target.value !== ""){
+                navigate(`/user/my-projects?&search=${e.target.value}`);
+              } else {
+                navigate(`/user/my-projects`);
+              }
+            }
+          }}
           className={styles.searchBar}
         />
       )}
-      {projects.length > 0 ? (
-        projects
-          .filter((project) =>
-            project.basicInfo.projectName
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase())
-          )
-          .map(
-            (project, index) =>
-              project.status === 'approved' && (
-                <div className={styles.projectCard}>
-                  <ProjectCard project={project} />
-                </div>
-              )
-          )
+      {currentProjects.length > 0 ? (
+        currentProjects
+          .filter((project) => {
+            const projectName = project.basicInfo.projectName.toLowerCase();
+            const searchLowerCase = searchQuery.toLowerCase();
+            return project.status === 'approved' && projectName.includes(searchLowerCase);
+          })
+          .map((project, index) => (
+            <div key={index} className={styles.projectCardWrapper}>
+              <ProjectCard project={project} />
+            </div>
+          ))
       ) : (
         <div>
           <p>You do not have any approved projects.</p>
-          <Link to='/add-project/inform' className={styles.addButton}>
+          <Link to="/add-project/inform" className={styles.addButton}>
             If you have an idea...
           </Link>
         </div>
       )}
+      <div className={styles.pagination}>
+        {[...Array(Math.ceil(projects.length / projectsPerPage)).keys()].map(number => (
+          <button
+            key={number + 1}
+            onClick={() => paginate(number + 1)}
+            className={`${styles.pageItem} ${currentPage === number + 1 ? styles.active : ''}`}
+          >
+            {number + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
-};
+}
 
 export default ActiveProjects;

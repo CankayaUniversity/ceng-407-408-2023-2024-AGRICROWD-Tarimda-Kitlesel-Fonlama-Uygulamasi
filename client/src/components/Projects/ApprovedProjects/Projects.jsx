@@ -29,7 +29,7 @@ const ProjectCard = ({ project }) => {
             </h3>
 
             {project.basicInfo.projectImages &&
-            project.basicInfo.projectImages.length > 0 ? (
+              project.basicInfo.projectImages.length > 0 ? (
               <div className={styles.projectImagesContainer}>
                 {project.basicInfo.projectImages.map(
                   (photo, index) =>
@@ -115,7 +115,7 @@ const Projects = () => {
     'http://localhost:3000/projects'
   );
   const [currentPage, setCurrentPage] = useState(1);
-  const projectsPerPage = 4; 
+  const projectsPerPage = 4;
 
   useEffect(() => {
     const fetchApprovedProjects = async () => {
@@ -326,7 +326,7 @@ const Projects = () => {
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
-      if(currentPage - 1 === 1){
+      if (currentPage - 1 === 1) {
         navigate(`/projects`);
       } else {
         navigate(`/projects?page=${currentPage - 1}`);
@@ -379,6 +379,9 @@ const Projects = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className={styles.searchInput}
             />
+            <div className={styles.mainCategory}>
+              <a href="/projects">All Projects</a>
+            </div>
             <div className={styles.categoryList}>
               {categories.map((category) => (
                 <div key={category._id}>
@@ -427,10 +430,14 @@ const Projects = () => {
         <div className={styles.gridContainer}>
           {loading ? (
             <div>Loading...</div>
-          ) : (
+          ) : currentProjects.length > 0 ? (
             currentProjects.map((project) => (
               <ProjectCard key={project._id} project={project} />
             ))
+          ) : (
+            <div className={styles.noProjectsMessage}>
+              No projects found in this category. Click <a href="/add-project">here</a> to add one.
+            </div>
           )}
         </div>
       </div>

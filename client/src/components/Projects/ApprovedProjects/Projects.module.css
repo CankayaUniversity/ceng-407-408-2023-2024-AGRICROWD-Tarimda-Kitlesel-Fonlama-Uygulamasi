@@ -200,3 +200,21 @@
 .pageButton:not(:disabled):hover {
   background-color: #f0f0f0;
 }
+
+
+.noProjectsMessage {
+  padding: 20px 0px 0px 200px;
+  text-align: center;
+  font-size: 20px;
+  color: #666;
+}
+
+.noProjectsMessage a {
+  color: dodgerblue;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.noProjectsMessage a:hover {
+  text-decoration: underline;
+}
