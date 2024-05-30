@@ -28,12 +28,11 @@ import DashboardforActiveProject from "./components/User/MyProjects/ActiveProjec
 import MyInvestments from "./components/User/MyInvestments/MyInvestments";
 
 //ProjectAddition
-import AddProjectNav from "./components/addProject/ProgressBar/ProgressBar";
 import AddProjects from "./components/addProject/AddProject";
 import ProjectInform from "./components/addProject/details/inform/Inform";
 import ProjectBasics from "./components/addProject/details/basicInfo/BasicInfo";
 import ProjectReward from "./components/addProject/details/reward/Reward";
-import ProjectSubmitForApproval from "./components/addProject/details/submit/SubmitForApproval";
+import ProjectSubmitForApproval from "./components/addProject/details/Submit/SubmitForApproval";
 
 import AdminLogin from "./components/Admin/Login/AdminLogin";
 import AdminHome from "./components/Admin/Panel/AdminHome/AdminHome";

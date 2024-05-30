@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
@@ -11,6 +11,11 @@ const Reward = () => {
   );
   const navigate = useNavigate();
 
+  useEffect(()=>{
+    if(isRewardCompleted){
+      navigate("/add-project/submit");
+    } 
+  });
   const handleSubmit = (event) => {
     event.preventDefault();
 

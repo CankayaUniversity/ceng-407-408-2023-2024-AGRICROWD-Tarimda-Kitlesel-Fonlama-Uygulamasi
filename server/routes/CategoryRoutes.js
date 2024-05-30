@@ -1,6 +1,37 @@
 const express = require('express');
+const axios = require('axios');
 const router = express.Router();
 const { Category, SubCategory } = require('../models/Categories');
+
+//middleware
+const verifyAdminToken = async (req,res,next) => {
+    const admToken = req.headers.authorization;
+    if(!admToken || !admToken.startsWith('Bearer ')){
+        return res.status(401).json({success:false, message:'Unauthorized'});
+    }
+
+    try {
+        const response = await axios.post(
+            'http://localhost:3001/api/admin/verify-token',
+            {},
+            {
+                headers: {
+                    Authorization: admToken,
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true
+            }
+        );
+        if(response.data.success){
+            next();
+        } else {
+            res.status(403).json({success:false, message:'There is no admin!'});
+        }
+    } catch(error) {
+        console.error("endpoint error ",error)
+        res.status(500).json({success:false, message:'Internal server error'});
+    }
+};
 
 //mainCategories
 router.get('/fetch-main-categories', async (req, res) => {
@@ -13,7 +44,7 @@ router.get('/fetch-main-categories', async (req, res) => {
     }
 });
 
-router.post('/add-new-main-category', async (req, res) => {
+router.post('/add-new-main-category', verifyAdminToken,async (req, res) => {
     try {
         const { categoryName, requiresLocation } = req.body;
         
@@ -34,31 +65,47 @@ router.post('/add-new-main-category', async (req, res) => {
     }
 });
 
-router.put('/edit-main-category', async (req, res) => {
+router.put('/edit-main-category', verifyAdminToken,async (req, res) => {
     try {
         const { categoryName, categoryId } = req.body;
-        const updatedCategory = await Category.findByIdAndUpdate(categoryId, { categoryName }, { new: true });
-        res.json(updatedCategory);
+        if (!categoryName || !categoryId) {
+            return res.status(400).json({ error: 'categoryName and categoryId are required' });
+        }
+        const updatedCategory = await Category.findByIdAndUpdate(
+            categoryId,
+            { categoryName },
+            { new: true, runValidators: true }
+        );
+        if (!updatedCategory) {
+            return res.status(404).json({ error: 'Category not found' });
+        }
+        res.json({
+            message: 'Category updated successfully',
+            updatedCategory,
+        });
     } catch (error) {
         console.error('Error updating category:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-router.delete('/delete-main-category/:categoryId', async (req, res) => {
+router.delete('/delete-main-category/:categoryId', verifyAdminToken,async (req, res) => {
     try {
         const categoryId = req.params.categoryId;
+
+        await SubCategory.deleteMany({ mainCategory: categoryId });
         await Category.findByIdAndDelete(categoryId);
-        res.json({ success: true, message: 'Category deleted successfully' });
+
+        res.json({ success: true, message: 'Category and its subcategories deleted successfully' });
     } catch (error) {
         console.error('Error deleting category:', error);
-        res.status(500).json({ error: 'Internal Server Error', message: "Please contact with admin" });
+        res.status(500).json({ error: 'Internal Server Error', message: 'Please contact with admin' });
     }
 });
 
 
 //Subcategories
-router.post('/add-subcategory', async (req, res) => {
+router.post('/add-subcategory', verifyAdminToken,async (req, res) => {
     try {
         const { mainCategoryId, subCategoryName } = req.body;
         const existingSubCategory = await SubCategory.findOne({ subCategoryName, mainCategory: mainCategoryId });
@@ -83,7 +130,7 @@ router.post('/add-subcategory', async (req, res) => {
     }
 });
 
-router.get('/fetch-subcategories', async (req, res) => {
+router.get('/fetch-subcategories',async (req, res) => {
     try {
         const { categoryId } = req.query;
         const subCategories = await SubCategory.find({ mainCategory: categoryId });
@@ -96,6 +143,57 @@ router.get('/fetch-subcategories', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+router.put('/edit-sub-category', verifyAdminToken,async (req, res) => {
+    try {
+        const { subCategoryName, subCategoryId } = req.body;
+
+        if (!subCategoryName || !subCategoryId) {
+            return res.status(400).json({ error: 'subCategoryName and subCategoryId are required' });
+        }
+
+        const existingSubCategory = await SubCategory.findOne({
+            subCategoryName,
+            _id: { $ne: subCategoryId }
+        });
+
+        if (existingSubCategory) {
+            return res.status(400).json({ error: 'Subcategory with this name already exists' });
+        }
+
+        const updatedCategory = await SubCategory.findByIdAndUpdate(
+            subCategoryId,
+            { subCategoryName },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedCategory) {
+            return res.status(404).json({ error: 'Subcategory not found' });
+        }
+
+        res.json({
+            message: 'Subcategory updated successfully',
+            updatedCategory,
+        });
+    } catch (error) {
+        console.error('Error updating subcategory:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+router.delete('/delete-sub-category/:subCategoryId', verifyAdminToken,async (req, res) => {
+    try {
+        const subCategoryId = req.params.subCategoryId;
+        await SubCategory.findByIdAndDelete(subCategoryId);
+        res.json({ success: true, message: 'Sub category deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting sub-category:', error);
+        res.status(500).json({ error: 'Internal Server Error', message: "Please contact with server admin" });
+    }
+});
+
+
 
 
 //fetch-both
