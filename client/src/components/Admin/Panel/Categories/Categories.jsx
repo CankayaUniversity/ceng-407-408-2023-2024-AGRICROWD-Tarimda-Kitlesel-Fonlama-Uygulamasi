@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { Helmet } from 'react-helmet-async';
 import styles from './Categories.module.css';
 
@@ -14,14 +16,25 @@ function Categories() {
   const [requiresLocation, setRequiresLocation] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
+  const navigate = useNavigate();
 
   //Categories CRUD operations
   const fetchCategories = useCallback(async () => {
+    const admToken = Cookies.get('admToken');
+    if (!admToken) {
+      setErrorMessage('Admin token not found. Please log in.');
+      setTimeout(() => setErrorMessage(''), 10000);
+      return;
+    }
     try {
       const response = await axios.get(
-        'http://localhost:3001/api/categories/fetch-main-categories'
-      );
+        'http://localhost:3001/api/categories/fetch-main-categories', {
+        headers: {
+          Authorization: `Bearer ${admToken}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
       if (response.data.success) {
         setCategories(response.data.categories);
         response.data.categories.forEach((category) => {
@@ -39,12 +52,25 @@ function Categories() {
 
   const handleAddCategory = async (e) => {
     e.preventDefault();
+    const admToken = Cookies.get('admToken');
+    if (!admToken) {
+      setErrorMessage('Admin token not found. Please log in.');
+      setTimeout(() => setErrorMessage(''), 10000);
+      return;
+    }
     try {
       const response = await axios.post(
         'http://localhost:3001/api/categories/add-new-main-category',
         {
           categoryName: newCategoryName,
           requiresLocation: requiresLocation,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${admToken}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
         }
       );
       if (response.data.success) {
@@ -68,6 +94,12 @@ function Categories() {
   };
 
   const handleDeleteCategory = async (categoryId, categoryName) => {
+    const admToken = Cookies.get('admToken');
+    if (!admToken) {
+      setErrorMessage('Admin token not found. Please log in.');
+      setTimeout(() => setErrorMessage(''), 10000);
+      return;
+    }
     const userConfirmation = prompt(`Type the name of the category "${categoryName}" to confirm deletion along with all its subcategories.`);
     if (userConfirmation !== categoryName) {
       alert('Category name does not match. Deletion cancelled.');
@@ -78,12 +110,17 @@ function Categories() {
         `http://localhost:3001/api/categories/delete-main-category/${categoryId}`,
         {
           categoryId,
+          headers: {
+            Authorization: `Bearer ${admToken}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
         }
       );
       if (response.data.success) {
         setSuccessMessage(response.data.message);
         setTimeout(() => setSuccessMessage(''), 10000);
-        fetchSubCategories();
+        fetchCategories();
       } else {
         setErrorMessage(response.data.message);
       }
@@ -93,12 +130,25 @@ function Categories() {
   };
 
   const handleEditCategory = async (categoryId) => {
+    const admToken = Cookies.get('admToken');
+    if (!admToken) {
+      setErrorMessage('Admin token not found. Please log in.');
+      setTimeout(() => setErrorMessage(''), 10000);
+      return;
+    }
     try {
       const response = await axios.put(
         `http://localhost:3001/api/categories/edit-main-category`,
         {
           categoryId,
           categoryName: editCategory.name,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${admToken}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
         }
       );
       if (response.data.success) {
@@ -119,13 +169,23 @@ function Categories() {
 
   //subcategories CRUD operations
   const fetchSubCategories = async (categoryId) => {
+    const admToken = Cookies.get('admToken');
+    if (!admToken) {
+      setErrorMessage('Admin token not found. Please log in.');
+      setTimeout(() => setErrorMessage(''), 10000);
+      return;
+    }
     try {
       const response = await axios.get(
         `http://localhost:3001/api/categories/fetch-subcategories`,
         {
           params: {
             categoryId: categoryId,
+          }, headers: {
+            Authorization: `Bearer ${admToken}`,
+            'Content-Type': 'application/json'
           },
+          withCredentials: true
         }
       );
       if (response.data.success) {
@@ -150,12 +210,25 @@ function Categories() {
 
   const handleAddSubCategory = async (e) => {
     e.preventDefault();
+    const admToken = Cookies.get('admToken');
+    if (!admToken) {
+      setErrorMessage('Admin token not found. Please log in.');
+      setTimeout(() => setErrorMessage(''), 10000);
+      return;
+    }
     try {
       const response = await axios.post(
         `http://localhost:3001/api/categories/add-subcategory`,
         {
           mainCategoryId: selectedCategory,
           subCategoryName: newSubCategoryName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${admToken}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
         }
       );
       if (response.data.success) {
@@ -178,12 +251,25 @@ function Categories() {
   };
 
   const handleEditSubCategory = async (subCategoryId) => {
+    const admToken = Cookies.get('admToken');
+    if (!admToken) {
+      setErrorMessage('Admin token not found. Please log in.');
+      setTimeout(() => setErrorMessage(''), 10000);
+      return;
+    }
     try {
       const response = await axios.put(
         `http://localhost:3001/api/categories/edit-sub-category`,
         {
           subCategoryId,
           subCategoryName: editSubCategory.name,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${admToken}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
         }
       );
       if (response.data.success) {
@@ -206,7 +292,12 @@ function Categories() {
     }
   };
 
-  const handleDeleteSubCategory = async (subCategoryId,subCategoryName) => {
+  const handleDeleteSubCategory = async (subCategoryId, subCategoryName) => {
+    const admToken = Cookies.get('admToken');
+    if (!admToken) {
+      alert("Please log in the admin panel.");
+      navigate("/admin/login");
+    }
     const userConfirmation = prompt(`Type the name of the category "${subCategoryName}" to confirm deletion along with all its subcategories.`);
     if (userConfirmation !== subCategoryName) {
       alert('Sub-category name does not match. Deletion cancelled.');
@@ -214,7 +305,14 @@ function Categories() {
     }
     try {
       const response = await axios.delete(
-        `http://localhost:3001/api/categories/delete-sub-category/${subCategoryId}`
+        `http://localhost:3001/api/categories/delete-sub-category/${subCategoryId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${admToken}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        }
       );
       if (response.data.success) {
         setSuccessMessage(response.data.message);
@@ -345,7 +443,7 @@ function Categories() {
                 </div>
                 <div
                   className={styles.iconContainer}
-                  onClick={() => handleDeleteCategory(category._id,category.categoryName)}
+                  onClick={() => handleDeleteCategory(category._id, category.categoryName)}
                 >
                   <span style={{ fontSize: '1.5rem' }}>✖</span>
                 </div>
@@ -443,7 +541,7 @@ function Categories() {
                         </div>
                         <div
                           className={styles.iconContainer}
-                          onClick={() => handleDeleteSubCategory(subCategory._id,subCategory.subCategoryName)}
+                          onClick={() => handleDeleteSubCategory(subCategory._id, subCategory.subCategoryName)}
                         >
                           <span style={{ fontSize: '1.5rem' }}>✖</span>
                         </div>

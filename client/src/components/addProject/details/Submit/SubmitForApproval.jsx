@@ -78,6 +78,9 @@ const SubmitForm = () => {
     try {
       if (isInformCompleted && isBasicsCompleted && isRewardCompleted) {
         const basicInfo = JSON.parse(localStorage.getItem(userId));
+        const rewardPercentage = localStorage.getItem('percentage');
+        const parcedPercantage = JSON.parse(rewardPercentage);
+        basicInfo.rewardPercentage = Number(parcedPercantage);
         const { category, subCategory, ...rest } = basicInfo;
         const response = await axios.post(
           "http://localhost:3001/api/admin/projects/add-pending",

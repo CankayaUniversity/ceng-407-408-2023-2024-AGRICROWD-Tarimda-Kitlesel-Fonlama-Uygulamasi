@@ -46,6 +46,10 @@ const ProjectSchema = new mongoose.Schema({
           type: Number,   
         }
       },
+      rewardPercentage: {
+        type: Number,
+        required: true
+      }
     },
     required: true
   },
