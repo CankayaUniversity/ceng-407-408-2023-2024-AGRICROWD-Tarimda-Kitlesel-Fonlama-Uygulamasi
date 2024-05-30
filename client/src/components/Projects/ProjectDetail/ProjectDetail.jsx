@@ -1,19 +1,19 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { Helmet } from 'react-helmet-async';
-import { ethers } from '../../Contracts/ethers-5.7.esm.min.js';
+import React, { useEffect, useState, useCallback } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+import { Helmet } from "react-helmet-async";
+import { ethers } from "../../Contracts/ethers-5.7.esm.min.js";
 import {
   abi,
   contractAddress,
-} from '../../Contracts/smartContractConstants.js';
-import NotFound from '../../NotFound/NotFound.jsx';
-import styles from './ProjectDetails.module.css';
-import ProgressBar from '../ProgressBar/ProgressBar.jsx';
+} from "../../Contracts/smartContractConstants.js";
+import NotFound from "../../NotFound/NotFound.jsx";
+import styles from "./ProjectDetails.module.css";
+import ProgressBar from "../ProgressBar/ProgressBar.jsx";
 
 const ProjectDetail = () => {
   const { projectNameandId } = useParams();
-  const [encodedProjectName, pId] = projectNameandId.split('-pid-');
+  const [encodedProjectName, pId] = projectNameandId.split("-pid-");
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -23,14 +23,14 @@ const ProjectDetail = () => {
   const [isFunding, setIsFunding] = useState(false);
   const [isDonating, setIsDonating] = useState(false);
   const [projectOwner, setProjectOwner] = useState(null);
-  const [canonicalUrl, setCanonicalUrl] = useState('');
+  const [canonicalUrl, setCanonicalUrl] = useState("");
 
   const navigate = useNavigate();
 
   // Function to check if the user is logged in
   const isLoggedIn = () => {
     // Check for authentication token in cookies
-    const authToken = document.cookie.includes('authToken');
+    const authToken = document.cookie.includes("authToken");
     return !!authToken;
   };
 
@@ -44,11 +44,11 @@ const ProjectDetail = () => {
         if (response.data.success) {
           setProject(response.data.project);
         } else {
-          console.error('Error fetching project:', response.data.message);
+          console.error("Error fetching project:", response.data.message);
         }
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching project:', error);
+        console.error("Error fetching project:", error);
         setLoading(false);
       }
     };
@@ -68,7 +68,7 @@ const ProjectDetail = () => {
 
       try {
         const userResponse = await axios.post(
-          'http://localhost:3001/api/info/user',
+          "http://localhost:3001/api/info/user",
           { userId: project.userId }
         );
         setProjectOwner(userResponse.data);
@@ -123,7 +123,7 @@ const ProjectDetail = () => {
   const handleInvalidUrl = useCallback(() => {
     if (project && project.basicInfo) {
       const projectNameInUrl = project.basicInfo.projectName
-        .replace(/\s+/g, '-')
+        .replace(/\s+/g, "-")
         .toLowerCase();
       const correctedUrl = `/project/${projectNameInUrl}-pid-${project._id}`;
       navigate(correctedUrl);
@@ -164,7 +164,7 @@ const ProjectDetail = () => {
         const projectDetails = await contract.getProjectDetails(pId);
         setAmountFundedETH(ethers.utils.formatEther(projectDetails[4]));
       } catch (error) {
-        console.error('Error fetching amount funded:', error);
+        console.error("Error fetching amount funded:", error);
       }
     };
 
@@ -174,13 +174,13 @@ const ProjectDetail = () => {
   const fundProject = async () => {
     // Check if the user is logged in
     if (!isLoggedIn()) {
-      alert('Please log in to fund the project.');
+      alert("Please log in to fund the project.");
       const returnUrl = window.location.pathname;
       navigate(`/login?returnUrl=${encodeURIComponent(returnUrl)}`);
       return;
     }
 
-    const ethAmount = prompt('Enter the amount in ETH you want to fund:');
+    const ethAmount = prompt("Enter the amount in ETH you want to fund:");
     if (ethAmount) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -192,11 +192,11 @@ const ProjectDetail = () => {
           value: ethers.utils.parseEther(ethAmount),
         });
         await listenForTransactionMine(transactionResponse, provider);
-        alert('Successfully funded the project!');
+        alert("Successfully funded the project!");
         setIsFunding(false);
       } catch (error) {
-        console.error('Error funding the project:', error);
-        alert('An error occurred while funding the project.');
+        console.error("Error funding the project:", error);
+        alert("An error occurred while funding the project.");
         setIsFunding(false);
       }
     }
@@ -205,13 +205,13 @@ const ProjectDetail = () => {
   const donateProject = async () => {
     // Check if the user is logged in
     if (!isLoggedIn()) {
-      alert('Please log in to donate to the project.');
+      alert("Please log in to donate to the project.");
       const returnUrl = window.location.pathname;
       navigate(`/login?returnUrl=${encodeURIComponent(returnUrl)}`);
       return;
     }
 
-    const ethAmount = prompt('Enter the amount in ETH you want to donate:');
+    const ethAmount = prompt("Enter the amount in ETH you want to donate:");
     if (ethAmount) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -223,11 +223,11 @@ const ProjectDetail = () => {
           value: ethers.utils.parseEther(ethAmount),
         });
         await listenForTransactionMine(transactionResponse, provider);
-        alert('Successfully donated to the project!');
+        alert("Successfully donated to the project!");
         setIsDonating(false);
       } catch (error) {
-        console.error('Error donating to the project:', error);
-        alert('An error occurred while donating to the project.');
+        console.error("Error donating to the project:", error);
+        alert("An error occurred while donating to the project.");
         setIsDonating(false);
       }
     }
@@ -237,12 +237,12 @@ const ProjectDetail = () => {
     try {
       const receipt = await transactionResponse.wait();
       if (receipt.status === 1) {
-        console.log('Transaction successful!');
+        console.log("Transaction successful!");
       } else {
-        console.error('Transaction failed!');
+        console.error("Transaction failed!");
       }
     } catch (error) {
-      console.error('Error during transaction mining:', error);
+      console.error("Error during transaction mining:", error);
     }
   };
 
@@ -264,24 +264,24 @@ const ProjectDetail = () => {
   return (
     <div className={styles.projectDetailContainer}>
       <Helmet>
-        <meta charSet='utf-8' />
+        <meta charSet="utf-8" />
         <title>{project.basicInfo.projectName} - AGRICROWD</title>
-        <link rel='canonical' href={canonicalUrl} />
+        <link rel="canonical" href={canonicalUrl} />
       </Helmet>
 
       <nav className={styles.breadcrumb}>
-        <Link to='/'>Home</Link>
-        <Link to='/projects'>Projects</Link>
+        <Link to="/">Home</Link>
+        <Link to="/projects">Projects</Link>
         <Link
           to={`/projects/${project.category.mainCategory.categoryName
-            .replace(/\s+/g, '-')
+            .replace(/\s+/g, "-")
             .toLowerCase()}-cid-${project.category.mainCategory._id}`}
         >
           {project.category.mainCategory.categoryName}
         </Link>
         <Link
           to={`/projects/${project.category.subCategory.subCategoryName
-            .replace(/\s+/g, '-')
+            .replace(/\s+/g, "-")
             .toLowerCase()}-cid-${project.category.subCategory._id}`}
         >
           {project.category.subCategory.subCategoryName}
@@ -291,7 +291,7 @@ const ProjectDetail = () => {
         <div className={styles.sliderContainer}>
           <div className={styles.slider}>
             {project.basicInfo.projectImages &&
-              project.basicInfo.projectImages.length > 0 ? (
+            project.basicInfo.projectImages.length > 0 ? (
               <div className={styles.mainImageContainer}>
                 <img
                   className={styles.mainImage}
@@ -312,7 +312,7 @@ const ProjectDetail = () => {
 
           <div>
             <div className={styles.projectSubInfo}>
-              <h3 style={{ marginBottom: '0.5rem' }}>Description</h3>
+              <h3 style={{ marginBottom: "0.5rem" }}>Description</h3>
               <div
                 dangerouslySetInnerHTML={{
                   __html: project.basicInfo.projectDescription,
@@ -327,40 +327,40 @@ const ProjectDetail = () => {
             <h3>{project.basicInfo.projectName}</h3>
 
             <div className={styles.tagsContainer}>
-              <div style={{ display: 'flex', gap: '.5rem' }}>
+              <div style={{ display: "flex", gap: ".5rem" }}>
                 <div className={styles.mainTag}>
-                  <span style={{ marginRight: '0.4rem' }}>🏷️</span>
+                  <span style={{ marginRight: "0.4rem" }}>🏷️</span>
                   {project.category.mainCategory.categoryName}
                 </div>
                 <div className={styles.subTag}>
-                  <span style={{ marginRight: '0.4rem' }}>🏷️</span>
+                  <span style={{ marginRight: "0.4rem" }}>🏷️</span>
                   {project.category.subCategory.subCategoryName}
                 </div>
               </div>
               <div className={styles.tag}>
-                <span>📍</span>{' '}
-                <span style={{ fontWeight: '500' }}>Country:</span>{' '}
+                <span>📍</span>{" "}
+                <span style={{ fontWeight: "500" }}>Country:</span>{" "}
                 {project.basicInfo.country}
               </div>
               {project.basicInfo.location && (
                 <div className={styles.tag}>
-                  <span>🌐</span> Location: Lat:{' '}
-                  {project.basicInfo.location.lat}, Lng:{' '}
+                  <span>🌐</span> Location: Lat:{" "}
+                  {project.basicInfo.location.lat}, Lng:{" "}
                   {project.basicInfo.location.lng}
                 </div>
               )}
             </div>
             <div className={styles.infoContainer}>
               <p>
-                <span>💌</span>{' '}
-                <span style={{ fontWeight: '500' }}>Target Amount:</span>{' '}
-                {project.basicInfo.targetAmount} ETH (1 ETH = $5000)
+                <span>💌</span>{" "}
+                <span style={{ fontWeight: "500" }}>Target Amount:</span>{" "}
+                {project.basicInfo.targetAmount} ETH
               </p>
             </div>
             <p className={styles.remainingTime}>
               <div>
-                <span style={{ marginRight: '0.5rem' }}>⏱️</span>
-                <span style={{ fontWeight: '500' }}>
+                <span style={{ marginRight: "0.5rem" }}>⏱️</span>
+                <span style={{ fontWeight: "500" }}>
                   Investment Remaining Time:
                 </span>
               </div>
@@ -371,60 +371,64 @@ const ProjectDetail = () => {
               )}
             </p>
 
-            {/* Progress bar */}
-            {/* <div className='progress-bar-container'>
-            <div className='progress-bar'>
-              <div
-                className='progress-bar-filled'
-                style={{ width: `${calculateFundingProgress()}%` }}
-              >
-                {calculateFundingProgress().toFixed(1)}%
-              </div>
+            {/* Funded amount */}
+            <div className={styles.fundedAmount}>
+              <span style={{ fontWeight: "500" }}>
+                Amount Funded: {amountFundedETH} ETH
+              </span>
+              {progress >= 100 && (
+                <p style={{ marginTop: "0.5rem", color: "red" }}>
+                  This project has reached its funding goal. You can no longer
+                  send funds to this project, but you can still make donations.
+                </p>
+              )}
             </div>
-          </div> */}
 
+            {/* Progress bar */}
             <ProgressBar progress={progress} />
 
-            <div style={{ display: 'flex', gap: '1rem', margin: '0 auto' }}>
+            <div style={{ display: "flex", gap: "1rem", margin: "0 auto" }}>
               {/* Disable the "Fund" button if the project is fully funded */}
-              <button
-                onClick={fundProject}
-                className={styles.button}
-                style={{
-                  backgroundColor: '#37b24d',
-                }}
-                disabled={isFunding || calculateFundingProgress() >= 100}
-              >
-                {isFunding ? 'Funding...' : 'Fund'}
-              </button>
+              {progress < 100 && (
+                <button
+                  onClick={fundProject}
+                  className={styles.button}
+                  style={{
+                    backgroundColor: "#37b24d",
+                  }}
+                  disabled={isFunding}
+                >
+                  {isFunding ? "Funding..." : "Fund"}
+                </button>
+              )}
               <button
                 onClick={donateProject}
                 className={styles.button}
                 style={{
-                  basckgroundColor: '#fff',
-                  color: '#333',
+                  backgroundColor: "#fff",
+                  color: "#333",
                 }}
                 disabled={isDonating}
               >
-                {isDonating ? 'Donating...' : 'Donate'}
+                {isDonating ? "Donating..." : "Donate"}
               </button>
             </div>
           </div>
           <div className={styles.projectSubInfo}>
             {projectOwner && (
               <>
-                <h3 style={{ marginBottom: '0.5rem', fontWeight: '700' }}>
+                <h3 style={{ marginBottom: "0.5rem", fontWeight: "700" }}>
                   Project Owner
                 </h3>
-                <p style={{ marginBottom: '.5rem', fontWeight: '600' }}>
+                <p style={{ marginBottom: ".5rem", fontWeight: "600" }}>
                   {projectOwner.data.name} {projectOwner.data.surname}
                 </p>
-                <p style={{ marginBottom: '.5rem' }}>
-                  <span style={{ fontWeight: '600' }}>Phone:</span>{' '}
+                <p style={{ marginBottom: ".5rem" }}>
+                  <span style={{ fontWeight: "600" }}>Phone:</span>{" "}
                   {projectOwner.data.phone}
                 </p>
                 <p>
-                  <span style={{ fontWeight: '600' }}>Email:</span>{' '}
+                  <span style={{ fontWeight: "600" }}>Email:</span>{" "}
                   {projectOwner.data.email}
                 </p>
               </>
