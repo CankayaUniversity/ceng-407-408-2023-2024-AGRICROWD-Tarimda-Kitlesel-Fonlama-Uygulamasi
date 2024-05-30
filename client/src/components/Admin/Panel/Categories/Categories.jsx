@@ -8,12 +8,15 @@ function Categories() {
   const [subCategories, setSubCategories] = useState([]);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [editCategory, setEditCategory] = useState({ id: null, name: '' });
+  const [editSubCategory, setEditSubCategory] = useState({ id: null, name: '' });
   const [newSubCategoryName, setNewSubCategoryName] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [requiresLocation, setRequiresLocation] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+
+  //Categories CRUD operations
   const fetchCategories = useCallback(async () => {
     try {
       const response = await axios.get(
@@ -33,40 +36,6 @@ function Categories() {
       setCategories([]);
     }
   }, []);
-
-  const fetchSubCategories = async (categoryId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3001/api/categories/fetch-subcategories`,
-        {
-          params: {
-            categoryId: categoryId,
-          },
-        }
-      );
-      if (response.data.success) {
-        setSubCategories((prevState) => ({
-          ...prevState,
-          [categoryId]: response.data.subCategories,
-        }));
-      } else {
-        setSubCategories((prevState) => ({
-          ...prevState,
-          [categoryId]: [],
-        }));
-      }
-    } catch (error) {
-      console.error('Error fetching subcategories:', error);
-      setSubCategories((prevState) => ({
-        ...prevState,
-        [categoryId]: [],
-      }));
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
 
   const handleAddCategory = async (e) => {
     e.preventDefault();
@@ -98,7 +67,12 @@ function Categories() {
     }
   };
 
-  const handleDeleteCategory = async (categoryId) => {
+  const handleDeleteCategory = async (categoryId, categoryName) => {
+    const userConfirmation = prompt(`Type the name of the category "${categoryName}" to confirm deletion along with all its subcategories.`);
+    if (userConfirmation !== categoryName) {
+      alert('Category name does not match. Deletion cancelled.');
+      return;
+    }
     try {
       const response = await axios.delete(
         `http://localhost:3001/api/categories/delete-main-category/${categoryId}`,
@@ -109,7 +83,7 @@ function Categories() {
       if (response.data.success) {
         setSuccessMessage(response.data.message);
         setTimeout(() => setSuccessMessage(''), 10000);
-        fetchCategories();
+        fetchSubCategories();
       } else {
         setErrorMessage(response.data.message);
       }
@@ -143,6 +117,37 @@ function Categories() {
     }
   };
 
+  //subcategories CRUD operations
+  const fetchSubCategories = async (categoryId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/api/categories/fetch-subcategories`,
+        {
+          params: {
+            categoryId: categoryId,
+          },
+        }
+      );
+      if (response.data.success) {
+        setSubCategories((prevState) => ({
+          ...prevState,
+          [categoryId]: response.data.subCategories,
+        }));
+      } else {
+        setSubCategories((prevState) => ({
+          ...prevState,
+          [categoryId]: [],
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+      setSubCategories((prevState) => ({
+        ...prevState,
+        [categoryId]: [],
+      }));
+    }
+  };
+
   const handleAddSubCategory = async (e) => {
     e.preventDefault();
     try {
@@ -172,10 +177,62 @@ function Categories() {
     }
   };
 
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    setEditCategory({ id: null, name: '' });
+  const handleEditSubCategory = async (subCategoryId) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3001/api/categories/edit-sub-category`,
+        {
+          subCategoryId,
+          subCategoryName: editSubCategory.name,
+        }
+      );
+      if (response.data.success) {
+        setSuccessMessage(response.data.message);
+        setTimeout(() => setSuccessMessage(''), 10000);
+        fetchCategories();
+        setEditSubCategory({ id: null, name: '' });
+      } else {
+        setErrorMessage(response.data.message);
+        setTimeout(() => setErrorMessage(''), 10000);
+      }
+    } catch (error) {
+      console.error('Error editing sub-category:', error);
+      if (error.response && error.response.data && error.response.data.error) {
+        setErrorMessage(error.response.data.error);
+      } else {
+        setErrorMessage('Failed to edit sub-category. Please try again.');
+      }
+      setTimeout(() => setErrorMessage(''), 10000);
+    }
   };
+
+  const handleDeleteSubCategory = async (subCategoryId,subCategoryName) => {
+    const userConfirmation = prompt(`Type the name of the category "${subCategoryName}" to confirm deletion along with all its subcategories.`);
+    if (userConfirmation !== subCategoryName) {
+      alert('Sub-category name does not match. Deletion cancelled.');
+      return;
+    }
+    try {
+      const response = await axios.delete(
+        `http://localhost:3001/api/categories/delete-sub-category/${subCategoryId}`
+      );
+      if (response.data.success) {
+        setSuccessMessage(response.data.message);
+        setTimeout(() => setSuccessMessage(''), 10000);
+        fetchCategories();
+      } else {
+        setErrorMessage(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error deleting category:', error);
+    }
+  };
+
+  //useEFfect's
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
 
   return (
     <div className={styles.pageLayout}>
@@ -254,7 +311,6 @@ function Categories() {
                   className={styles.iconContainer}
                   onClick={() => {
                     handleEditCategory(category._id);
-                    window.location.reload();
                   }}
                 >
                   <img
@@ -289,7 +345,7 @@ function Categories() {
                 </div>
                 <div
                   className={styles.iconContainer}
-                  onClick={() => handleDeleteCategory(category._id)}
+                  onClick={() => handleDeleteCategory(category._id,category.categoryName)}
                 >
                   <span style={{ fontSize: '1.5rem' }}>✖</span>
                 </div>
@@ -332,13 +388,67 @@ function Categories() {
             </div>
             <div className={styles.subCategoriesContainer}>
               {subCategories[category._id] &&
-              subCategories[category._id].length > 0 ? (
+                subCategories[category._id].length > 0 ? (
                 subCategories[category._id].map((subCategory) => (
                   <div
                     key={subCategory._id}
                     className={styles.subCategoryContainer}
                   >
-                    {subCategory.subCategoryName}
+                    {editSubCategory.id === subCategory._id ? (
+                      <div className={styles.editSubCategoryContainer}>
+                        <input
+                          type='text'
+                          value={editSubCategory.name}
+                          onChange={(e) =>
+                            setEditSubCategory({
+                              ...editSubCategory,
+                              name: e.target.value,
+                            })
+                          }
+                          placeholder='New Subcategory Name'
+                        />
+                        <div
+                          className={styles.iconContainer}
+                          onClick={() => {
+                            handleEditSubCategory(subCategory._id);
+                          }}
+                        >
+                          <img
+                            src='/images/checkmark-outline.svg'
+                            alt='Save Button'
+                            className={styles.icon}
+                            style={{ marginLeft: '0.25rem' }}
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className={styles.subCategoryNameDeleteContainer}>
+                        <span>{subCategory.subCategoryName}</span>
+                        <div className={styles.iconContainer}>
+                          <img
+                            src='/images/settings-outline.svg'
+                            alt='Edit Button'
+                            className={styles.icon}
+                            onClick={() =>
+                              setEditSubCategory((prevEditSubCategory) =>
+                                prevEditSubCategory.id === subCategory._id
+                                  ? { id: null, name: '' }
+                                  : {
+                                    id: subCategory._id,
+                                    name: subCategory.subCategoryName,
+                                  }
+                              )
+                            }
+                          />
+                        </div>
+                        <div
+                          className={styles.iconContainer}
+                          onClick={() => handleDeleteSubCategory(subCategory._id,subCategory.subCategoryName)}
+                        >
+                          <span style={{ fontSize: '1.5rem' }}>✖</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))
               ) : (
