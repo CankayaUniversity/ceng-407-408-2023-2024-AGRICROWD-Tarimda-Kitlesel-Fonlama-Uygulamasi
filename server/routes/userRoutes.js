@@ -37,19 +37,25 @@ router.put('/update-info', async (req, res) => {
 router.put('/change-password', async (req, res) => {
     const { oldPassword, newPassword } = req.body;
     const authToken = req.headers.authorization;
+
     try {
         const tokenResponse = await axios.post('http://localhost:3001/api/auth', {}, {
             headers: { Authorization: authToken }
         });
         if (tokenResponse.data.success) {
             const userId = tokenResponse.data.user._id;
-            const user = await UserModel.findById(userId); // ObjectId doğru kullanımı
-            if (!user || !(await bcrypt.compare(oldPassword, user.password))) {
+            const user = await UserModel.findById(userId);
+            if (!user) {
+                return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+            }
+            const isMatch = await bcrypt.compare(oldPassword, user.password);
+            if (!isMatch) {
                 return res.status(401).json({ errors: ['Geçersiz kullanıcı adı veya şifre.'] });
             }
             const hashedNewPassword = await bcrypt.hash(newPassword, 10);
             user.password = hashedNewPassword;
             await user.save();
+
             return res.json({ success: true, message: 'Şifre başarıyla güncellendi.' });
         } else {
             return res.status(401).json({ errors: ['Oturum bilgileri geçersiz.'] });

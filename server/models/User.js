@@ -19,7 +19,7 @@ const UserTable = new mongoose.Schema({
     },
     gender: {
         type: String,
-        enum: ['Erkek', 'Kadın', 'Belirtmek İstemiyorum'],
+        enum: ['Male', 'Female', 'Rather not say'],
         required: false,
     },
     city: {
@@ -43,9 +43,9 @@ const UserTable = new mongoose.Schema({
         required: false,
         validate: {
             validator: function(v) {
-                return /\(\+90\)\s\d{3}\s\d{3}\s\d{4}/.test(v);
+                return /^(\+90\s?)?(\d{3}\s?\d{3}\s?\d{4})$/.test(v); 
             },
-            message: props => `${props.value} geçerli bir Türkiye telefon numarası değil! Doğru format: (+90) XXX XXX XXXX`
+            message: props => `${props.value} geçerli bir Türkiye telefon numarası değil! Doğru format: (+90) XXX XXX XXXX veya 05XX XXX XXX`
         },
     },
     email: {
