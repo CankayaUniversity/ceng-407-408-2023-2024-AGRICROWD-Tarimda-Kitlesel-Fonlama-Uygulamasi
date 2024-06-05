@@ -3,8 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const router = express.Router();
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
 
 const Admin = require('../models/Admin');
 const Project = require('../models/ProjectsSchema');
@@ -13,7 +11,7 @@ const Project = require('../models/ProjectsSchema');
 router.post('/login', async (req, res) => {
     const { username, password, recaptchaValue } = req.body;
     try {
-        const recaptchaVerification = await axios.post('http://localhost:3001/api/recaptcha', { recaptchaValue });
+        const recaptchaVerification = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/api/recaptcha`, { recaptchaValue });
         if (!recaptchaVerification.data.success) {
             return res.status(400).json({ errors: ['reCAPTCHA validation failed'] });
         }
@@ -40,7 +38,7 @@ router.put('/change-password', async (req, res) => {
     const { oldPassword, newPassword } = req.body;
     const authToken = req.headers.authorization;
     try {
-        const tokenResponse = await axios.post('http://localhost:3001/api/admin/verify-token', null, {
+        const tokenResponse = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/api/admin/verify-token`, null, {
             headers: { Authorization: authToken }
         });
         if (tokenResponse.data.success) {

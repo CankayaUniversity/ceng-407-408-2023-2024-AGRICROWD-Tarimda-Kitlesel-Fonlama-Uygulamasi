@@ -29,7 +29,7 @@ const ActiveProjects = () => {
       if (authToken) {
         try {
           const authResponse = await axios.post(
-            'http://localhost:3001/api/auth',
+            `${process.env.REACT_APP_BASE_API_URL}/api/auth`,
             {},
             {
               headers: {
@@ -54,7 +54,7 @@ const ActiveProjects = () => {
     const fetchProjects = async (userId) => {
       try {
         const projectResponse = await axios.get(
-          `http://localhost:3001/api/user/projects/fetch-approved-projects?userId=${userId}`
+          `${process.env.REACT_APP_BASE_API_URL}/api/user/projects/fetch-approved-projects?userId=${userId}`
         );
         if (projectResponse.data.length > 0) {
           setProjects(projectResponse.data);

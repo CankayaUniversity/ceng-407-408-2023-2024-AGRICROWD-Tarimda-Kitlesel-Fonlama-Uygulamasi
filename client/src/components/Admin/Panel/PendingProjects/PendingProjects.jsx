@@ -10,20 +10,34 @@ import styles from "./PendingProjects.module.css";
 
 const RenderProjectData = ({ projectData }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [projectImages, setProjectImages] = useState([]);
+  useEffect(() => {
+    const fetchProjectImages = async () => {
+      try {
+        const photoData = await Promise.all(
+          projectData.basicInfo.projectImages.map(async (imageId) => {
+            const response = await axios.get(`${process.env.REACT_APP_BASE_API_URL}/api/photos/${imageId}`);
+            return response.data.photo.url;
+          })
+        );
+        setProjectImages(photoData);
+      } catch (error) {
+        console.error("Error fetching project images:", error);
+      }
+    };
+
+    fetchProjectImages();
+  }, [projectData.basicInfo.projectImages]);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === projectData.basicInfo.projectImages.length - 1
-        ? 0
-        : prevIndex + 1
+      prevIndex === projectImages.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const prevImage = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0
-        ? projectData.basicInfo.projectImages.length - 1
-        : prevIndex - 1
+      prevIndex === 0 ? projectImages.length - 1 : prevIndex - 1
     );
   };
 
@@ -61,13 +75,13 @@ const RenderProjectData = ({ projectData }) => {
           </div>
         </div>
         {projectData.basicInfo.projectImages &&
-        projectData.basicInfo.projectImages.length > 0 ? (
+          projectData.basicInfo.projectImages.length > 0 ? (
           <div className={styles.projectImagesContainer}>
             <h4>Project Photos</h4>
             <div>
               <img
                 className={styles.projectImage}
-                src={`http://localhost:3001/api/photos/${projectData.basicInfo.projectImages[currentImageIndex]}`}
+                src={projectImages[currentImageIndex]}
                 alt={`Project ${currentImageIndex}`}
               />
               <div className={styles.sliderControls}>
@@ -97,15 +111,16 @@ const PendingProjects = () => {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [feedbackMessage, setFeedbackMessage] = useState("");
 
+
   const fetchProjects = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3001/api/admin/projects/pending"
+        `${process.env.REACT_APP_BASE_API_URL}/api/admin/projects/pending`
       );
       const projectsWithUserDetails = await Promise.all(
         response.data.pendingProjects.map(async (project) => {
           const userResponse = await axios.post(
-            "http://localhost:3001/api/info/user",
+            `${process.env.REACT_APP_BASE_API_URL}/api/info/user`,
             { userId: project.userId }
           );
           const userDetails = userResponse.data;
@@ -133,22 +148,22 @@ const PendingProjects = () => {
   const handleApproveProject = async (projectId, fundingGoalETH) => {
     try {
       // Connect to Ethereum blockchain and interact with the smart contract
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, abi, signer);
+      //const provider = new ethers.providers.Web3Provider(window.ethereum);
+      //const signer = provider.getSigner();
+      //const contract = new ethers.Contract(contractAddress, abi, signer);
 
       // Call createProject function in the smart contract
-      const transactionResponse = await contract.createProject(
-        projectId, // MongoDB ObjectId as a parameter
-        ethers.utils.parseEther(fundingGoalETH.toString())
-      );
+      //const transactionResponse = await contract.createProject(
+      //  projectId, // MongoDB ObjectId as a parameter
+      //  ethers.utils.parseEther(fundingGoalETH.toString())
+      //);
 
       // Wait for the transaction to be mined
-      await transactionResponse.wait();
+      //await transactionResponse.wait();
 
       // Once the transaction is successful, proceed with backend approval
       const response = await axios.put(
-        "http://localhost:3001/api/admin/projects/approve",
+        `${process.env.REACT_APP_BASE_API_URL}/api/admin/projects/approve`,
         {
           projectId,
         }
@@ -170,7 +185,7 @@ const PendingProjects = () => {
   const handleRejectProject = async () => {
     try {
       const response = await axios.put(
-        "http://localhost:3001/api/admin/projects/reject",
+        `${process.env.REACT_APP_BASE_API_URL}/api/admin/projects/reject`,
         {
           projectId: selectedProjectId,
           rejectionReason,

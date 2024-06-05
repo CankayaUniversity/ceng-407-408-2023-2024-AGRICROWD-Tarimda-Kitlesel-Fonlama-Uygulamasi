@@ -28,7 +28,7 @@ function Categories() {
     }
     try {
       const response = await axios.get(
-        'http://localhost:3001/api/categories/fetch-main-categories', {
+        `${process.env.REACT_APP_BASE_API_URL}/api/categories/fetch-main-categories`, {
         headers: {
           Authorization: `Bearer ${admToken}`,
           'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ function Categories() {
     }
     try {
       const response = await axios.post(
-        'http://localhost:3001/api/categories/add-new-main-category',
+        `${process.env.REACT_APP_BASE_API_URL}/api/categories/add-new-main-category`,
         {
           categoryName: newCategoryName,
           requiresLocation: requiresLocation,
@@ -107,7 +107,7 @@ function Categories() {
     }
     try {
       const response = await axios.delete(
-        `http://localhost:3001/api/categories/delete-main-category/${categoryId}`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/categories/delete-main-category/${categoryId}`,
         {
           categoryId,
           headers: {
@@ -138,7 +138,7 @@ function Categories() {
     }
     try {
       const response = await axios.put(
-        `http://localhost:3001/api/categories/edit-main-category`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/categories/edit-main-category/`,
         {
           categoryId,
           categoryName: editCategory.name,
@@ -177,7 +177,7 @@ function Categories() {
     }
     try {
       const response = await axios.get(
-        `http://localhost:3001/api/categories/fetch-subcategories`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/categories/fetch-subcategories`,
         {
           params: {
             categoryId: categoryId,
@@ -218,7 +218,7 @@ function Categories() {
     }
     try {
       const response = await axios.post(
-        `http://localhost:3001/api/categories/add-subcategory`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/categories/add-subcategory`,
         {
           mainCategoryId: selectedCategory,
           subCategoryName: newSubCategoryName,
@@ -259,7 +259,7 @@ function Categories() {
     }
     try {
       const response = await axios.put(
-        `http://localhost:3001/api/categories/edit-sub-category`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/categories/edit-sub-category`,
         {
           subCategoryId,
           subCategoryName: editSubCategory.name,
@@ -305,7 +305,7 @@ function Categories() {
     }
     try {
       const response = await axios.delete(
-        `http://localhost:3001/api/categories/delete-sub-category/${subCategoryId}`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/categories/delete-sub-category/${subCategoryId}`,
         {
           headers: {
             Authorization: `Bearer ${admToken}`,

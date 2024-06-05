@@ -43,7 +43,7 @@ function DashboardforActiveProject() {
     const fetchProject = async () => {
       try {
         const projectResponse = await axios.post(
-          `http://localhost:3001/api/projects/fetch-single-project`,
+          `${process.env.REACT_APP_BASE_API_URL}/api/projects/fetch-single-project`,
           { projectId },
           {
             headers: { Authorization: `Bearer ${authToken}` },

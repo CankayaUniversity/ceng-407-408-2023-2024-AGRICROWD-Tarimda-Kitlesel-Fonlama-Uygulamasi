@@ -12,7 +12,7 @@ const verifyAdminToken = async (req,res,next) => {
 
     try {
         const response = await axios.post(
-            'http://localhost:3001/api/admin/verify-token',
+            `${process.env.REACT_APP_BASE_API_URL}/api/admin/verify-token`,
             {},
             {
                 headers: {

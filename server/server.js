@@ -7,11 +7,13 @@ require('dotenv').config();
 
 const app = express();
 app.use(express.json());
-const corsOptions = {
-  origin: 'http://localhost:3000',
-  credentials: true,
-};
-app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
 
 mongoose.connect(process.env.MONGODB_URI, {
 })
@@ -51,7 +53,7 @@ app.use('/api/photos', photosRoutes);
 const projectsRoutes = require('./routes/ProjectRoutes.js');
 app.use('/api/projects', projectsRoutes);
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

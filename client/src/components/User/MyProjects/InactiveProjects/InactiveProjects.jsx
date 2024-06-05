@@ -31,7 +31,7 @@ function InactiveProjects() {
       if (authToken) {
         try {
           const authResponse = await axios.post(
-            'http://localhost:3001/api/auth',
+            `${process.env.REACT_APP_BASE_API_URL}/api/auth`,
             {},
             {
               headers: {
@@ -56,7 +56,7 @@ function InactiveProjects() {
     const fetchProjects = async (userId) => {
       try {
         const projectResponse = await axios.get(
-          `http://localhost:3001/api/user/projects/fetch-inactive-projects?userId=${userId}`,
+          `${process.env.REACT_APP_BASE_API_URL}/api/user/projects/fetch-inactive-projects?userId=${userId}`,
           {
             headers: { Authorization: `Bearer ${authToken}` },
           }

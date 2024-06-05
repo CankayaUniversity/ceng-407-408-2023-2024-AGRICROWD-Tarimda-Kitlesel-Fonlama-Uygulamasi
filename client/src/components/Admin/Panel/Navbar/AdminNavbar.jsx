@@ -54,6 +54,12 @@ function AdminNavBar() {
             >
               Pending Projects
             </NavLink>
+            <NavLink
+              to='/'
+              target='_blank'
+            >
+              Main Page
+            </NavLink>
             <button onClick={handleLogout} className={styles.logout}>
               Logout
             </button>

@@ -30,7 +30,7 @@ const BasicInfoForm = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:3001/api/categories/fetch-main-categories'
+          `${process.env.REACT_APP_BASE_API_URL}/api/categories/fetch-main-categories`
         );
         if (response.data.success) {
           setCategories(response.data.categories);
@@ -48,7 +48,7 @@ const BasicInfoForm = () => {
   const fetchSubCategories = async (categoryId) => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/api/categories/fetch-subcategories`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/categories/fetch-subcategories`,
         {
           params: { categoryId },
         }
@@ -78,7 +78,7 @@ const BasicInfoForm = () => {
     const fetchUserID = async () => {
       try {
         const response = await axios.post(
-          'http://localhost:3001/api/auth',
+          `${process.env.REACT_APP_BASE_API_URL}/api/auth`,
           {},
           {
             headers: {
@@ -180,7 +180,7 @@ const BasicInfoForm = () => {
       });
 
       const uploadResponse = await axios.post(
-        'http://localhost:3001/api/photos/upload',
+        `${process.env.REACT_APP_BASE_API_URL}/api/photos/upload`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },

@@ -13,7 +13,7 @@ router.post(
     const { email, password, recaptchaValue } = req.body;
     try {
       const recaptchaVerification = await axios.post(
-        'http://localhost:3001/api/recaptcha',
+        `${process.env.REACT_APP_BASE_API_URL}/api/recaptcha`,
         { recaptchaValue }
       );
       if (recaptchaVerification.data.success) {

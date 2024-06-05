@@ -38,7 +38,7 @@ const ProjectDetail = () => {
     const fetchProject = async () => {
       try {
         const response = await axios.post(
-          `http://localhost:3001/api/projects/details`,
+          `${process.env.REACT_APP_BASE_API_URL}/api/projects/details`,
           { projectId: pId }
         );
         if (response.data.success) {
@@ -68,7 +68,7 @@ const ProjectDetail = () => {
 
       try {
         const userResponse = await axios.post(
-          "http://localhost:3001/api/info/user",
+          `${process.env.REACT_APP_BASE_API_URL}/api/info/user`,
           { userId: project.userId }
         );
         setProjectOwner(userResponse.data);
@@ -295,7 +295,7 @@ const ProjectDetail = () => {
               <div className={styles.mainImageContainer}>
                 <img
                   className={styles.mainImage}
-                  src={`http://localhost:3001/api/photos/${project.basicInfo.projectImages[currentImageIndex]}`}
+                  src={`${process.env.REACT_APP_BASE_API_URL}/api/photos/${project.basicInfo.projectImages[currentImageIndex]}`}
                   alt={`Project ${currentImageIndex}`}
                 />
                 <button className={styles.prevButton} onClick={prevImage}>

@@ -51,7 +51,7 @@ router.post('/fetch-single-project', async (req, res) => {
     }
 
     try {
-        const tokenResponse = await axios.post('http://localhost:3001/api/auth', {}, {
+        const tokenResponse = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/api/auth`, {}, {
             headers: { Authorization: authToken }
         });
         if (tokenResponse.data.success) {

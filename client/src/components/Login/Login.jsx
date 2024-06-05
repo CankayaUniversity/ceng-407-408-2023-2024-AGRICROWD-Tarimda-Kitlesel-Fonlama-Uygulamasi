@@ -36,7 +36,7 @@ function Login() {
       console.log('reCAPTCHA validation success');
       axios
         .post(
-          'http://localhost:3001/api/login',
+          `${process.env.REACT_APP_BASE_API_URL}/api/login`,
           { email, password, recaptchaValue },
           { withCredentials: true }
         )

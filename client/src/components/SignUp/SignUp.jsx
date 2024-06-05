@@ -53,7 +53,7 @@ function Signup() {
     }
 
     axios
-      .post('http://localhost:3001/api/register', {
+      .post(`${process.env.REACT_APP_BASE_API_URL}/api/register`, {
         name,
         email,
         password,

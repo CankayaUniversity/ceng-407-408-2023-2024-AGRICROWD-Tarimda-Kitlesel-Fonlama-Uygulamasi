@@ -23,6 +23,7 @@ const ProjectSchema = new mongoose.Schema({
       projectImages: [
         {
           type: mongoose.Schema.Types.ObjectId,
+          ref: 'Photo',
           required: true
         }
       ],

@@ -13,7 +13,7 @@ router.post('/',
     async (req, res) => {
         const { name, email, password, recaptchaValue } = req.body;
         try {
-            const recaptchaVerification = await axios.post('http://localhost:3001/api/recaptcha', { recaptchaValue });
+            const recaptchaVerification = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/api/recaptcha`, { recaptchaValue });
             if (recaptchaVerification.data.success) {
                 const existingUser = await UserModel.findOne({ email: email });
                 if (existingUser) {

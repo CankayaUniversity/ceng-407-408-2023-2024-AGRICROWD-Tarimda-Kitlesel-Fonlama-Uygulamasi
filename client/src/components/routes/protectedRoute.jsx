@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children }) => {
             try {
                 if (authTokenFromCookie) {
                     const response = await axios.post(
-                        'http://localhost:3001/api/auth',
+                        `${process.env.REACT_APP_BASE_API_URL}/api/auth`,
                         {},
                         {
                             headers: {
