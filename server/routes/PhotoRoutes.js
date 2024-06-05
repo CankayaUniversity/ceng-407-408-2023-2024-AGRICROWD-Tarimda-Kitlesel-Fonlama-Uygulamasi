@@ -1,19 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const { Storage } = require('@google-cloud/storage');
+const multer = require('multer');
+const path = require('path');
 const Photo = require('../models/PhotoModel');
 
 const storage = new Storage({
   projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
-  keyFilename: './keys/bucketKey.json' // Servis anahtarınıza göre değiştirin
+  keyFilename: './keys/bucketKey.json'
 });
 const bucketName = 'agricrowd_storage';
 const bucket = storage.bucket(bucketName);
 
-router.post('/upload', async (req, res) => {
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024 // Max file size: 10MB
+  }
+});
+
+router.post('/upload', upload.array('photos', 10), async (req, res) => {
   try {
     const files = req.files;
-    console.log("fotograflarin durumu: ",files);
 
     if (!files || files.length === 0) {
       return res.status(400).json({ message: 'Hiçbir dosya yüklenmedi.' });
@@ -31,12 +39,12 @@ router.post('/upload', async (req, res) => {
 
       blobStream.on('error', (err) => {
         console.error('Error uploading photo:', err);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
       });
 
       blobStream.on('finish', async () => {
         const photoUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
-        
+
         const savedPhoto = await Photo.create({ url: photoUrl });
         savedPhotos.push(savedPhoto);
 
@@ -52,6 +60,9 @@ router.post('/upload', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+module.exports = router;
+
 
 // Fotoğrafı almak için endpoint
 router.get('/:photoId', async (req, res) => {

@@ -183,6 +183,9 @@ const PendingProjects = () => {
   };
 
   const handleRejectProject = async () => {
+    if (!window.confirm("Are you sure you want to reject this project?")) {
+      return;
+    }
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_BASE_API_URL}/api/admin/projects/reject`,

@@ -15,6 +15,7 @@ const ProjectDetail = () => {
   const { projectNameandId } = useParams();
   const [encodedProjectName, pId] = projectNameandId.split("-pid-");
   const [project, setProject] = useState(null);
+  const [photoUrls, setPhotoUrls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [remainingTime, setRemainingTime] = useState(null);
@@ -34,6 +35,23 @@ const ProjectDetail = () => {
     return !!authToken;
   };
 
+  const fetchPhotoUrl = async (photoId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_API_URL}/api/photos/${photoId}`
+      );
+      if (response.data.success) {
+        return response.data.url;
+      } else {
+        console.error("Error fetching photo:", response.data.message);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching photo:", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const fetchProject = async () => {
       try {
@@ -42,7 +60,15 @@ const ProjectDetail = () => {
           { projectId: pId }
         );
         if (response.data.success) {
-          setProject(response.data.project);
+          const projectData = response.data.project;
+
+          const photoUrls = await Promise.all(
+            projectData.basicInfo.projectImages.map((photoId) =>
+              fetchPhotoUrl(photoId)
+            )
+          );
+          setPhotoUrls(photoUrls);
+          setProject(projectData);
         } else {
           console.error("Error fetching project:", response.data.message);
         }
@@ -295,7 +321,7 @@ const ProjectDetail = () => {
               <div className={styles.mainImageContainer}>
                 <img
                   className={styles.mainImage}
-                  src={`${process.env.REACT_APP_BASE_API_URL}/api/photos/${project.basicInfo.projectImages[currentImageIndex]}`}
+                  src={photoUrls[currentImageIndex]}
                   alt={`Project ${currentImageIndex}`}
                 />
                 <button className={styles.prevButton} onClick={prevImage}>
