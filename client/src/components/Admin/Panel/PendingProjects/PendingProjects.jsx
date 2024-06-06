@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { ethers } from "../../../Contracts/ethers-5.7.esm.min.js"; // Import ethers.js for interacting with the smart contract
+import { ethers } from "../../../Contracts/ethers-5.7.esm.min.js";
 import {
   abi,
   contractAddress,
-} from "../../../Contracts/smartContractConstants.js"; // Import the smart contract ABI and address
+} from "../../../Contracts/smartContractConstants.js";
 import { Helmet } from "react-helmet-async";
 import styles from "./PendingProjects.module.css";
 
@@ -130,23 +130,26 @@ const PendingProjects = () => {
     return () => clearTimeout(timer);
   }, [feedbackMessage]);
 
-  const handleApproveProject = async (projectId, fundingGoalETH) => {
+  const handleApproveProject = async (
+    projectId,
+    projectName,
+    fundingGoalETH,
+    rewardPercentage
+  ) => {
     try {
-      // Connect to Ethereum blockchain and interact with the smart contract
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(contractAddress, abi, signer);
 
-      // Call createProject function in the smart contract
       const transactionResponse = await contract.createProject(
-        projectId, // MongoDB ObjectId as a parameter
-        ethers.utils.parseEther(fundingGoalETH.toString())
+        projectId,
+        projectName,
+        ethers.utils.parseEther(fundingGoalETH.toString()),
+        rewardPercentage
       );
 
-      // Wait for the transaction to be mined
       await transactionResponse.wait();
 
-      // Once the transaction is successful, proceed with backend approval
       const response = await axios.put(
         "http://localhost:3001/api/admin/projects/approve",
         {
@@ -156,7 +159,7 @@ const PendingProjects = () => {
 
       if (response.data.success) {
         setSelectedProjectId(null);
-        setFeedbackMessage(response.data.message); // success message !
+        setFeedbackMessage(response.data.message);
         fetchProjects();
       } else {
         setFeedbackMessage("Error approving project. Please try again later.");
@@ -245,7 +248,9 @@ const PendingProjects = () => {
                           onClick={() =>
                             handleApproveProject(
                               project._id,
-                              project.basicInfo.targetAmount
+                              project.basicInfo.projectName,
+                              project.basicInfo.targetAmount,
+                              project.basicInfo.rewardPercentage
                             )
                           }
                         >
