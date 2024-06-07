@@ -383,6 +383,12 @@ const ProjectDetail = () => {
                 {project.basicInfo.targetAmount} ETH
               </p>
             </div>
+            <div className={styles.infoContainer}>
+              <p>
+                <span style={{ fontWeight: "500" }}>Reward Percentage:</span>{" "}
+                {project.basicInfo.rewardPercentage} %
+              </p>
+            </div>
             <p className={styles.remainingTime}>
               <div>
                 <span style={{ marginRight: "0.5rem" }}>⏱️</span>
@@ -402,6 +408,10 @@ const ProjectDetail = () => {
               <span style={{ fontWeight: "500" }}>
                 Amount Funded: {amountFundedETH} ETH
               </span>
+              <p style={{ marginTop: "0.5rem", color: "green" }}>
+                (Our platform takes %5 of the funds as a commission. But we
+                don't take any commission from the donations.)
+              </p>
               {progress >= 100 && (
                 <p style={{ marginTop: "0.5rem", color: "red" }}>
                   This project has reached its funding goal. You can no longer

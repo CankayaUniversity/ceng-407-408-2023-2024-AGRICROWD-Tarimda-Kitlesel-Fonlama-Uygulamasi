@@ -28,6 +28,12 @@ export const abi = [
       },
       {
         indexed: false,
+        internalType: "string",
+        name: "projectName",
+        type: "string",
+      },
+      {
+        indexed: false,
         internalType: "uint256",
         name: "fundingGoalUSD",
         type: "uint256",
@@ -36,6 +42,12 @@ export const abi = [
         indexed: false,
         internalType: "uint256",
         name: "fundingGoalETH",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "rewardPercentage",
         type: "uint256",
       },
     ],
@@ -132,8 +144,18 @@ export const abi = [
         type: "string",
       },
       {
+        internalType: "string",
+        name: "_projectName",
+        type: "string",
+      },
+      {
         internalType: "uint256",
         name: "_fundingGoalETH",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_rewardPercentage",
         type: "uint256",
       },
     ],
@@ -219,6 +241,40 @@ export const abi = [
         internalType: "uint256[]",
         name: "",
         type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "investor",
+        type: "address",
+      },
+    ],
+    name: "getInvestmentsByAddress",
+    outputs: [
+      {
+        internalType: "string[]",
+        name: "",
+        type: "string[]",
+      },
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+      {
+        internalType: "string[]",
+        name: "",
+        type: "string[]",
       },
     ],
     stateMutability: "view",
@@ -394,6 +450,11 @@ export const abi = [
         type: "address",
       },
       {
+        internalType: "string",
+        name: "projectName",
+        type: "string",
+      },
+      {
         internalType: "uint256",
         name: "fundingGoalUSD",
         type: "uint256",
@@ -421,6 +482,11 @@ export const abi = [
       {
         internalType: "uint256",
         name: "amountDonatedETH",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "rewardPercentage",
         type: "uint256",
       },
     ],

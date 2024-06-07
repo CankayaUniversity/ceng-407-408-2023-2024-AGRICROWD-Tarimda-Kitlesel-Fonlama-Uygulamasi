@@ -16,7 +16,9 @@ const RenderProjectData = ({ projectData }) => {
       try {
         const photoData = await Promise.all(
           projectData.basicInfo.projectImages.map(async (imageId) => {
-            const response = await axios.get(`${process.env.REACT_APP_BASE_API_URL}/api/photos/${imageId}`);
+            const response = await axios.get(
+              `${process.env.REACT_APP_BASE_API_URL}/api/photos/${imageId}`
+            );
             return response.data.photo.url;
           })
         );
@@ -75,7 +77,7 @@ const RenderProjectData = ({ projectData }) => {
           </div>
         </div>
         {projectData.basicInfo.projectImages &&
-          projectData.basicInfo.projectImages.length > 0 ? (
+        projectData.basicInfo.projectImages.length > 0 ? (
           <div className={styles.projectImagesContainer}>
             <h4>Project Photos</h4>
             <div>
@@ -111,7 +113,6 @@ const PendingProjects = () => {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [feedbackMessage, setFeedbackMessage] = useState("");
 
-
   const fetchProjects = async () => {
     try {
       const response = await axios.get(
@@ -145,23 +146,26 @@ const PendingProjects = () => {
     return () => clearTimeout(timer);
   }, [feedbackMessage]);
 
-  const handleApproveProject = async (projectId, fundingGoalETH) => {
+  const handleApproveProject = async (
+    projectId,
+    projectName,
+    fundingGoalETH,
+    rewardPercentage
+  ) => {
     try {
-      // Connect to Ethereum blockchain and interact with the smart contract
-      //const provider = new ethers.providers.Web3Provider(window.ethereum);
-      //const signer = provider.getSigner();
-      //const contract = new ethers.Contract(contractAddress, abi, signer);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, abi, signer);
 
-      // Call createProject function in the smart contract
-      //const transactionResponse = await contract.createProject(
-      //  projectId, // MongoDB ObjectId as a parameter
-      //  ethers.utils.parseEther(fundingGoalETH.toString())
-      //);
+      const transactionResponse = await contract.createProject(
+        projectId,
+        projectName,
+        ethers.utils.parseEther(fundingGoalETH.toString()),
+        rewardPercentage
+      );
 
-      // Wait for the transaction to be mined
-      //await transactionResponse.wait();
+      await transactionResponse.wait();
 
-      // Once the transaction is successful, proceed with backend approval
       const response = await axios.put(
         `${process.env.REACT_APP_BASE_API_URL}/api/admin/projects/approve`,
         {
@@ -171,7 +175,7 @@ const PendingProjects = () => {
 
       if (response.data.success) {
         setSelectedProjectId(null);
-        setFeedbackMessage(response.data.message); // success message !
+        setFeedbackMessage(response.data.message);
         fetchProjects();
       } else {
         setFeedbackMessage("Error approving project. Please try again later.");
@@ -263,7 +267,9 @@ const PendingProjects = () => {
                           onClick={() =>
                             handleApproveProject(
                               project._id,
-                              project.basicInfo.targetAmount
+                              project.basicInfo.projectName,
+                              project.basicInfo.targetAmount,
+                              project.basicInfo.rewardPercentage
                             )
                           }
                         >
