@@ -103,6 +103,20 @@ function AdminLogin() {
         >
           Admin Panel
         </p>
+        <a
+          href='https://agricrowd-server.oa.r.appspot.com/api-docs/'
+          target='_blank'
+          rel='noopener noreferrer'
+          style={{
+            color: 'blue', 
+            textDecoration: 'underline', 
+            fontSize: '1.2rem', 
+            marginTop: '1rem', 
+            display: 'block' 
+          }}
+        >
+          API Documentation
+        </a>
       </div>
 
       <div className={styles.rightContainer}>

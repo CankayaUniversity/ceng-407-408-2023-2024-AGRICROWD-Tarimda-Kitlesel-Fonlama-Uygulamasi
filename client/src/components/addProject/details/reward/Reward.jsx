@@ -1,34 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import Web3 from 'web3';
 
 import styles from './Reward.module.css';
 
 const Reward = () => {
   const [percentage, setPercentage] = useState('');
+  const [walletAddress, setWalletAddress] = useState('');
   const [isRewardCompleted, setIsRewardCompleted] = useState(
     localStorage.getItem('isRewardCompleted') === 'true'
   );
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    if(isRewardCompleted){
+  useEffect(() => {
+    if (isRewardCompleted) {
       navigate("/add-project/submit");
-    } 
-  });
+    }
+  }, [isRewardCompleted, navigate]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Validate that the percentage is a positive number
     if (percentage && parseFloat(percentage) > 0) {
-      // Save the percentage value to local storage
-      localStorage.setItem('percentage', percentage);
+      if (Web3.utils.isAddress(walletAddress)) {
+        localStorage.setItem('percentage', percentage);
+        localStorage.setItem('walletAddress', walletAddress);
 
-      // Set isRewardCompleted to true and save it to local storage
-      setIsRewardCompleted(true);
-      localStorage.setItem('isRewardCompleted', 'true');
-      navigate('/add-project/submit');
-      console.log('Reward info submitted successfully!');
+        setIsRewardCompleted(true);
+        localStorage.setItem('isRewardCompleted', 'true');
+        navigate('/add-project/submit');
+        console.log('Reward info submitted successfully!');
+      } else {
+        alert('Please enter a valid wallet address.');
+      }
     } else {
       alert('Please enter a valid percentage.');
     }
@@ -36,6 +41,10 @@ const Reward = () => {
 
   const handlePercentageChange = (event) => {
     setPercentage(event.target.value);
+  };
+
+  const handleWalletAddressChange = (event) => {
+    setWalletAddress(event.target.value);
   };
 
   return (
@@ -68,6 +77,20 @@ const Reward = () => {
             value={percentage}
             onChange={handlePercentageChange}
             placeholder='Enter percentage'
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor='walletAddress' style={{ marginRight: '1.5rem' }}>
+            Wallet Address for Payments:
+          </label>
+          <input
+            type='text'
+            id='walletAddress'
+            name='walletAddress'
+            value={walletAddress}
+            onChange={handleWalletAddressChange}
+            placeholder='Enter wallet address'
             required
           />
         </div>

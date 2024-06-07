@@ -19,6 +19,70 @@ const upload = multer({
   }
 });
 
+/**
+ * @swagger
+ * tags:
+ *   name: Photos API's
+ *   description: Endpoints for managing photos
+ */
+
+/**
+ * @swagger
+ * /upload:
+ *   post:
+ *     tags:
+ *       - Photos API's
+ *     summary: Upload photos
+ *     description: Upload up to 10 photos with a maximum size of 10MB each.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               photos:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       201:
+ *         description: Photos uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     example: 60c72b2f5f1b2c001f6e4b3c
+ *                   url:
+ *                     type: string
+ *                     example: https://storage.googleapis.com/agricrowd_storage/1623919241763-123456789.jpg
+ *       400:
+ *         description: No files uploaded
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Hiçbir dosya yüklenmedi.
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
+ */
 router.post('/upload', upload.array('photos', 10), async (req, res) => {
   try {
     const files = req.files;
@@ -61,10 +125,65 @@ router.post('/upload', upload.array('photos', 10), async (req, res) => {
   }
 });
 
-module.exports = router;
-
-
-// Fotoğrafı almak için endpoint
+/**
+ * @swagger
+ * /{photoId}:
+ *   get:
+ *     tags:
+ *       - Photos API's
+ *     summary: Get photo by ID
+ *     description: Retrieve a photo's information by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: photoId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the photo to retrieve
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved photo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 photo:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: 60c72b2f5f1b2c001f6e4b3c
+ *                     url:
+ *                       type: string
+ *                       example: https://storage.googleapis.com/agricrowd_storage/1623919241763-123456789.jpg
+ *                 url:
+ *                   type: string
+ *                   example: https://storage.googleapis.com/agricrowd_storage/1623919241763-123456789.jpg
+ *       404:
+ *         description: Photo not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Photo not found
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
+ */
 router.get('/:photoId', async (req, res) => {
   const { photoId } = req.params;
   try {
@@ -72,7 +191,7 @@ router.get('/:photoId', async (req, res) => {
     if (!photo) {
       return res.status(404).json({ message: 'Photo not found' });
     }
-    res.status(201).json({success:true, photo:photo, url: photo.url});
+    res.status(200).json({success:true, photo:photo, url: photo.url});
   } catch (error) {
     console.error('Error fetching photo:', error);
     res.status(500).json({ message: 'Internal Server Error' });

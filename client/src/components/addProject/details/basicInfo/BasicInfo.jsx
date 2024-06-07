@@ -4,7 +4,6 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Editor } from '@tinymce/tinymce-react';
 import styles from './BasicInfo.module.css';
-import MapContainer from './Mapping/MapContainer';
 import { Helmet } from 'react-helmet-async';
 
 const BasicInfoForm = () => {
@@ -408,7 +407,7 @@ const BasicInfoForm = () => {
 
         {requiresLocation && (
           <div style={requiresLocation ? pushDown : {}}>
-            <MapContainer onLocationSelect={handleLocationSelect} />
+            <p>map section?</p>
           </div>
         )}
 

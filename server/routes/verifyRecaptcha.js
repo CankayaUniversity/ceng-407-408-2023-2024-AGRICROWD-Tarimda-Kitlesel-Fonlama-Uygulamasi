@@ -2,6 +2,73 @@ const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: reCAPTCHA API's
+ *   description: Endpoints for reCAPTCHA verification
+ */
+
+/**
+ * @swagger
+ * /:
+ *   post:
+ *     tags:
+ *       - reCAPTCHA API's
+ *     summary: Verify reCAPTCHA token
+ *     description: Validate reCAPTCHA token with Google reCAPTCHA API.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               recaptchaValue:
+ *                 type: string
+ *                 example: "03AGdBq24..."
+ *     responses:
+ *       200:
+ *         description: reCAPTCHA validated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         description: reCAPTCHA validation failed
+ *         content:
+ *           application/json
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["reCAPTCHA validation failed"]
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["Internal Server Error"]
+ */
 router.post('/', async (req, res) => {
     const { recaptchaValue } = req.body;
     try {

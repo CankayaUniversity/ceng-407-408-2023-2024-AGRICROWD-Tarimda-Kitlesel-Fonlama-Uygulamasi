@@ -24,7 +24,6 @@ const ProtectedRoute = ({ children }) => {
                         }
                     );
                     if (response.data.success) {
-                        console.log('User is authenticated');
                         setIsAuthenticated(true);
                     }
                 }

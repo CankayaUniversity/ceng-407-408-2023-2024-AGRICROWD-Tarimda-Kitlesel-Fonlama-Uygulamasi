@@ -7,28 +7,53 @@ const RandomProjects = () => {
   const [randomProjects, setRandomProjects] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const fetchCoverImage = async (photoId) => {
+    try {
+      const coverImageResponse = await axios.get(
+        `${process.env.REACT_APP_BASE_API_URL}/api/photos/${photoId}`
+      );
+      return coverImageResponse.data.url;
+    } catch (error) {
+      console.error('Error fetching cover image:', error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const fetchRandomProjects = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:3001/api/projects/fetch-approved-projects'
+          `${process.env.REACT_APP_BASE_API_URL}/api/projects/fetch-approved-projects`
         );
+        
         const shuffledProjects = response.data
           .sort(() => 0.5 - Math.random())
           .slice(0, 3);
-        setRandomProjects(shuffledProjects);
+  
+        const projectsWithImages = await Promise.all(
+          shuffledProjects.map(async (project) => {
+            const coverImageUrl = await fetchCoverImage(project.basicInfo.projectImages[project.basicInfo.coverImage] || 'default-image-url');
+            return {
+              ...project,
+              coverImageUrl: coverImageUrl || 'default-image-url'
+            };
+          })
+        );
+  
+        setRandomProjects(projectsWithImages);
       } catch (error) {
         console.error('Error fetching random projects:', error);
       }
     };
-
+  
     fetchRandomProjects();
   }, []);
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % randomProjects.length);
-    }, 5000); // 5 saniyede bir geçiş yap
+    }, 15000);
     return () => clearInterval(interval);
   }, [randomProjects.length]);
 
@@ -45,9 +70,11 @@ const RandomProjects = () => {
 
   return (
     <section className={styles.randomProjects}>
-      <h2 style={{ margin: '1.5rem 0', textAlign: 'center' }}>
+      {randomProjects.length > 0 && (
+        <h2 style={{ margin: '1.5rem 0', textAlign: 'center' }}>
         Discover Random Projects
       </h2>
+      )}
       <div className={styles.projectList}>
         {randomProjects.length > 0 && (
           <div
@@ -65,15 +92,9 @@ const RandomProjects = () => {
             >
               <div className={styles.projectCard}>
                 <div className={styles.projectImageContainer}>
-                  {randomProjects[currentIndex].basicInfo.projectImages &&
-                  randomProjects[currentIndex].basicInfo.projectImages.length >
-                    0 ? (
+                  {randomProjects[currentIndex].coverImageUrl ? (
                     <img
-                      src={`http://localhost:3001/api/photos/${
-                        randomProjects[currentIndex].basicInfo.projectImages[
-                          randomProjects[currentIndex].basicInfo.coverImage
-                        ]
-                      }`}
+                      src={randomProjects[currentIndex].coverImageUrl}
                       alt={`Project ${randomProjects[currentIndex]._id}`}
                       className={styles.projectImage}
                     />

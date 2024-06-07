@@ -60,6 +60,18 @@ function AdminNavBar() {
             >
               Main Page
             </NavLink>
+            <a
+                href='https://agricrowd-server.oa.r.appspot.com/api-docs/'
+                target='_blank'
+                rel='noopener noreferrer'
+                style={{
+                  color: 'black',
+                  textDecoration: 'underline',
+                  display: 'block' 
+                }}
+              >
+                API Documentation
+              </a>
             <button onClick={handleLogout} className={styles.logout}>
               Logout
             </button>

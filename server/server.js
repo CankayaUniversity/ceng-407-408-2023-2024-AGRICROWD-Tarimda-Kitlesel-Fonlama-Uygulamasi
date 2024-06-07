@@ -2,18 +2,27 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cron = require('node-cron');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./swaggerOptions');
 
 require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Credentials', 'true');
+  const allowedOrigins = ['https://agricrowd-1709931956899.oa.r.appspot.com','http://localhost:3000'];
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  }
+
   next();
 });
+
 
 mongoose.connect(process.env.MONGODB_URI, {
 })
@@ -22,6 +31,8 @@ mongoose.connect(process.env.MONGODB_URI, {
     require('./scripts/createInitialAdmin');
   })
   .catch(err => console.error('MongoDB connection error:', err));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 const recaptchaRoutes = require('./routes/verifyRecaptcha');
 app.use('/api/recaptcha', recaptchaRoutes);

@@ -50,6 +50,10 @@ const ProjectSchema = new mongoose.Schema({
       rewardPercentage: {
         type: Number,
         required: true
+      },
+      walletAddress: {
+        type: String,
+        required: true
       }
     },
     required: true
