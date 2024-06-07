@@ -42,7 +42,7 @@ const verifyAdminToken = async (req,res,next) => {
 
 /**
  * @swagger
- * /fetch-main-categories:
+ * /api/categories/fetch-main-categories:
  *   get:
  *     summary: Fetch main categories
  *     description: Retrieves a list of main categories.
@@ -65,7 +65,7 @@ router.get('/fetch-main-categories', async (req, res) => {
 });
 /**
  * @swagger
- * /add-new-main-category:
+ * /api/categories/add-new-main-category:
  *   post:
  *     summary: Add new main category
  *     description: Adds a new main category.
@@ -113,7 +113,7 @@ router.post('/add-new-main-category', verifyAdminToken,async (req, res) => {
 });
 /**
  * @swagger
- * /edit-main-category:
+ * /api/categories/edit-main-category:
  *   put:
  *     summary: Edit main category
  *     description: Updates an existing main category.
@@ -167,7 +167,7 @@ router.put('/edit-main-category', verifyAdminToken,async (req, res) => {
 
 /**
  * @swagger
- * /delete-main-category/{categoryId}:
+ * /api/categories/delete-main-category/{categoryId}:
  *   delete:
  *     summary: Delete main category
  *     description: Deletes a main category and its subcategories.
@@ -202,7 +202,7 @@ router.delete('/delete-main-category/:categoryId', verifyAdminToken,async (req, 
 //Subcategories
 /**
  * @swagger
- * /add-subcategory:
+ * /api/categories/add-subcategory:
  *   post:
  *     summary: Add subcategory
  *     description: Adds a new subcategory to an existing main category.
@@ -256,7 +256,7 @@ router.post('/add-subcategory', verifyAdminToken,async (req, res) => {
 });
 /**
  * @swagger
- * /fetch-subcategories:
+ * /api/categories/fetch-subcategories:
  *   get:
  *     summary: Fetch subcategories
  *     description: Retrieves all subcategories for a given main category.
@@ -292,7 +292,7 @@ router.get('/fetch-subcategories',async (req, res) => {
 });
 /**
  * @swagger
- * /edit-sub-category:
+ * /api/categories/edit-sub-category:
  *   put:
  *     summary: Edit subcategory
  *     description: Updates an existing subcategory.
@@ -359,7 +359,7 @@ router.put('/edit-sub-category', verifyAdminToken,async (req, res) => {
 
 /**
  * @swagger
- * /delete-sub-category/{subCategoryId}:
+ * /api/categories/delete-sub-category/{subCategoryId}:
  *   delete:
  *     summary: Delete subcategory
  *     description: Deletes a subcategory.

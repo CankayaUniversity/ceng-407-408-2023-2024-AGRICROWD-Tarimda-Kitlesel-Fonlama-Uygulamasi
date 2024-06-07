@@ -11,7 +11,7 @@ const User = require('../models/User');
 
 /**
  * @swagger
- * /user:
+ * /api/info/user:
  *   post:
  *     tags:
  *       - User API's

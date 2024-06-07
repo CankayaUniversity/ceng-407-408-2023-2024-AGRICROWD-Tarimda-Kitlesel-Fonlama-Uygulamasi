@@ -28,7 +28,7 @@ const upload = multer({
 
 /**
  * @swagger
- * /upload:
+ * /api/photos/upload:
  *   post:
  *     tags:
  *       - Photos API's
@@ -127,7 +127,7 @@ router.post('/upload', upload.array('photos', 10), async (req, res) => {
 
 /**
  * @swagger
- * /{photoId}:
+ * /api/photos/{photoId}:
  *   get:
  *     tags:
  *       - Photos API's

@@ -13,7 +13,7 @@ const Projects = require('../models/ProjectsSchema');
 /**
  * @swagger
  * 
- * /fetch-approved-projects:
+ * /api/projects/fetch-approved-projects:
  *   get:
  *     tags:
  *       - Projects API's
@@ -61,7 +61,7 @@ router.get('/fetch-approved-projects', async (req, res) => {
 
 /**
  * @swagger
- * /details:
+ * /api/projects/details:
  *   post:
  *     tags:
  *       - Projects API's
@@ -170,7 +170,7 @@ router.post('/details', async (req, res) => {
 
 /**
  * @swagger
- * /fetch-single-project:
+ * /api/projects/fetch-single-project:
  *   post:
  *     tags:
  *       - Projects API's

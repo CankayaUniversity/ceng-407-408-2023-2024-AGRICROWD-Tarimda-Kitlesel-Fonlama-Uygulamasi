@@ -11,7 +11,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /:
+ * /api/recaptcha/:
  *   post:
  *     tags:
  *       - reCAPTCHA API's

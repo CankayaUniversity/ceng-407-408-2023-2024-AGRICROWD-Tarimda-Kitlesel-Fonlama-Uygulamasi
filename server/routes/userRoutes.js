@@ -14,7 +14,7 @@ const Project = require('../models/ProjectsSchema');
 
 /**
  * @swagger
- * /{userId}:
+ * /api/user/{userId}:
  *   get:
  *     tags:
  *       - User API's
@@ -64,7 +64,7 @@ router.get('/:userId', async (req, res) => {
 });
 /**
  * @swagger
- * /update-info:
+ * /api/user/update-info:
  *   put:
  *     tags:
  *       - User API's
@@ -107,7 +107,7 @@ router.put('/update-info', async (req, res) => {
 
 /**
  * @swagger
- * /change-password:
+ * /api/user/change-password:
  *   put:
  *     tags:
  *       - User API's
@@ -169,7 +169,7 @@ router.put('/change-password', async (req, res) => {
 
 /**
  * @swagger
- * /projects/fetch-approved-projects:
+ * /api/user/projects/fetch-approved-projects:
  *   get:
  *     tags:
  *       - User API's
@@ -218,7 +218,7 @@ router.get('/projects/fetch-approved-projects', async (req, res) => {
 
 /**
  * @swagger
- * /projects/fetch-inactive-projects:
+ * /api/user/projects/fetch-inactive-projects:
  *   get:
  *     tags:
  *       - User API's

@@ -16,7 +16,7 @@ const Project = require('../models/ProjectsSchema');
 
 /**
  * @swagger
- * /login:
+ * /api/admin/login:
  *   post:
  *     summary: Admin login
  *     description: Login admin with username, password and reCAPTCHA value
@@ -75,7 +75,7 @@ router.post('/login', async (req, res) => {
 
 /**
  * @swagger
- * /change-password:
+ * /api/admin/change-password:
  *   put:
  *     summary: Change admin password
  *     description: Change admin password
@@ -133,7 +133,7 @@ router.put('/change-password', async (req, res) => {
 
 /**
  * @swagger
- * /verify-token:
+ * /api/admin/verify-token:
  *   post:
  *     summary: Verify admin token
  *     description: Verify admin token
@@ -172,7 +172,7 @@ router.post('/verify-token', async (req, res) => {
 
 /**
  * @swagger
- * /projects/add-pending:
+ * /api/admin/projects/add-pending:
  *   post:
  *     summary: Add pending project
  *     description: Add a new pending project
@@ -217,7 +217,7 @@ router.post('/projects/add-pending', async (req, res) => {
 
 /**
  * @swagger
- * /projects/pending:
+ * /api/admin/projects/pending:
  *   get:
  *     summary: Get pending projects
  *     description: Get all pending projects
@@ -249,7 +249,7 @@ router.get('/projects/pending', async (req, res) => {
 
 /**
  * @swagger
- * /projects/approve:
+ * /api/admin/projects/approve:
  *   put:
  *     summary: Approve project
  *     description: Approve a pending project
@@ -296,7 +296,7 @@ router.put('/projects/approve', async (req, res) => {
 
 /**
  * @swagger
- * /projects/reject:
+ * /api/admin/projects/reject:
  *   put:
  *     summary: Reject project
  *     description: Reject a pending project
@@ -343,7 +343,7 @@ router.put('/projects/reject', async (req, res) => {
 
 /**
  * @swagger
- * /projects/{projectId}/photos:
+ * /api/admin/projects/{projectId}/photos:
  *   get:
  *     summary: Get project photos
  *     description: Get photos of a project by project ID

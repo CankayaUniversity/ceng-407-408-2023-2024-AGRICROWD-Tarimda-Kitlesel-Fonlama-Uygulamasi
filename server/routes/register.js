@@ -8,16 +8,16 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   name: Auth API's
- *   description: Endpoints for user authentication and registration
+ *   name: Register API
+ *   description: Endpoint for registration
  */
 
 /**
  * @swagger
- * /:
+ * /api/register:
  *   post:
  *     tags:
- *       - Auth API's
+ *       - Register API
  *     summary: Register a new user
  *     description: Create a new user account after verifying reCAPTCHA and checking if the email is already in use.
  *     requestBody:

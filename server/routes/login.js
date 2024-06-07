@@ -15,7 +15,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /:
+ * /api/login:
  *   post:
  *     tags:
  *       - Auth API's
