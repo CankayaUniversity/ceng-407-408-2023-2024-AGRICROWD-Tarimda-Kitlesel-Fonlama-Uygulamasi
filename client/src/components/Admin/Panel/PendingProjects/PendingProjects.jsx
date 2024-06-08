@@ -150,7 +150,8 @@ const PendingProjects = () => {
     projectId,
     projectName,
     fundingGoalETH,
-    rewardPercentage
+    rewardPercentage,
+    investeeAddress
   ) => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -161,7 +162,8 @@ const PendingProjects = () => {
         projectId,
         projectName,
         ethers.utils.parseEther(fundingGoalETH.toString()),
-        rewardPercentage
+        rewardPercentage,
+        investeeAddress
       );
 
       await transactionResponse.wait();
@@ -269,13 +271,13 @@ const PendingProjects = () => {
                               project._id,
                               project.basicInfo.projectName,
                               project.basicInfo.targetAmount,
-                              project.basicInfo.rewardPercentage
+                              project.basicInfo.rewardPercentage,
+                              project.basicInfo.walletAddress
                             )
                           }
                         >
                           Approve
                         </button>
-
                         <button
                           className={styles.button}
                           onClick={() => setSelectedProjectId(project._id)}

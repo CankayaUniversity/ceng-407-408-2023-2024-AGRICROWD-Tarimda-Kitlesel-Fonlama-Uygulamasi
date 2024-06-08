@@ -158,6 +158,11 @@ export const abi = [
         name: "_rewardPercentage",
         type: "uint256",
       },
+      {
+        internalType: "address",
+        name: "investeeAddress",
+        type: "address",
+      },
     ],
     name: "createProject",
     outputs: [],
@@ -201,6 +206,30 @@ export const abi = [
     name: "fundProject",
     outputs: [],
     stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "mongoDbObjectId",
+        type: "string",
+      },
+    ],
+    name: "getDonatorsAndDonations",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
+      },
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {

@@ -13,6 +13,8 @@ function DashboardforActiveProject() {
   const [project, setProject] = useState(null);
   const [funders, setFunders] = useState([]);
   const [funds, setFunds] = useState([]);
+  const [donors, setDonors] = useState([]);
+  const [donations, setDonations] = useState([]);
   const { projectNameandID } = useParams();
   const [encodedProjectName, projectId] = projectNameandID.split("-pid-");
   const [errorMessage, setErrorMessage] = useState("");
@@ -108,6 +110,32 @@ function DashboardforActiveProject() {
     fetchFundersAndFunds();
   }, [project, projectId]);
 
+  useEffect(() => {
+    const fetchDonorsAndDonations = async () => {
+      if (!project) return;
+
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const contract = new ethers.Contract(contractAddress, abi, provider);
+        const projectDetails = await contract.getDonatorsAndDonations(
+          projectId
+        );
+
+        const donorsArray = projectDetails[0];
+        const donationsArray = projectDetails[1].map((donation) =>
+          ethers.utils.formatEther(donation)
+        );
+
+        setDonors(donorsArray);
+        setDonations(donationsArray);
+      } catch (error) {
+        console.error("Error fetching donors and donations:", error);
+      }
+    };
+
+    fetchDonorsAndDonations();
+  }, [project, projectId]);
+
   const handleWithdraw = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
@@ -200,6 +228,17 @@ function DashboardforActiveProject() {
           {funders.map((funder, index) => (
             <li key={index}>
               Address: {funder}, Amount Funded: {funds[index]} ETH
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h2>Donors and Donations</h2>
+        <ul>
+          {donors.map((donor, index) => (
+            <li key={index}>
+              Address: {donor}, Amount Donated: {donations[index]} ETH
             </li>
           ))}
         </ul>
