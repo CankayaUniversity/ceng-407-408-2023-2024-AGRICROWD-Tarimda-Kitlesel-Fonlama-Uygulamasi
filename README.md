@@ -1,7 +1,7 @@
-# ceng-407-408-2023-2024-AGRICROWD-Tarimda-Kitlesel-Fonlama-Uygulamasi
-AGRICROWD (Tarimda Kitlesel Fonlama Uygulamasi)
+# AGRICROWD (Tarımda Kitlesel Fonlama Uygulaması)
 
-🌾 AGRICROWD Project Website: https://agricrowd.vercel.app/
-🌾 AGRICROWD Project Website: [Agricrowd Live](https://agricrowd-1709931956899.oa.r.appspot.com/)
-🌾 AGRICROWD API Documentation: [API Documentation](https://agricrowd-server.oa.r.appspot.com/api-docs/)
+🌾 AGRICROWD Proje Websitesi: <a href="https://agricrowd.vercel.app/" target="_blank">https://agricrowd.vercel.app/</a>
 
+🌾 AGRICROWD Proje Websitesi: <a href="https://agricrowd-1709931956899.oa.r.appspot.com/" target="_blank">Agricrowd Live</a>
+
+🌾 AGRICROWD API Dokümantasyonu: <a href="https://agricrowd-server.oa.r.appspot.com/api-docs/" target="_blank">API Documentation</a>
