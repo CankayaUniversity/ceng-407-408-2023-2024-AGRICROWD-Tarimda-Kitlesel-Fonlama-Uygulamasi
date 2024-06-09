@@ -19,6 +19,7 @@ function DashboardforActiveProject() {
   const [amountFundedETH, setAmountFundedETH] = useState(0);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [isSendingReward, setIsSendingReward] = useState(false);
+  const [fundsWithdrawn, setFundsWithdrawn] = useState(false); // New state variable
 
   const navigate = useNavigate();
   const handleInvalidUrl = useCallback(() => {
@@ -118,6 +119,7 @@ function DashboardforActiveProject() {
       const transactionResponse = await contract.withdrawFunds(projectId);
       await listenForTransactionMine(transactionResponse, provider);
       alert("Successfully withdrew funds!");
+      setFundsWithdrawn(true); // Set fundsWithdrawn to true after successful withdrawal
       setIsWithdrawing(false);
     } catch (error) {
       console.error("Error withdrawing funds:", error);
@@ -134,12 +136,12 @@ function DashboardforActiveProject() {
       const contract = new ethers.Contract(contractAddress, abi, signer);
 
       // Calculate the total reward amount
-      const rewardPercentage = project.basicInfo.rewardPercentage;
-      const totalRewardAmount = funds.reduce((total, fund) => {
-        const fundAmount = ethers.utils.parseEther(fund);
-        const rewardAmount = fundAmount.mul(rewardPercentage).div(100);
-        return total.add(fundAmount).add(rewardAmount);
-      }, ethers.BigNumber.from(0));
+      let totalRewardAmount = ethers.BigNumber.from(0);
+      for (let i = 0; i < funders.length; i++) {
+        const fund = ethers.utils.parseEther(funds[i]);
+        const rewardAmount = fund.mul(10).div(100); // 10% reward
+        totalRewardAmount = totalRewardAmount.add(fund).add(rewardAmount);
+      }
 
       await contract.sendReward(projectId, {
         value: totalRewardAmount,
@@ -217,7 +219,7 @@ function DashboardforActiveProject() {
         <button
           onClick={handleSendReward}
           className={styles.button}
-          disabled={isSendingReward}
+          disabled={!fundsWithdrawn || isSendingReward}
         >
           {isSendingReward ? "Sending Reward..." : "Send Reward"}
         </button>
