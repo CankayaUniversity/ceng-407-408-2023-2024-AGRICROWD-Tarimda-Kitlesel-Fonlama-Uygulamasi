@@ -13,13 +13,14 @@ function DashboardforActiveProject() {
   const [project, setProject] = useState(null);
   const [funders, setFunders] = useState([]);
   const [funds, setFunds] = useState([]);
+  const [donors, setDonors] = useState([]);
+  const [donations, setDonations] = useState([]);
   const { projectNameandID } = useParams();
   const [encodedProjectName, projectId] = projectNameandID.split("-pid-");
   const [errorMessage, setErrorMessage] = useState("");
   const [amountFundedETH, setAmountFundedETH] = useState(0);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [isSendingReward, setIsSendingReward] = useState(false);
-  const [fundsWithdrawn, setFundsWithdrawn] = useState(false); // New state variable
 
   const navigate = useNavigate();
   const handleInvalidUrl = useCallback(() => {
@@ -43,7 +44,7 @@ function DashboardforActiveProject() {
     const fetchProject = async () => {
       try {
         const projectResponse = await axios.post(
-          `http://localhost:3001/api/projects/fetch-single-project`,
+          `${process.env.REACT_APP_BASE_API_URL}/api/projects/fetch-single-project`,
           { projectId },
           {
             headers: { Authorization: `Bearer ${authToken}` },
@@ -109,6 +110,32 @@ function DashboardforActiveProject() {
     fetchFundersAndFunds();
   }, [project, projectId]);
 
+  useEffect(() => {
+    const fetchDonorsAndDonations = async () => {
+      if (!project) return;
+
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const contract = new ethers.Contract(contractAddress, abi, provider);
+        const projectDetails = await contract.getDonatorsAndDonations(
+          projectId
+        );
+
+        const donorsArray = projectDetails[0];
+        const donationsArray = projectDetails[1].map((donation) =>
+          ethers.utils.formatEther(donation)
+        );
+
+        setDonors(donorsArray);
+        setDonations(donationsArray);
+      } catch (error) {
+        console.error("Error fetching donors and donations:", error);
+      }
+    };
+
+    fetchDonorsAndDonations();
+  }, [project, projectId]);
+
   const handleWithdraw = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
@@ -119,7 +146,6 @@ function DashboardforActiveProject() {
       const transactionResponse = await contract.withdrawFunds(projectId);
       await listenForTransactionMine(transactionResponse, provider);
       alert("Successfully withdrew funds!");
-      setFundsWithdrawn(true); // Set fundsWithdrawn to true after successful withdrawal
       setIsWithdrawing(false);
     } catch (error) {
       console.error("Error withdrawing funds:", error);
@@ -136,12 +162,12 @@ function DashboardforActiveProject() {
       const contract = new ethers.Contract(contractAddress, abi, signer);
 
       // Calculate the total reward amount
-      let totalRewardAmount = ethers.BigNumber.from(0);
-      for (let i = 0; i < funders.length; i++) {
-        const fund = ethers.utils.parseEther(funds[i]);
-        const rewardAmount = fund.mul(10).div(100); // 10% reward
-        totalRewardAmount = totalRewardAmount.add(fund).add(rewardAmount);
-      }
+      const rewardPercentage = project.basicInfo.rewardPercentage;
+      const totalRewardAmount = funds.reduce((total, fund) => {
+        const fundAmount = ethers.utils.parseEther(fund);
+        const rewardAmount = fundAmount.mul(rewardPercentage).div(100);
+        return total.add(fundAmount).add(rewardAmount);
+      }, ethers.BigNumber.from(0));
 
       await contract.sendReward(projectId, {
         value: totalRewardAmount,
@@ -207,6 +233,17 @@ function DashboardforActiveProject() {
         </ul>
       </div>
 
+      <div>
+        <h2>Donors and Donations</h2>
+        <ul>
+          {donors.map((donor, index) => (
+            <li key={index}>
+              Address: {donor}, Amount Donated: {donations[index]} ETH
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <div className={styles.btnsContainer}>
         <button
           onClick={handleWithdraw}
@@ -219,7 +256,7 @@ function DashboardforActiveProject() {
         <button
           onClick={handleSendReward}
           className={styles.button}
-          disabled={!fundsWithdrawn || isSendingReward}
+          disabled={isSendingReward}
         >
           {isSendingReward ? "Sending Reward..." : "Send Reward"}
         </button>

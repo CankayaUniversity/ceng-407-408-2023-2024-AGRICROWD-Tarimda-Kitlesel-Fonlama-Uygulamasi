@@ -29,7 +29,7 @@ const ActiveProjects = () => {
       if (authToken) {
         try {
           const authResponse = await axios.post(
-            'http://localhost:3001/api/auth',
+            `${process.env.REACT_APP_BASE_API_URL}/api/auth`,
             {},
             {
               headers: {
@@ -51,18 +51,47 @@ const ActiveProjects = () => {
       }
     };
 
+    const fetchCoverImage = async (photoId) => {
+      try {
+        const coverImageResponse = await axios.get(
+          `${process.env.REACT_APP_BASE_API_URL}/api/photos/${photoId}`
+        );
+        return coverImageResponse.data.url;
+      } catch (error) {
+        console.error('Error fetching cover image:', error);
+        return null;
+      }
+    };
+
+
     const fetchProjects = async (userId) => {
       try {
         const projectResponse = await axios.get(
-          `http://localhost:3001/api/user/projects/fetch-approved-projects?userId=${userId}`
+          `${process.env.REACT_APP_BASE_API_URL}/api/user/projects/fetch-approved-projects?userId=${userId}`
         );
         if (projectResponse.data.length > 0) {
-          setProjects(projectResponse.data);
+          const projectsData = projectResponse.data;
+          const projectsWithCoverImages = await Promise.all(
+            projectsData.map(async (project) => {
+              if (project.basicInfo && project.basicInfo.projectImages) {
+                const coverImageUrl = await fetchCoverImage(project.basicInfo.projectImages[project.basicInfo.coverImage]);
+                if (coverImageUrl) {
+                  return {
+                    ...project,
+                    coverImageUrl: coverImageUrl
+                  };
+                }
+              }
+              return project;
+            })
+          );
+
+          setProjects(projectsWithCoverImages);
         } else {
           console.error('No projects found or failed to load projects.');
         }
       } catch (error) {
-        console.error('Projeler yüklenirken hata oluştu:', error);
+        console.error('Error while loading projects:', error);
       }
     };
 
@@ -109,9 +138,9 @@ const ActiveProjects = () => {
                   href={`/project/${project.basicInfo.projectName.replace(/\s+/g, '-').toLowerCase()}-pid-${project._id}`}
                   className={styles.coverLink}
                 >
-                  {project.basicInfo.projectImages && project.basicInfo.projectImages.length > 0 ? (
+                  {project.coverImageUrl ? (
                     <img
-                      src={`http://localhost:3001/api/photos/${project.basicInfo.projectImages[project.basicInfo.coverImage]}`}
+                      src={project.coverImageUrl}
                       alt="Project Cover"
                       className={styles.coverImage}
                     />

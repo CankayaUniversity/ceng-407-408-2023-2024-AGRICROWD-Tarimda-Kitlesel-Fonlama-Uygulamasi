@@ -23,6 +23,7 @@ const ProjectSchema = new mongoose.Schema({
       projectImages: [
         {
           type: mongoose.Schema.Types.ObjectId,
+          ref: 'Photo',
           required: true
         }
       ],
@@ -48,6 +49,10 @@ const ProjectSchema = new mongoose.Schema({
       },
       rewardPercentage: {
         type: Number,
+        required: true
+      },
+      walletAddress: {
+        type: String,
         required: true
       }
     },

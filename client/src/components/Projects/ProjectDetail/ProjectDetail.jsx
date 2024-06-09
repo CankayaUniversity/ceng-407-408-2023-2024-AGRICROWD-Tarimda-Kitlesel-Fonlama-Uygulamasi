@@ -15,6 +15,7 @@ const ProjectDetail = () => {
   const { projectNameandId } = useParams();
   const [encodedProjectName, pId] = projectNameandId.split("-pid-");
   const [project, setProject] = useState(null);
+  const [photoUrls, setPhotoUrls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [remainingTime, setRemainingTime] = useState(null);
@@ -34,15 +35,40 @@ const ProjectDetail = () => {
     return !!authToken;
   };
 
+  const fetchPhotoUrl = async (photoId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_API_URL}/api/photos/${photoId}`
+      );
+      if (response.data.success) {
+        return response.data.url;
+      } else {
+        console.error("Error fetching photo:", response.data.message);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching photo:", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const fetchProject = async () => {
       try {
         const response = await axios.post(
-          `http://localhost:3001/api/projects/details`,
+          `${process.env.REACT_APP_BASE_API_URL}/api/projects/details`,
           { projectId: pId }
         );
         if (response.data.success) {
-          setProject(response.data.project);
+          const projectData = response.data.project;
+
+          const photoUrls = await Promise.all(
+            projectData.basicInfo.projectImages.map((photoId) =>
+              fetchPhotoUrl(photoId)
+            )
+          );
+          setPhotoUrls(photoUrls);
+          setProject(projectData);
         } else {
           console.error("Error fetching project:", response.data.message);
         }
@@ -68,7 +94,7 @@ const ProjectDetail = () => {
 
       try {
         const userResponse = await axios.post(
-          "http://localhost:3001/api/info/user",
+          `${process.env.REACT_APP_BASE_API_URL}/api/info/user`,
           { userId: project.userId }
         );
         setProjectOwner(userResponse.data);
@@ -295,7 +321,7 @@ const ProjectDetail = () => {
               <div className={styles.mainImageContainer}>
                 <img
                   className={styles.mainImage}
-                  src={`http://localhost:3001/api/photos/${project.basicInfo.projectImages[currentImageIndex]}`}
+                  src={photoUrls[currentImageIndex]}
                   alt={`Project ${currentImageIndex}`}
                 />
                 <button className={styles.prevButton} onClick={prevImage}>
@@ -357,6 +383,12 @@ const ProjectDetail = () => {
                 {project.basicInfo.targetAmount} ETH
               </p>
             </div>
+            <div className={styles.infoContainer}>
+              <p>
+                <span style={{ fontWeight: "500" }}>Reward Percentage:</span>{" "}
+                {project.basicInfo.rewardPercentage} %
+              </p>
+            </div>
             <p className={styles.remainingTime}>
               <div>
                 <span style={{ marginRight: "0.5rem" }}>⏱️</span>
@@ -376,6 +408,10 @@ const ProjectDetail = () => {
               <span style={{ fontWeight: "500" }}>
                 Amount Funded: {amountFundedETH} ETH
               </span>
+              <p style={{ marginTop: "0.5rem", color: "green" }}>
+                (Our platform takes %5 of the funds as a commission. But we
+                don't take any commission from the donations.)
+              </p>
               {progress >= 100 && (
                 <p style={{ marginTop: "0.5rem", color: "red" }}>
                   This project has reached its funding goal. You can no longer

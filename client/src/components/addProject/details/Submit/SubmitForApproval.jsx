@@ -22,7 +22,7 @@ const SubmitForm = () => {
     const fetchUserID = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:3001/api/auth",
+          `${process.env.REACT_APP_BASE_API_URL}/api/auth`,
           {},
           {
             headers: {
@@ -79,11 +79,13 @@ const SubmitForm = () => {
       if (isInformCompleted && isBasicsCompleted && isRewardCompleted) {
         const basicInfo = JSON.parse(localStorage.getItem(userId));
         const rewardPercentage = localStorage.getItem('percentage');
+        const walletAddress = localStorage.getItem('walletAddress');
         const parcedPercantage = JSON.parse(rewardPercentage);
         basicInfo.rewardPercentage = Number(parcedPercantage);
+        basicInfo.walletAddress = walletAddress;
         const { category, subCategory, ...rest } = basicInfo;
         const response = await axios.post(
-          "http://localhost:3001/api/admin/projects/add-pending",
+          `${process.env.REACT_APP_BASE_API_URL}/api/admin/projects/add-pending`,
           {
             userId,
             basicInfo: rest,

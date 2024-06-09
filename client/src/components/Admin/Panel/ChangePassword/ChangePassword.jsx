@@ -57,7 +57,7 @@ function ChangePassword() {
     try {
       const admToken = Cookies.get('admToken');
       const response = await axios.put(
-        'http://localhost:3001/api/admin/change-password',
+        `${process.env.REACT_APP_BASE_API_URL}/api/admin/change-password`,
         {
           oldPassword,
           newPassword,

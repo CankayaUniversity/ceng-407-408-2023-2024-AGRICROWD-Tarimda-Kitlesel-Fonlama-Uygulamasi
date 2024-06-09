@@ -1,4 +1,15 @@
 .homeContainer {
-    padding: 20px;
-    text-align: center;
-  }
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.homeContainer h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.homeContainer p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}

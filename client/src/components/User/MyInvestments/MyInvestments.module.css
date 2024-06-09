@@ -1,4 +1,32 @@
 .homeContainer {
-    padding: 20px;
-    text-align: center;
+  padding: 20px;
+}
+
+.investmentsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.investmentItem {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.projectName {
+  color: green;
+  font-weight: bold;
+}
+
+.projectName::before {
+  content: "Project Name: ";
+  font-weight: normal;
+}
+
+.projectName,
+.fundingAmount,
+.rewardAmount {
+  margin-bottom: 10px;
 }

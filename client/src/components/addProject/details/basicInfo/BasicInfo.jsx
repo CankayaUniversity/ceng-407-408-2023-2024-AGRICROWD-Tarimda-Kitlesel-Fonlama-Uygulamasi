@@ -4,7 +4,6 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Editor } from '@tinymce/tinymce-react';
 import styles from './BasicInfo.module.css';
-import MapContainer from './Mapping/MapContainer';
 import { Helmet } from 'react-helmet-async';
 
 const BasicInfoForm = () => {
@@ -30,7 +29,7 @@ const BasicInfoForm = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:3001/api/categories/fetch-main-categories'
+          `${process.env.REACT_APP_BASE_API_URL}/api/categories/fetch-main-categories`
         );
         if (response.data.success) {
           setCategories(response.data.categories);
@@ -48,7 +47,7 @@ const BasicInfoForm = () => {
   const fetchSubCategories = async (categoryId) => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/api/categories/fetch-subcategories`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/categories/fetch-subcategories`,
         {
           params: { categoryId },
         }
@@ -78,7 +77,7 @@ const BasicInfoForm = () => {
     const fetchUserID = async () => {
       try {
         const response = await axios.post(
-          'http://localhost:3001/api/auth',
+          `${process.env.REACT_APP_BASE_API_URL}/api/auth`,
           {},
           {
             headers: {
@@ -147,17 +146,17 @@ const BasicInfoForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (targetAmount <= 0) {
       alert('Hedef miktar pozitif bir değer olmalıdır.');
       return;
     }
-
-    if (projectImages.length === 0 || projectImages.length > MAX_IMAGES) {
-      alert(`Lütfen 1 ila ${MAX_IMAGES} arasında resim yükleyin.`);
+  
+    if (projectImages.length === 0 || projectImages.length > 10) {
+      alert('Lütfen 1 ila 10 arasında resim yükleyin.');
       return;
     }
-
+  
     const validFileExtensions = /\.(jpg|jpeg|png|gif|bmp)$/i;
     let validFiles = true;
     Array.from(projectImages).forEach((file) => {
@@ -165,30 +164,28 @@ const BasicInfoForm = () => {
         validFiles = false;
       }
     });
-
+  
     if (!validFiles) {
-      alert(
-        'Dosya formatı desteklenmiyor. Lütfen yalnızca resim ve görüntü dosyaları yükleyin.'
-      );
+      alert('Dosya formatı desteklenmiyor. Lütfen yalnızca resim ve görüntü dosyaları yükleyin.');
       return;
     }
-
+  
     try {
       const formData = new FormData();
       Array.from(projectImages).forEach((image) => {
         formData.append('photos', image);
       });
-
+  
       const uploadResponse = await axios.post(
-        'http://localhost:3001/api/photos/upload',
+        `${process.env.REACT_APP_BASE_API_URL}/api/photos/upload`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },
         }
       );
-
+  
       console.log('Uploaded photos:', uploadResponse.data);
-
+  
       const basicInfo = {
         projectName,
         projectDescription,
@@ -199,12 +196,12 @@ const BasicInfoForm = () => {
         coverImage: coverImageIndex,
         targetAmount: Number(targetAmount),
         campaignDuration: Number(campaignDuration),
-        location, // Konum bilgisini ekleyin
+        location,
       };
-
+  
       localStorage.setItem(userId, JSON.stringify(basicInfo));
       localStorage.setItem('isBasicsCompleted', 'true');
-
+  
       navigate('/add-project/reward');
       console.log('Basic info submitted successfully!');
     } catch (error) {
@@ -410,7 +407,7 @@ const BasicInfoForm = () => {
 
         {requiresLocation && (
           <div style={requiresLocation ? pushDown : {}}>
-            <MapContainer onLocationSelect={handleLocationSelect} />
+            <p>map section?</p>
           </div>
         )}
 

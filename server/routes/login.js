@@ -6,6 +6,93 @@ const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Auth API's
+ *   description: Endpoints for authentication
+ */
+
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     tags:
+ *       - Auth API's
+ *     summary: User login
+ *     description: Authenticate user with email and password along with reCAPTCHA validation.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The user's email.
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 description: The user's password.
+ *                 example: yourpassword123
+ *               recaptchaValue:
+ *                 type: string
+ *                 description: reCAPTCHA response token.
+ *                 example: 03AGdBq26_JG05gfUtnL...
+ *     responses:
+ *       200:
+ *         description: Successfully authenticated user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 authToken:
+ *                   type: string
+ *                   description: JWT token for authenticated user.
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *       400:
+ *         description: reCAPTCHA validation failed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: reCAPTCHA validation failed!
+ *       401:
+ *         description: Authentication failed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: No record exists with this email!
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: Internal Server Error!
+ */
+
 router.post(
   '/',
   [body('email').isEmail().withMessage('Geçerli bir e-posta adresi giriniz.')],
@@ -13,7 +100,7 @@ router.post(
     const { email, password, recaptchaValue } = req.body;
     try {
       const recaptchaVerification = await axios.post(
-        'http://localhost:3001/api/recaptcha',
+        `${process.env.REACT_APP_BASE_API_URL}/api/recaptcha`,
         { recaptchaValue }
       );
       if (recaptchaVerification.data.success) {

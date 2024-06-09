@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 const photoSchema = new mongoose.Schema({
-  filename: { type: String, required: true },
-  originalname: { type: String, required: true },
-  path: { type: String, required: true },
-  mimetype: { type: String, required: true },
+  filename: { type: String },
+  originalname: { type: String  },
+  path: { type: String },
+  mimetype: { type: String},
+  url: {type: String, required:true},
 });
 
 const Photo = mongoose.model('Photo', photoSchema);

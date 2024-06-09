@@ -3,17 +3,54 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const router = express.Router();
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
 
 const Admin = require('../models/Admin');
 const Project = require('../models/ProjectsSchema');
 
+/**
+ * @swagger
+ * tags:
+ *   name: Admin API's
+ *   description: Admin management and project approval endpoints
+ */
 
+/**
+ * @swagger
+ * /api/admin/login:
+ *   post:
+ *     summary: Admin login
+ *     description: Login admin with username, password and reCAPTCHA value
+ *     parameters:
+ *       - in: body
+ *         name: admin
+ *         description: Admin login credentials
+ *         schema:
+ *           type: object
+ *           required:
+ *             - username
+ *             - password
+ *             - recaptchaValue
+ *           properties:
+ *             username:
+ *               type: string
+ *             password:
+ *               type: string
+ *             recaptchaValue:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       400:
+ *         description: reCAPTCHA validation failed
+ *       401:
+ *         description: Invalid username or password
+ *       500:
+ *         description: An error occurred
+ */
 router.post('/login', async (req, res) => {
     const { username, password, recaptchaValue } = req.body;
     try {
-        const recaptchaVerification = await axios.post('http://localhost:3001/api/recaptcha', { recaptchaValue });
+        const recaptchaVerification = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/api/recaptcha`, { recaptchaValue });
         if (!recaptchaVerification.data.success) {
             return res.status(400).json({ errors: ['reCAPTCHA validation failed'] });
         }
@@ -36,11 +73,43 @@ router.post('/login', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/change-password:
+ *   put:
+ *     summary: Change admin password
+ *     description: Change admin password
+ *     parameters:
+ *       - in: body
+ *         name: password
+ *         description: Old and new password
+ *         schema:
+ *           type: object
+ *           required:
+ *             - oldPassword
+ *             - newPassword
+ *           properties:
+ *             oldPassword:
+ *               type: string
+ *             newPassword:
+ *               type: string
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *       401:
+ *         description: Invalid username or password
+ *       500:
+ *         description: An error occurred
+ */
 router.put('/change-password', async (req, res) => {
     const { oldPassword, newPassword } = req.body;
     const authToken = req.headers.authorization;
     try {
-        const tokenResponse = await axios.post('http://localhost:3001/api/admin/verify-token', null, {
+        const tokenResponse = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/api/admin/verify-token`, null, {
             headers: { Authorization: authToken }
         });
         if (tokenResponse.data.success) {
@@ -62,6 +131,25 @@ router.put('/change-password', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/verify-token:
+ *   post:
+ *     summary: Verify admin token
+ *     description: Verify admin token
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Token verification successful
+ *       401:
+ *         description: Auth token not provided
+ *       500:
+ *         description: An error occurred
+ */
 router.post('/verify-token', async (req, res) => {
     const authToken = req.headers.authorization;
     if (!authToken) {
@@ -82,12 +170,38 @@ router.post('/verify-token', async (req, res) => {
     }
 });
 
-
-//projects side
-
+/**
+ * @swagger
+ * /api/admin/projects/add-pending:
+ *   post:
+ *     summary: Add pending project
+ *     description: Add a new pending project
+ *     parameters:
+ *       - in: body
+ *         name: project
+ *         description: Project details
+ *         schema:
+ *           type: object
+ *           required:
+ *             - userId
+ *             - basicInfo
+ *             - category
+ *           properties:
+ *             userId:
+ *               type: string
+ *             basicInfo:
+ *               type: object
+ *             category:
+ *               type: object
+ *     responses:
+ *       201:
+ *         description: Project submitted for approval successfully
+ *       500:
+ *         description: An error occurred while submitting the project for approval
+ */
 router.post('/projects/add-pending', async (req, res) => {
     try {
-        const { userId, basicInfo, category} = req.body;
+        const { userId, basicInfo, category } = req.body;
         const newPendingProject = new Project({
             userId,
             basicInfo,
@@ -101,26 +215,63 @@ router.post('/projects/add-pending', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/projects/pending:
+ *   get:
+ *     summary: Get pending projects
+ *     description: Get all pending projects
+ *     responses:
+ *       200:
+ *         description: A list of pending projects
+ *       500:
+ *         description: An error occurred while fetching pending projects
+ */
 router.get('/projects/pending', async (req, res) => {
     try {
-        const pendingProjects = await Project.find({status: 'pending'})
-        .populate({
-            path: 'category.mainCategory',
-            model: 'Category',
-            select: 'categoryName'
-        })
-        .populate({
-            path: 'category.subCategory',
-            model: 'SubCategory',
-            select: 'subCategoryName'
-        });
-        res.status(200).json({success:true, pendingProjects});
+        const pendingProjects = await Project.find({ status: 'pending' })
+            .populate({
+                path: 'category.mainCategory',
+                model: 'Category',
+                select: 'categoryName'
+            })
+            .populate({
+                path: 'category.subCategory',
+                model: 'SubCategory',
+                select: 'subCategoryName'
+            });
+        res.status(200).json({ success: true, pendingProjects });
     } catch (error) {
         console.error('Error fetching pending projects:', error);
         res.status(500).json({ message: 'An error occurred while fetching pending projects.' });
     }
 });
 
+/**
+ * @swagger
+ * /api/admin/projects/approve:
+ *   put:
+ *     summary: Approve project
+ *     description: Approve a pending project
+ *     parameters:
+ *       - in: body
+ *         name: projectId
+ *         description: Project ID
+ *         schema:
+ *           type: object
+ *           required:
+ *             - projectId
+ *           properties:
+ *             projectId:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Project approved successfully
+ *       404:
+ *         description: Project not found
+ *       500:
+ *         description: Server error
+ */
 router.put('/projects/approve', async (req, res) => {
     const { projectId } = req.body;
     try {
@@ -137,14 +288,40 @@ router.put('/projects/approve', async (req, res) => {
             );
             res.json({ success: true, message: 'Project approved successfully!' });
         }
-
     } catch (error) {
         console.error('Error approving project:', error);
         res.status(500).json({ success: false, error: 'Server error' });
     }
 });
 
-
+/**
+ * @swagger
+ * /api/admin/projects/reject:
+ *   put:
+ *     summary: Reject project
+ *     description: Reject a pending project
+ *     parameters:
+ *       - in: body
+ *         name: project
+ *         description: Project ID and rejection reason
+ *         schema:
+ *           type: object
+ *           required:
+ *             - projectId
+ *             - rejectionReason
+ *           properties:
+ *             projectId:
+ *               type: string
+ *             rejectionReason:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Project rejected successfully
+ *       404:
+ *         description: Project not found
+ *       500:
+ *         description: Server error
+ */
 router.put('/projects/reject', async (req, res) => {
     const { projectId, rejectionReason } = req.body;
     try {
@@ -164,10 +341,26 @@ router.put('/projects/reject', async (req, res) => {
     }
 });
 
-
-
-
-
+/**
+ * @swagger
+ * /api/admin/projects/{projectId}/photos:
+ *   get:
+ *     summary: Get project photos
+ *     description: Get photos of a project by project ID
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         type: string
+ *         description: ID of the project
+ *     responses:
+ *       200:
+ *         description: A list of project photos
+ *       404:
+ *         description: Project not found
+ *       500:
+ *         description: An error occurred while fetching project photos
+ */
 router.get('/projects/:projectId/photos', async (req, res) => {
     try {
         const projectId = req.params.projectId;
@@ -181,7 +374,5 @@ router.get('/projects/:projectId/photos', async (req, res) => {
         res.status(500).json({ message: 'An error occurred while fetching project photos.' });
     }
 });
-
-
 
 module.exports = router;

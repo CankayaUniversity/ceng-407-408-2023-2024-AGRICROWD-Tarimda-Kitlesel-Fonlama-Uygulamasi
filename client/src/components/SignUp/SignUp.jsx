@@ -18,11 +18,12 @@ function Signup() {
     hasSpecialChar: false,
     isLengthValid: false,
   });
-  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
   const [recaptchaValue, setRecaptchaValue] = useState(null);
   const handleRecaptchaChange = (value) => {
     setRecaptchaValue(value);
   };
+  const navigate = useNavigate();
 
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
@@ -53,7 +54,7 @@ function Signup() {
     }
 
     axios
-      .post('http://localhost:3001/api/register', {
+      .post(`${process.env.REACT_APP_BASE_API_URL}/api/register`, {
         name,
         email,
         password,
@@ -71,6 +72,7 @@ function Signup() {
       .catch((err) => {
         if (err.response && err.response.data && err.response.data.errors) {
           const serverErrors = err.response.data.errors;
+          setErrorMessage(serverErrorMessage);
           console.error('Server error message:', serverErrors);
         } else if (err.response) {
           console.error('Server error message:', err.response.data);
@@ -111,6 +113,11 @@ function Signup() {
           <h2 className={styles.formTitle}>Your account details</h2>
 
           <form className={styles.form} onSubmit={handleSubmit}>
+            {errorMessage && (
+              <div className={styles.errorMessage}>
+                {errorMessage}
+              </div>
+            )}
             <div className={styles.formRow}>
               <div className={styles.formRowInner}>
                 <input

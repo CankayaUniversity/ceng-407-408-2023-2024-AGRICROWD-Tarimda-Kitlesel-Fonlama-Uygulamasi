@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+/app.yaml
 
 # testing
 /coverage
@@ -11,6 +12,7 @@
 # production
 /build
 /uploads
+/keys
 
 
 # misc
@@ -24,3 +26,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.app.yaml
+.gcloudignore
+server/keys/bucketKey.json

@@ -3,6 +3,13 @@ const axios = require('axios');
 const router = express.Router();
 const { Category, SubCategory } = require('../models/Categories');
 
+/**
+ * @swagger
+ * tags:
+ *   name: Category API's
+ *   description: Endpoints for managing categories
+ */
+
 //middleware
 const verifyAdminToken = async (req,res,next) => {
     const admToken = req.headers.authorization;
@@ -12,7 +19,7 @@ const verifyAdminToken = async (req,res,next) => {
 
     try {
         const response = await axios.post(
-            'http://localhost:3001/api/admin/verify-token',
+            `${process.env.REACT_APP_BASE_API_URL}/api/admin/verify-token`,
             {},
             {
                 headers: {
@@ -33,6 +40,19 @@ const verifyAdminToken = async (req,res,next) => {
     }
 };
 
+/**
+ * @swagger
+ * /api/categories/fetch-main-categories:
+ *   get:
+ *     summary: Fetch main categories
+ *     description: Retrieves a list of main categories.
+ *     responses:
+ *       200:
+ *         description: A list of main categories
+ *       500:
+ *         description: Internal Server Error
+ */
+
 //mainCategories
 router.get('/fetch-main-categories', async (req, res) => {
     try {
@@ -43,7 +63,34 @@ router.get('/fetch-main-categories', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
+/**
+ * @swagger
+ * /api/categories/add-new-main-category:
+ *   post:
+ *     summary: Add new main category
+ *     description: Adds a new main category.
+ *     parameters:
+ *       - in: body
+ *         name: category
+ *         description: The category object to add
+ *         schema:
+ *           type: object
+ *           required:
+ *             - categoryName
+ *             - requiresLocation
+ *           properties:
+ *             categoryName:
+ *               type: string
+ *             requiresLocation:
+ *               type: boolean
+ *     responses:
+ *       200:
+ *         description: Category added successfully
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal Server Error
+ */
 router.post('/add-new-main-category', verifyAdminToken,async (req, res) => {
     try {
         const { categoryName, requiresLocation } = req.body;
@@ -64,7 +111,36 @@ router.post('/add-new-main-category', verifyAdminToken,async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
+/**
+ * @swagger
+ * /api/categories/edit-main-category:
+ *   put:
+ *     summary: Edit main category
+ *     description: Updates an existing main category.
+ *     parameters:
+ *       - in: body
+ *         name: category
+ *         description: The category object to update
+ *         schema:
+ *           type: object
+ *           required:
+ *             - categoryId
+ *             - categoryName
+ *           properties:
+ *             categoryId:
+ *               type: string
+ *             categoryName:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Category updated successfully
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Category not found
+ *       500:
+ *         description: Internal Server Error
+ */
 router.put('/edit-main-category', verifyAdminToken,async (req, res) => {
     try {
         const { categoryName, categoryId } = req.body;
@@ -89,6 +165,25 @@ router.put('/edit-main-category', verifyAdminToken,async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/categories/delete-main-category/{categoryId}:
+ *   delete:
+ *     summary: Delete main category
+ *     description: Deletes a main category and its subcategories.
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the main category to delete
+ *     responses:
+ *       200:
+ *         description: Category and its subcategories deleted successfully
+ *       500:
+ *         description: Internal Server Error
+ */
 router.delete('/delete-main-category/:categoryId', verifyAdminToken,async (req, res) => {
     try {
         const categoryId = req.params.categoryId;
@@ -105,6 +200,36 @@ router.delete('/delete-main-category/:categoryId', verifyAdminToken,async (req, 
 
 
 //Subcategories
+/**
+ * @swagger
+ * /api/categories/add-subcategory:
+ *   post:
+ *     summary: Add subcategory
+ *     description: Adds a new subcategory to an existing main category.
+ *     parameters:
+ *       - in: body
+ *         name: subcategory
+ *         description: The subcategory object to add
+ *         schema:
+ *           type: object
+ *           required:
+ *             - mainCategoryId
+ *             - subCategoryName
+ *           properties:
+ *             mainCategoryId:
+ *               type: string
+ *             subCategoryName:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Subcategory added successfully
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Main category not found
+ *       500:
+ *         description: Internal Server Error
+ */
 router.post('/add-subcategory', verifyAdminToken,async (req, res) => {
     try {
         const { mainCategoryId, subCategoryName } = req.body;
@@ -129,7 +254,29 @@ router.post('/add-subcategory', verifyAdminToken,async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to add sub category' });
     }
 });
-
+/**
+ * @swagger
+ * /api/categories/fetch-subcategories:
+ *   get:
+ *     summary: Fetch subcategories
+ *     description: Retrieves all subcategories for a given main category.
+ *     parameters:
+ *       - in: query
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the main category to fetch subcategories for
+ *     responses:
+ *       200:
+ *         description: Subcategories retrieved successfully
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: No subcategories found for the given category
+ *       500:
+ *         description: Internal Server Error
+ */
 router.get('/fetch-subcategories',async (req, res) => {
     try {
         const { categoryId } = req.query;
@@ -143,7 +290,36 @@ router.get('/fetch-subcategories',async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
+/**
+ * @swagger
+ * /api/categories/edit-sub-category:
+ *   put:
+ *     summary: Edit subcategory
+ *     description: Updates an existing subcategory.
+ *     parameters:
+ *       - in: body
+ *         name: subcategory
+ *         description: The subcategory object to update
+ *         schema:
+ *           type: object
+ *           required:
+ *             - subCategoryId
+ *             - subCategoryName
+ *           properties:
+ *             subCategoryId:
+ *               type: string
+ *             subCategoryName:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Subcategory updated successfully
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Subcategory not found
+ *       500:
+ *         description: Internal Server Error
+ */
 router.put('/edit-sub-category', verifyAdminToken,async (req, res) => {
     try {
         const { subCategoryName, subCategoryId } = req.body;
@@ -181,7 +357,25 @@ router.put('/edit-sub-category', verifyAdminToken,async (req, res) => {
     }
 });
 
-
+/**
+ * @swagger
+ * /api/categories/delete-sub-category/{subCategoryId}:
+ *   delete:
+ *     summary: Delete subcategory
+ *     description: Deletes a subcategory.
+ *     parameters:
+ *       - in: path
+ *         name: subCategoryId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the subcategory to delete
+ *     responses:
+ *       200:
+ *         description: Subcategory deleted successfully
+ *       500:
+ *         description: Internal Server Error
+ */
 router.delete('/delete-sub-category/:subCategoryId', verifyAdminToken,async (req, res) => {
     try {
         const subCategoryId = req.params.subCategoryId;
@@ -197,7 +391,18 @@ router.delete('/delete-sub-category/:subCategoryId', verifyAdminToken,async (req
 
 
 //fetch-both
-
+/**
+ * @swagger
+ * /fetch-both:
+ *   get:
+ *     summary: Fetch both main and sub categories
+ *     description: Retrieves all main categories along with their subcategories.
+ *     responses:
+ *       200:
+ *         description: Main and sub categories retrieved successfully
+ *       500:
+ *         description: Internal Server Error
+ */
 router.get('/fetch-both', async (req, res) => {
     try {
         const mainCategories = await Category.find();
@@ -213,8 +418,6 @@ router.get('/fetch-both', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
-
 
 
 module.exports = router;

@@ -2,16 +2,27 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cron = require('node-cron');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./swaggerOptions');
 
 require('dotenv').config();
 
 const app = express();
 app.use(express.json());
-const corsOptions = {
-  origin: 'http://localhost:3000',
-  credentials: true,
-};
-app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  const allowedOrigins = ['https://agricrowd-1709931956899.oa.r.appspot.com','http://localhost:3000'];
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  }
+
+  next();
+});
+
 
 mongoose.connect(process.env.MONGODB_URI, {
 })
@@ -20,6 +31,8 @@ mongoose.connect(process.env.MONGODB_URI, {
     require('./scripts/createInitialAdmin');
   })
   .catch(err => console.error('MongoDB connection error:', err));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 const recaptchaRoutes = require('./routes/verifyRecaptcha');
 app.use('/api/recaptcha', recaptchaRoutes);
@@ -51,7 +64,7 @@ app.use('/api/photos', photosRoutes);
 const projectsRoutes = require('./routes/ProjectRoutes.js');
 app.use('/api/projects', projectsRoutes);
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

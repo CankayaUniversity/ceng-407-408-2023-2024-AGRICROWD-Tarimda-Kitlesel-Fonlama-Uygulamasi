@@ -30,7 +30,7 @@ function AdminLogin() {
     const admToken = Cookies.get('admToken');
     if (admToken) {
       axios
-        .post('http://localhost:3001/api/admin/verify-token', {
+        .post(`${process.env.REACT_APP_BASE_API_URL}/api/admin/verify-token`, {
           token: admToken,
         })
         .then((response) => {
@@ -55,7 +55,7 @@ function AdminLogin() {
       console.log('reCAPTCHA validation success');
       axios
         .post(
-          'http://localhost:3001/api/admin/login',
+          `${process.env.REACT_APP_BASE_API_URL}/api/admin/login`,
           { username, password, recaptchaValue },
           { withCredentials: true }
         )
@@ -103,6 +103,20 @@ function AdminLogin() {
         >
           Admin Panel
         </p>
+        <a
+          href='https://agricrowd-server.oa.r.appspot.com/api-docs/'
+          target='_blank'
+          rel='noopener noreferrer'
+          style={{
+            color: 'blue', 
+            textDecoration: 'underline', 
+            fontSize: '1.2rem', 
+            marginTop: '1rem', 
+            display: 'block' 
+          }}
+        >
+          API Documentation
+        </a>
       </div>
 
       <div className={styles.rightContainer}>

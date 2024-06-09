@@ -14,6 +14,26 @@ const ProjectCard = ({ project }) => {
     return diffDays <= 1 ? '1 day left' : `${diffDays} days left`;
   };
 
+  const [photoUrl, setPhotoUrl] = useState('');
+
+  useEffect(() => {
+    const fetchPhotoUrl = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BASE_API_URL}/api/photos/${project.basicInfo.projectImages[project.basicInfo.coverImage]}`);
+        if (response.ok) {
+          const data = await response.json();
+          setPhotoUrl(data.url);
+        } else {
+          console.error('Error fetching photo URL');
+        }
+      } catch (error) {
+        console.error('Error fetching photo URL:', error);
+      }
+    };
+
+    fetchPhotoUrl();
+  }, [project]);
+
   return (
     <Link
       to={`/project/${project.basicInfo.projectName
@@ -28,24 +48,15 @@ const ProjectCard = ({ project }) => {
               {project.basicInfo.projectName}
             </h3>
 
-            {project.basicInfo.projectImages &&
-              project.basicInfo.projectImages.length > 0 ? (
-              <div className={styles.projectImagesContainer}>
-                {project.basicInfo.projectImages.map(
-                  (photo, index) =>
-                    index === project.basicInfo.coverImage && (
-                      <img
-                        key={index}
-                        src={`http://localhost:3001/api/photos/${photo}`}
-                        alt={`Project ${index}`}
-                        className={styles.projectImage}
-                      />
-                    )
-                )}
-              </div>
+            {photoUrl ? (
+              <img
+                src={photoUrl}
+                alt={`Project ${project._id}`}
+                className={styles.projectImage}
+              />
             ) : (
               <div className={styles.noPhotos}>
-                No photos available for this project!
+                No photo available for this project!
               </div>
             )}
 
@@ -130,7 +141,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchApprovedProjects = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/projects/fetch-approved-projects');
+        const response = await axios.get(`${process.env.REACT_APP_BASE_API_URL}/api/projects/fetch-approved-projects`);
         setApprovedProjects(response.data);
         setLoading(false);
       } catch (error) {
@@ -144,7 +155,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchAllCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/categories/fetch-both');
+        const response = await axios.get(`${process.env.REACT_APP_BASE_API_URL}/api/categories/fetch-both`);
         if (response.data.success) {
           setCategories(response.data.categoriesWithSubCategories);
         } else {
